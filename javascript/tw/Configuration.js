@@ -245,7 +245,8 @@
 			else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
 				
 				// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
-				if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
 			}
 		});
 	}
