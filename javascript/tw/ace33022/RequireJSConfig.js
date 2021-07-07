@@ -62,6 +62,7 @@
  * @version 2020/08/12 ace 新增HTTPUtil。
  * @version 2020/09/04 ace 新增GitHub - jonnyreeves/js-logger: Lightweight, unobtrusive, configurable JavaScript logger.(https://github.com/jonnyreeves/js-logger)。
  * @version 2020/12/04 ace 新增ValidateUtil。
+ * @version 2021/07/07 ace 新增AndreaLombardo/BootSideMenu: BootSideMenu is a jQuery plugin to easily build a sliding menu in a Bootstrap based application.(https://github.com/AndreaLombardo/BootSideMenu)。
  *
  * @author ace
  *
@@ -325,6 +326,8 @@
 			"bootstrap-fileinput": "bootstrap/bootstrap-fileinput/js/fileinput",	/* @version 2016/11/07 新增bootstrap-fileinput。 */
 			"bootstrap-datetimepicker": "bootstrap/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min",	/* @version 2017/04/10 新增bootstrap-datetimepicker(https://github.com/Eonasdan/bootstrap-datetimepicker)。 */
 			"bootstrap-colorpicker": "bootstrap/bootstrap-colorpicker-2.5.1/dist/js/bootstrap-colorpicker.min",	/* @version 2017/11/18 新增Colorpicker(https://farbelous.github.io/bootstrap-colorpicker/)。 */
+			
+			"BootSideMenu": "bootstrap/BootSideMenu-1.0.0/js/BootSideMenu",	/* @version 2021/07/07 ace 新增AndreaLombardo/BootSideMenu: BootSideMenu is a jQuery plugin to easily build a sliding menu in a Bootstrap based application.(https://github.com/AndreaLombardo/BootSideMenu)。 */
 
 			"x-editable-bootstrap3": "x-editable/dist/bootstrap3-editable/js/bootstrap-editable",		/* @version 2017/06/28 新增X-editable(http://vitalets.github.io/x-editable/)。 */
 			"x-editable-bootstrap": "x-editable/dist/bootstrap3-editable/js/bootstrap-editable",		/* @version 2018/07/17 新增X-editable(http://vitalets.github.io/x-editable/)。 */
