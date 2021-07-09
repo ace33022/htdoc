@@ -63,6 +63,7 @@
  * @version 2020/09/04 ace 新增GitHub - jonnyreeves/js-logger: Lightweight, unobtrusive, configurable JavaScript logger.(https://github.com/jonnyreeves/js-logger)。
  * @version 2020/12/04 ace 新增ValidateUtil。
  * @version 2021/07/07 ace 新增AndreaLombardo/BootSideMenu: BootSideMenu is a jQuery plugin to easily build a sliding menu in a Bootstrap based application.(https://github.com/AndreaLombardo/BootSideMenu)。
+ * @version 2021/07/09 ace 新增tw.ace33022.vo.Lottery539Log。
  *
  * @author ace
  *
@@ -377,6 +378,7 @@
 			"tw.ace33022.vo.RolesPrograms": voPath + 'RolesPrograms',
       "tw.ace33022.vo.Users": voPath + 'Users',
 			"tw.ace33022.vo.Lottery649Logs": voPath + 'Lottery649Logs',	// @version 2017/04/24 新增tw.ace33022.vo.Lottery649Logs。
+			"tw.ace33022.vo.Lottery539Log": voPath + 'Lottery539Log',		// @version 2021/07/09 ace 新增tw.ace33022.vo.Lottery539Log。
 			"tw.ace33022.vo.Sizes": voPath + 'Sizes',	// @version 2017/06/10 新增tw.ace33022.vo.Sizes。
 			"tw.ace33022.vo.SizeGroups": voPath + 'SizeGroups',	// @version 2017/06/10 新增tw.ace33022.vo.SizeGroups。
 			"tw.ace33022.vo.SizeGroupsDetail": voPath + 'SizeGroupsDetail',	// @version 2017/06/10 新增tw.ace33022.vo.SizeGroupsDetail。
