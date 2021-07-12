@@ -2,6 +2,8 @@
  *
  * @module StringUtil
  *
+ * @version 2021/07/11 ace 新增removeHTMLTag()。
+ *
  * @see {@link https://demo.tc/post/813|建立良好的開發習慣，幫 js 檔案加上註解（jsdoc , vsdoc） | demo小鋪}
  * @see {@link https://codeday.me/bug/20171206/103929.html|javascript – 如何使用jsdoc-toolkit记录匿名函数(closure) - 代码日志}
  * @see {@link http://hant.ask.helplib.com/javascript/post_737062|如何使用jsdoc工具箱记录匿名函数( 关闭)_javascript_帮酷编程问答}
@@ -224,6 +226,33 @@
 
 		return result;
 	};
+	
+	/**
+	 *
+	 * 移除HTML標籤。
+	 *  
+	 * @author ace
+	 * 
+	 * @version 2010/10/17 ace 初始版本。
+	 *   
+	 * @param {String} 要處理HTML標籤之字串。
+	 *   
+	 * @return 移除HTML標籤後之字串。 
+	 * @type String 
+	 *   
+	 * @requires 
+	 *     
+	 * @see <a href="http://www.jlorocks.com/content.aspx?conId=1275">innerHTML與innerText的用法與區別</a>
+	 *
+	 */
+	function removeHTMLTag(value) {
+	
+		var result = value;
+	
+    if (value) result = value.replace(/<.+?>/gim, "");
+		
+		return result;
+	}
 		
 	if (typeof define === 'function') {
 	
@@ -248,6 +277,7 @@
 		module.exports.encodeUTF8ToBig5 = encodeUTF8ToBig5;
 		module.exports.rgb2hex = rgb2hex;
 		module.exports.getURLParameter = getURLParameter;
+		module.exports.removeHTMLTag = removeHTMLTag;
 	}
 	else {
 	
@@ -261,5 +291,6 @@
 		root.tw.ace33022.util.StringUtil.encodeUTF8ToBig5 = encodeUTF8ToBig5;
 		root.tw.ace33022.util.StringUtil.rgb2hex = rgb2hex;
 		root.tw.ace33022.util.StringUtil.getURLParameter = getURLParameter;
+		root.tw.ace33022.util.StringUtil.removeHTMLTag = removeHTMLTag;
 	}
 })(this);
