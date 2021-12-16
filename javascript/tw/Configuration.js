@@ -248,13 +248,8 @@
 	
 	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
 	
-		if (result.location.protocol.indexOf('http') == 0) {
+		if ((result.location.protocol.indexOf('http') == 0) && (result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 
-			if ((result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
-			
-				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
-				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
-				
 				result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
 				// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
@@ -313,27 +308,37 @@
 					"main": "lib/codemirror"
 				});
 				
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-			
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css');
-			
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css');
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
+				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 				
-				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
-			}
+					// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
+					document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
+					
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+				
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css');
+				
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css');
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
+					
+					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
+				});
+			/*
 			else {
 			
 				// http://localhost/
-				result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
+				
+					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
+				
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+				
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+				});
 			}
+			*/
 		}
 		else if ((result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
 			
@@ -350,13 +355,16 @@
 				
 				// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 				
-				result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
+				
+					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
+				
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+				
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+				});
 			}
 		}
 	}
