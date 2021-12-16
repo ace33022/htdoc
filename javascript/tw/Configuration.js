@@ -255,8 +255,7 @@
 				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
 				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
 				
-				// result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
-				result["JSLibDir"] = '';
+				result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
 				// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
 				result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require';
