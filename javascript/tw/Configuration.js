@@ -258,23 +258,10 @@
 	// result["paths"]["videojs-hotkeys"] = 'https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min';
 	// result["paths"]["videojs-hotkeys"] = result["JSLibDir"] + '/tw/ace33022/util/browser/videojs.hotkeys.min';
 	
-	// if ((new String(result.location.protocol)).startsWith('http') || (result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
-	if ((result.location.protocol.indexOf('http') == 0) || (result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
+	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
 	
-		// if ((new String(result.location.protocol)).startsWith('http')) {
 		if (result.location.protocol.indexOf('http') == 0) {
 
-			if ((typeof Packages === 'undefined')) {
-			
-				result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-			
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-				result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
-			}
-			
 			if ((result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 			
 				// result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
@@ -335,6 +322,8 @@
 					"main": "lib/codemirror"
 				});
 				
+				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
+				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 			
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
@@ -344,30 +333,22 @@
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
 				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
+				
+				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
 			}
-			/*
 			else {
-
-				console.log(result.location.origin.indexOf('127.0.0.1'));
-				console.log(result.location.origin.indexOf('localhost'));
-				console.log(((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1)));
-				console.log(typeof Packages);
-				console.log(typeof nw);
-				
-				if (((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1)) && (typeof Packages === 'undefined') && (typeof nw !== 'undefined')) {
-				
-					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
-				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
-				}
+			
+				// http://localhost/
+				result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
+			
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+			
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
 			}
-			*/
 		}
-		else if ((result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:')) {
+		else if ((result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
 			
 			// worker執行環境中並沒有window物件可以操作。
 			if (typeof WorkerGlobalScope === 'undefined') {
