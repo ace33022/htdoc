@@ -264,6 +264,10 @@
 
 			if ((result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 			
+				result["JSLibDir"] = '';
+			
+				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
+				
 				// result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
 				// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
@@ -322,8 +326,6 @@
 					"main": "lib/codemirror"
 				});
 				
-				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
-				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 			
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
@@ -334,7 +336,7 @@
 				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 				
-				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
+				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
 			}
 			else {
 			
