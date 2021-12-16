@@ -22,13 +22,16 @@
 
 	var RequireJSConfig;
 	
+	var _;	// underscore.js
+	
 	var ancestor;
 
 	var result = function(conn) {
 
 		var serialVersionUID = new Number(1);	// 保留
-
-    root._.extend(this, new ancestor(conn));
+		
+		_.extend(this, new ancestor(conn));
+    // root._.extend(this, new ancestor(conn));
 		
 		var tableName;
 		var accessVO;
@@ -90,12 +93,16 @@
 	
 		define(["tw.ace33022.dao.db.Ancestor"], function(Ancestor) {
 		
+			_ = root._;
+		
 			ancestor = Ancestor;
 		
 			return result;
 		});
 	}
 	else if (typeof exports !== 'undefined') {
+	
+		_ = require(RequireJSConfig.paths["underscore"] + '.js');
 	
 		module.exports = result;
 	}
@@ -108,6 +115,8 @@
 			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			if (typeof root.tw.ace33022.dao.db.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.dao.db.Ancestor"] + '.js');
 		}
+		
+		_ = root._;
 		
 		ancestor = root.tw.ace33022.dao.db.Ancestor;
 		

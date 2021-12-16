@@ -198,6 +198,7 @@
 		symbolID += marketType == '0' ? 'F' : 'M';
 		
 		logger.debug('symbolID: ' + symbolID);
+		// logger.debug('getQuoteDetail: ' + getQuoteDetail(marketType));
 		
 		arrQuoteList = JSON.parse(getQuoteDetail(marketType))["RtData"]["QuoteList"];
 		

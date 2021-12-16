@@ -19,12 +19,12 @@
 	var aceDir = 'tw/ace33022';
 	
 	var Database = function() { return null; };
-	
+
 	if (typeof process !== 'undefined') {
 
     // nodeJS執行環境
 		
-		// console.log('Process DefaultConfiguration...');
+		console.log('Process DefaultConfiguration...');
 		
 		if (typeof nw !== 'undefined') {
 		
@@ -162,8 +162,113 @@
 	};
 	
 	result["paths"] = new Object();
+	result["UIStyle"] = 'bootstrap';
 	
-	// if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {}
+	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
+	
+		/**
+		 *
+		 * @description loadCSS
+		 *
+		 * @param {String} CSS檔案連結。
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link https://stackoverflow.com/questions/10457870/is-there-any-way-to-load-css-and-javascript-from-a-string|html - Is there any way to load css and javascript from a string? - Stack Overflow}
+		 *
+		 */
+		result.loadCSS = function(src) {
+				
+			var link = document.createElement('link');
+			
+			link.setAttribute('type', 'text/css');
+			link.setAttribute('rel', 'stylesheet');
+			link.setAttribute('href', src);
+
+			document.head.appendChild(link);
+		}
+		
+		/**
+		 *
+		 * @description loadJS
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link http://rocksaying.tw/archives/11847511.html|跨網站載入與執行 JavaScript 的方式 - 石頭閒語}
+		 * @see {@link https://hype.codes/how-include-js-file-another-js-file|How to include JS file to another JS file? | Hype.Codes}
+		 * @see {@link https://stackoverflow.com/questions/3248384/document-createelementscript-synchronously|javascript - document.createElement("script") synchronously - Stack Overflow}
+		 *
+		 */
+		result.loadJS = function() {
+			
+			function RemoveAfterLoaded() {
+			
+				var eleScripts = document.getElementsByTagName('head')[0].getElementsByTagName('script');
+				var index;
+				
+				for (index = 0; index < eleScripts.length ; index++) {
+				
+					// 將此節點自 DOM 中移除。(ps.需等待瀏覽器進行垃圾回收，回收效率並不高。)
+					if (objJS === eleScripts[index]) document.getElementsByTagName('head')[0].removeChild(this); 
+				}
+			};
+			
+			var script = document.createElement('script');
+			var callback;
+			var sourceFile;
+			
+			script.setAttribute('type', 'text/javascript');
+			
+			if (arguments.length === 3) {
+			
+				sourceFile = arguments[1];
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+			
+				script.setAttribute('charset', arguments[0]);
+				// script.setAttribute('src', arguments[1]);
+				
+				callback = arguments[2];
+			}
+			else {
+			
+				sourceFile = arguments[0];
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+				
+				// script.setAttribute('src', arguments[0]);
+				
+				callback = arguments[1];
+			}
+			
+			script.setAttribute('src', sourceFile);
+			
+			script.onload = function() { if (typeof callback === 'function') callback(); };
+			
+			document.head.appendChild(script);
+		}
+		
+		result.loadNWInjectEnd = function() {
+		
+			var result = 'N';
+			var index;
+
+			var metas = document.getElementsByTagName('meta');
+
+			for (index = 0; index < metas.length; index++) {
+
+				if (metas[index].getAttribute('name') === 'load-nw_inject_end') {
+
+					result = metas[index].getAttribute('content');
+					break;
+				}
+			}
+
+			return result;
+		}
+	}
 	
 	/**
 	 *

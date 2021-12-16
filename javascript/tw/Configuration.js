@@ -32,7 +32,7 @@
 		
 		console.log('Process Configuration...');
 		
-		// console.log('process.env.NODE_PATH: ' + process.env.NODE_PATH);
+		console.log('process.env.NODE_PATH: ' + process.env.NODE_PATH);
 		// if (typeof process.env.NODE_PATH == 'undefined') throw new Error('NODE_PATH is undefined!');
 		
 		if (typeof nw !== 'undefined') {
@@ -60,6 +60,9 @@
 		if (typeof Packages !== 'undefined') {
 
 			// Rhino執行環境
+			
+			// 從Java啟動來呼叫時，基本環境並沒有load。
+			if (typeof load === 'undefined') load = function(file) { Packages.tw.ace33022.util.RhinoUtil.load(context, scope, new Packages.java.io.File(file)); }
 			
 			if (Packages.java.lang.System.getProperty('JSLibDir') == null) throw new Error('JSLibDir is undefined!');
 			if (typeof print != 'undefined') print('JSLibDir:' + Packages.java.lang.System.getProperty('JSLibDir'));
@@ -109,20 +112,137 @@
 	 */
 	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
 	
+		result["UIStyle"] = 'bootstrap';
+		
+		/**
+		 *
+		 * @description loadCSS
+		 *
+		 * @param {String} CSS檔案連結。
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link https://stackoverflow.com/questions/10457870/is-there-any-way-to-load-css-and-javascript-from-a-string|html - Is there any way to load css and javascript from a string? - Stack Overflow}
+		 *
+		 */
+		result.loadCSS = function(src) {
+				
+			var link = document.createElement('link');
+			
+			link.setAttribute('type', 'text/css');
+			link.setAttribute('rel', 'stylesheet');
+			link.setAttribute('href', src);
+
+			document.head.appendChild(link);
+		}
+		
+		/**
+		 *
+		 * @description loadJS
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link http://rocksaying.tw/archives/11847511.html|跨網站載入與執行 JavaScript 的方式 - 石頭閒語}
+		 * @see {@link https://hype.codes/how-include-js-file-another-js-file|How to include JS file to another JS file? | Hype.Codes}
+		 * @see {@link https://stackoverflow.com/questions/3248384/document-createelementscript-synchronously|javascript - document.createElement("script") synchronously - Stack Overflow}
+		 *
+		 */
+		result.loadJS = function() {
+			
+			function RemoveAfterLoaded() {
+			
+				var eleScripts = document.getElementsByTagName('head')[0].getElementsByTagName('script');
+				var index;
+				
+				for (index = 0; index < eleScripts.length ; index++) {
+				
+					// 將此節點自 DOM 中移除。(ps.需等待瀏覽器進行垃圾回收，回收效率並不高。)
+					if (objJS === eleScripts[index]) document.getElementsByTagName('head')[0].removeChild(this); 
+				}
+			};
+			
+			var script = document.createElement('script');
+			var callback;
+			var sourceFile;
+			
+			script.setAttribute('type', 'text/javascript');
+			
+			if (arguments.length === 3) {
+			
+				sourceFile = arguments[1];
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+			
+				script.setAttribute('charset', arguments[0]);
+				// script.setAttribute('src', arguments[1]);
+				
+				callback = arguments[2];
+			}
+			else {
+			
+				sourceFile = arguments[0];
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+				
+				// script.setAttribute('src', arguments[0]);
+				
+				callback = arguments[1];
+			}
+			
+			script.setAttribute('src', sourceFile);
+			
+			script.onload = function() { if (typeof callback === 'function') callback(); };
+			
+			document.head.appendChild(script);
+		}
+		
+		result.loadNWInjectEnd = function() {
+		
+			var result = 'N';
+			var index;
+
+			var metas = document.getElementsByTagName('meta');
+
+			for (index = 0; index < metas.length; index++) {
+
+				if (metas[index].getAttribute('name') === 'load-nw_inject_end') {
+
+					result = metas[index].getAttribute('content');
+					break;
+				}
+			}
+
+			return result;
+		}
+		
 		document.addEventListener('DOMContentLoaded', function() {
 		
-			// nwJS的location.protocol也是定義成chrome-extension:。
-			if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
+			// console.log(tw.ace33022.RequireJSConfig["baseUrl"])
+			// console.log(tw.ace33022.RequireJSConfig["paths"]["js-logger"]);
 			
-				// NW.js由inject_js_end屬性載入執行。
-				if (typeof nw === 'undefined') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-			}
-			else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
+			result.loadJS(tw.ace33022.RequireJSConfig["baseUrl"] + '/' + tw.ace33022.RequireJSConfig["paths"]["js-logger"], function() {
+			
+				Logger.useDefaults();
 				
-				// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
-				// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-				if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-			}
+				Logger.setLevel(Logger.INFO);
+				
+				Logger.log = Logger.info;
+			
+				// nwJS的location.protocol也是定義成chrome-extension:。
+				if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
+				
+					// NW.js由inject_js_end屬性載入執行。
+					if (typeof nw === 'undefined') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				}
+				else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
+					
+					// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
+					// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+					if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				}
+			});
 		});
 	}
 
@@ -139,12 +259,23 @@
 	// result["paths"]["videojs-hotkeys"] = result["JSLibDir"] + '/tw/ace33022/util/browser/videojs.hotkeys.min';
 	
 	// if ((new String(result.location.protocol)).startsWith('http') || (result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
-	if ((result.location.protocol.indexOf('http') == 0) || (result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
+	if ((result.location.protocol.indexOf('http') == 0) || (result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
 	
 		// if ((new String(result.location.protocol)).startsWith('http')) {
 		if (result.location.protocol.indexOf('http') == 0) {
-		
-			if ((result.location.origin.indexOf('127.0.0.1') === -1) && (result.location.origin.indexOf('localhost') === -1)) {
+
+			if ((typeof Packages === 'undefined')) {
+			
+				result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
+			
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+			
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+				result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+			}
+			
+			if ((result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 			
 				// result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
@@ -176,7 +307,9 @@
 				result["paths"]["papaparse"] = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min';
 				result["paths"]["filesaver"] = 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min';
 				result["paths"]["md5"] = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.7.0/js/md5.min';
-					
+				
+				result["paths"]["js-logger"] = 'https://cdn.jsdelivr.net/npm/js-logger@1.6.1/src/logger.min';
+				
 				result["paths"]["wordcloud"] = 'https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.6/wordcloud2.min';
 
 				result["paths"]["leaflet"] = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.3/leaflet';
@@ -212,9 +345,16 @@
 				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 			}
+			/*
 			else {
-			
-				if (typeof Packages === 'undefined') {
+
+				console.log(result.location.origin.indexOf('127.0.0.1'));
+				console.log(result.location.origin.indexOf('localhost'));
+				console.log(((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1)));
+				console.log(typeof Packages);
+				console.log(typeof nw);
+				
+				if (((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1)) && (typeof Packages === 'undefined') && (typeof nw !== 'undefined')) {
 				
 					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
 				
@@ -225,8 +365,9 @@
 					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
 				}
 			}
+			*/
 		}
-		else if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
+		else if ((result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:')) {
 			
 			// worker執行環境中並沒有window物件可以操作。
 			if (typeof WorkerGlobalScope === 'undefined') {
@@ -251,7 +392,7 @@
 			}
 		}
 	}
-		
+	
 	if (typeof process !== 'undefined') {
 	
 		// nodeJS執行環境
@@ -279,12 +420,15 @@
 			
 			Packages.java.lang.System.setProperty(new Packages.java.lang.String('launch.configuration.ini'), new Packages.java.lang.String(Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'ReThink.ini'));
 			
-			root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'logging.properties';
-			root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'log4j.properties';
+			// root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'logging.properties';
+			// root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'log4j.properties';
 		
+			root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'logging.properties';
+			root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'log4j.properties';
+			
 			root["Configuration"]["Database"] = new function() {
 
-				var conn;
+				var conn = null;
 			
 				var DBDRIVER = '';
 				var DBURL = '';
@@ -302,14 +446,29 @@
 				// DBDRIVER = 'sun.jdbc.odbc.JdbcOdbcDriver';
 				java.lang.Class.forName(DBDRIVER);
 				
-				DBURL = 'jdbc:sqlite:' + 'W:/tool/package/LangEnv/Java/apache-tomcat/webapps/ROOT/WEB-INF/db/SQLite/base.sqlite3';
-				conn = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
+				// DBURL = 'jdbc:sqlite:' + 'W:/tool/package/LangEnv/Java/apache-tomcat/webapps/ROOT/WEB-INF/db/SQLite/base.sqlite3';
+				// DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getenv('WEB-INFDir') + '/db/SQLite/base.sqlite3';
+				DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getProperty('WEB-INFDir') + '/db/SQLite/base.sqlite3';
+				// conn = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
 				
 				// DBURL = 'jdbc:odbc:Driver={MicroSoft Access Driver (*.mdb)};DBQ=' + 'W:\\MyDoc\\Stock\\SrcData\\Access\\Stock.mdb';
 				// conn = java.sql.DriverManager.getConnection(DBURL, properties); 
 				
-				this.getConnection = function() { return conn; }
-				this.close = function() {if (conn != null) conn.close();}
+				this.getConnection = function() { 
+				
+					if (conn == null) conn = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
+					
+					return conn;
+				}
+				
+				this.close = function() {
+				
+					if (conn != null) {
+					
+						conn.close();
+						conn = null;
+					}
+				}
 			
 				return this;
 			};

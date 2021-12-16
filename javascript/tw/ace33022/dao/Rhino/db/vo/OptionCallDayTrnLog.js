@@ -26,6 +26,8 @@
 
 	var RequireJSConfig;
 	
+	var _;	// underscore.js
+	
 	var ancestor;
 	var accessVO;
 	
@@ -33,7 +35,8 @@
 
 		var serialVersionUID = new Number(1);     // 保留
 		
-		root._.extend(this, new ancestor(conn));
+		// root._.extend(this, new ancestor(conn));
+		_.extend(this, new ancestor(conn));
     // this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// this.setTableName('option_call_day_trn_log');
@@ -66,6 +69,8 @@
 	
 		define(["tw.ace33022.dao.db.vo.Ancestor", "tw.ace33022.vo.OptionCallDayTrnLog", "underscore"], function(Ancestor, OptionCallDayTrnLog) {
 		
+			_ = root._;
+		
 			ancestor = Ancestor;
 			accessVO = OptionCallDayTrnLog;
 			
@@ -76,11 +81,11 @@
 	
 		RequireJSConfig = require('tw/ace33022/utils/RequireJSConfig.js');
 		
-		require(RequireJSConfig.paths["underscore"] + '.js');
+		_ = require(RequireJSConfig.paths["underscore"] + '.js');
 	
 		ancestor = require(RequireJSConfig.paths["tw.ace33022.dao.db.vo.Ancestor"] + '.js');
 		accessVO = require(RequireJSConfig.paths["tw.ace33022.vo.OptionCallDayTrnLog"] + '.js');
-			
+
 		module.exports = result;
 	}
 	else {
@@ -88,16 +93,18 @@
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
 		if (typeof load !== 'undefined') {
-		
+
 			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
-			
+
 			if (typeof root.tw.ace33022.dao.db.vo.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.dao.db.vo.Ancestor"] + '.js');
 			if (typeof root.tw.ace33022.vo.OptionCallDayTrnLog === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.OptionCallDayTrnLog"] + '.js');
 		}
 		
+		_ = root._;
+		
 		ancestor = root.tw.ace33022.dao.db.vo.Ancestor;
 		accessVO = root.tw.ace33022.vo.OptionCallDayTrnLog;
-		
+
 		root.tw.ace33022.dao.db.vo.OptionCallDayTrnLog = result;
 	}
 })(this);

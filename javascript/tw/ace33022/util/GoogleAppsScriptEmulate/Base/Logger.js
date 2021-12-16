@@ -13,6 +13,15 @@
 (function(root) {
 
 	if (typeof root.Logger === 'undefined') root.Logger = {};
+	if (typeof root.console === 'undefined') {
+	
+		root.console = {};
+		
+		root.console.log = function(msg) {
+		
+			if (typeof Packages != null) print(msg);
+		}
+	}
 	
 	root.Logger["clear"] = function() {};
 	root.Logger["getLog"] = function() {};

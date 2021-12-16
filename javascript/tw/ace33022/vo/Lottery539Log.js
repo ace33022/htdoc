@@ -59,7 +59,6 @@
 		this.getNum03 = function() {return num03;}
 		this.getNum04 = function() {return num04;}
 		this.getNum05 = function() {return num05;}
-		this.getNumSpecial = function() {return numSpecial;}
 		this.getPrize01 = function() {return prize01;}
 		this.getPrize02 = function() {return prize02;}
 		this.getPrize03 = function() {return prize03;}
@@ -106,7 +105,7 @@
     
     this.getSchemaJSONObject = function() {
 
-      var result = _.extend({}, uber.getSchemaJSONObject());
+      var result = root._.extend({}, uber.getSchemaJSONObject());
 
 			result.$schema = '/json-schema/vo/lottery539_log';
 			result.title = 'lottery539_log';
@@ -142,11 +141,12 @@
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
-		// _ = require(RequireJSConfig.paths["underscore"] + '.js');
+		root._ = require(RequireJSConfig.paths["underscore"] + '.js');
 		
 		ancestor = require(RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
 		
-		module.exports = result;
+		// module.exports = result;
+		module.exports = new result();
 	}
 	else {
 	

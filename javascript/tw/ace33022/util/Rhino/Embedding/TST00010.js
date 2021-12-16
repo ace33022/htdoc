@@ -36,7 +36,8 @@ function main(param, param2) {
 	var result = {
 	
 		"code": "xyz",
-		"name": "許功蓋"
+		"name": "許功蓋",
+		"invalid_line_nums": [3, 5]
 	};
 	
 	Logger.log('param: ' + param);
@@ -44,5 +45,5 @@ function main(param, param2) {
 	
 	Logger.log('result: ' + JSON.stringify(result));
 	
-	return result;
+	return JSON.stringify(result);
 }

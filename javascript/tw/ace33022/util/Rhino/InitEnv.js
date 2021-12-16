@@ -50,15 +50,19 @@
  *
  */
 
-// 設定console輸出資料為Big5編碼格式。
+// 設定console輸出資料為BIG5編碼格式。
 Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'BIG5'));
 Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'BIG5'));
+
+// 設定console輸出資料為UTF8編碼格式。
+Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'UTF8'));
+Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'UTF8'));
 
 // @version 2013/03/04 新增alert函數對應print函數。
 if (typeof print === 'undefined') print = function(msg) { Packages.java.lang.System.out.println(msg); }
 
 // if (typeof alert === 'undefined') alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
-alert = print;
+if (typeof alert === 'undefined') alert = print;
 
 if (typeof module === 'undefined') {
 
@@ -102,7 +106,7 @@ if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSCon
 	
 // 是否使用require功能應該由各別程式自行指定。
 // load(JSLibDir + 'tw/ace33022/Rhino/require.js');
-	
+
 if (typeof define === 'function') {
 
 	// @version 2015/11/13 載入RequireJS時，新增定義requirejs函數。
@@ -115,6 +119,31 @@ else if (typeof exports !== 'undefined') {
 	// 沒有載入RequireJS時則載入Rhino-Require(會有node_modules目錄讀取問題)？
 	// load(Configuration.JSLibDir + '/tw/ace33022/util/Rhino/require.js');	
 }
+
+load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["js-logger"] + '.js');
+
+// Logger.log = Logger.info;	// 對應Google Apps Script語法。
+
+Logger.useDefaults({
+
+  "defaultLevel": Logger.INFO,
+  "formatter": function(messages, context) {
+
+		load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["moment"] + '.js');
+		
+		// for (var prop in context) print(prop + " = " + context[prop]);
+		// for (var prop in context["level"]) print(prop + " = " + context["level"][prop]);
+		
+		// print(messages);
+		// messages.unshift(moment(new Date()).format('YYYY/MM/DD HH:mm:ss'), '-', '[' + context.level.value + ']');
+		// messages.unshift(moment(new Date()).format('YYYY/MM/DD HH:mm:ss'), '-', '[' + context["level"]["name"] + ']');
+		messages.unshift(moment(new Date()).format('YYYY/MM/DD HH:mm:ss'), '[' + context["level"]["name"] + ']', '-');
+  },
+});
+
+Logger.log("java.specification.version: " + Packages.java.lang.System.getProperty("java.specification.version"));
+Logger.log("java.version: " + Packages.java.lang.System.getProperty("java.version"));
+Logger.log("java.runtime.version: " + Packages.java.lang.System.getProperty("java.runtime.version"));
 
 (function(root) {
 	
