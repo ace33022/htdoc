@@ -219,30 +219,18 @@
 		
 		document.addEventListener('DOMContentLoaded', function() {
 		
-			// console.log(tw.ace33022.RequireJSConfig["baseUrl"])
-			// console.log(tw.ace33022.RequireJSConfig["paths"]["js-logger"]);
+			// nwJS的location.protocol也是定義成chrome-extension:。
+			if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
 			
-			result.loadJS(tw.ace33022.RequireJSConfig["baseUrl"] + '/' + tw.ace33022.RequireJSConfig["paths"]["js-logger"], function() {
-			
-				Logger.useDefaults();
+				// NW.js由inject_js_end屬性載入執行。
+				if (typeof nw === 'undefined') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+			}
+			else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
 				
-				Logger.setLevel(Logger.INFO);
-				
-				Logger.log = Logger.info;
-			
-				// nwJS的location.protocol也是定義成chrome-extension:。
-				if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
-				
-					// NW.js由inject_js_end屬性載入執行。
-					if (typeof nw === 'undefined') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-				}
-				else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
-					
-					// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
-					// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-					if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-				}
-			});
+				// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
+				// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+			}
 		});
 	}
 
@@ -268,7 +256,7 @@
 				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
 				
 				// result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
-				result["JSLibDir"] = '/';
+				result["JSLibDir"] = '';
 
 				// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
 				result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require';
