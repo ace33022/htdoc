@@ -340,8 +340,8 @@
 			}
 			*/
 		}
-		else if ((result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
-			
+		else if ((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1) || (result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
+		
 			// worker執行環境中並沒有window物件可以操作。
 			if (typeof WorkerGlobalScope === 'undefined') {
 			
