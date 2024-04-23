@@ -22,9 +22,8 @@
 		
 		var dao;
 		
-		this.setDAO = function(value) { dao = value; return value; }
-		
-		this.getDAO = function() { return dao; }
+		this.setDAO = function(value) {dao = value; return value;}
+		this.getDAO = function() {return dao;}
 	};
 	
 	if (typeof define === 'function') {

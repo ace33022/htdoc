@@ -371,6 +371,8 @@
 							
 							// jqXHRResult = jqXHR;
 							
+							console.log('status: ' + jqXHR["status"]);
+							
 							if (jqXHR["status"] === HTTPUtil.Status.OK) {
 							
 								if (jqXHR["responseJSON"]["error_code"] === 0) {
@@ -455,11 +457,11 @@
 															
 																if (data["error_code"] === 0) {
 
-																	CommomForm.showMessage('密碼變更成功，下次登入請使用新密碼！');
+																	CommonForm.showMessage('密碼變更成功，下次登入請使用新密碼！');
 																}
 																else {
 
-																	CommomForm.showMessage('密碼變更失敗，錯誤訊息：' + data["error_message"]);
+																	CommonForm.showMessage('密碼變更失敗，錯誤訊息：' + data["error_message"]);
 																}
 															}
 														});
@@ -648,7 +650,7 @@
 														}
 														else {
 														
-															CommomForm.showMessage({
+															CommonForm.showMessage({
 															
 																"title": "系統處理過程有誤！",
 																"message": '錯誤代碼：' + status

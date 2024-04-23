@@ -8,44 +8,29 @@
  * @version 2015/11/21 ace 新增loggingPropertiesFile屬性。
  * @version 2018/08/13 ace 新增requirejsFile屬性。
  * @version 2021/07/11 ace 新增String物件預設函數。
+ * @version 2022/10/17 ace 合併NameSpace原有功能，減少另外建立檔案處理命名空間的問題。
  *
  * @author ace
  *
  */
-
 (function(root) {
 
+	var result = {
+
+		"DateFormatString": "yyyyMMdd",
+		"date_format_string": "yyyyMMdd",
+		"SaveDateFormatString": "yyyyMMdd",
+		"ShowDateFormatString": "yyyy/MM/dd",
+		"TimeFormatString": "HHmmss",
+		"SaveTimeFormatString": "HHmmss",
+		"ShowTimeFormatString": "HH:mm:ss",
+		"RESTfulRelativePath": "ws/rs/",
+		"requirejsFile": "javascript/requirejs/require.js"
+	};
+	
   var jsLibDir = 'javascript';
-	var aceDir = 'tw/ace33022';
 	
-	var Database = function() { return null; };
-	
-	if (typeof process !== 'undefined') {
-
-    // nodeJS執行環境
-		
-		// console.log('Process DefaultConfiguration...');
-		
-		if (typeof nw !== 'undefined') {
-		
-			// process.env.NODE_DIR = process.env.NODE_PATH;
-		}
-		else {
-		
-			// if (!process.env.NODE_DIR) throw new Error('NODE_DIR is undefined!');
-		}
-
-    // jsLibDir = process.env.NODE_DIR;
-	}
-	else {
-
-    if (typeof Packages !== 'undefined') {
-
-      // Rhino執行環境
-			
-      jsLibDir = Packages.java.lang.System.getProperty('JSLibDir');
-    }
-	}
+	var Database = function() {return null;}
 	
 	/**
 	 *
@@ -127,42 +112,72 @@
 			out = function(value) {};
 		}
 
-		this.trace = function(value) { out(value) };	// (the least serious)
-		this.debug = function(value) { out(value) };
-		this.info = function(value) { out(value) };
-		this.warn = function(value) { out(value) };
-		this.error = function(value) { out(value) };
-		this.fatal = function(value) { out(value) };	// (the most serious)
+		this.trace = function(value) {out(value)};	// (the least serious)
+		this.debug = function(value) {out(value)};
+		this.info = function(value) {out(value)};
+		this.warn = function(value) {out(value)};
+		this.error = function(value) {out(value)};
+		this.fatal = function(value) {out(value)};	// (the most serious)
 
 		return this;
 	}
 
-	var result = {
+	if (typeof root.tw == 'undefined') root.tw = {};
+	if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = {};
+	if (typeof root.tw.ace33022.util == 'undefined') root.tw.ace33022.util = {};
+	if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = {};
+	if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = {};
+	if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = {};
+	if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = {};
+	if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = {};
+	if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = {};
+	if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = {};
+	
+	if (typeof process !== 'undefined') {
 
-		"Database": new Database(),
-		"DateFormatString": "YYYYMMDD",
-		"SaveDateFormatString": "YYYYMMDD",
-		"ShowDateFormatString": "YYYY/MM/DD",
-		"TimeFormatString": "HHmmss",
-		"SaveTimeFormatString": "HHmmss",
-		"ShowTimeFormatString": "HH:mm:ss",
-		"JSLibDir": jsLibDir,
-		"JSLibPath": jsLibDir + '/',
-		"AceDir": aceDir,
-		"VODir": aceDir + '/vo',
-		"DAODir": aceDir + '/dao/Rhino',
-		"BrowserUIDir": aceDir + '/program/browser',
-		"DelphiBaseDir": 'K:/ReThink/Pascal/ExecuteEnv',
-		"location": new ServerInfo(),
-		"RESTfulRelativePath": "ws/rs/",
-		"logger": new logger(),
-		"loggingPropertiesFile": jsLibDir + '/tw/ace33022/util/Rhino/logging.properties',
-		"log4jPropertiesFile": jsLibDir + '/tw/ace33022/util/Rhino/log4j.properties',
-		"requirejsFile": "javascript/requirejs/require.js"
-	};
+    // nodeJS執行環境
+		
+		// console.log('Process DefaultConfiguration...');
+		
+		if (typeof nw !== 'undefined') {
+		
+			// process.env.NODE_DIR = process.env.NODE_PATH;
+		}
+		else {
+		
+			// if (!process.env.NODE_DIR) throw new Error('NODE_DIR is undefined!');
+		}
+
+    // jsLibDir = process.env.NODE_DIR;
+	}
+	else {
+
+    if (typeof Packages !== 'undefined') {
+
+      // Rhino執行環境
+			
+      jsLibDir = Packages.java.lang.System.getProperty('JSLibDir');
+    }
+	}
+	
+	result["Database"] = new Database();
+	result["location"] = new ServerInfo();
+	result["logger"] = new logger();
 	
 	result["paths"] = new Object();
 	
+	result["JSLibDir"] = jsLibDir;
+	result["JSLibPath"] = jsLibDir + '/';
+	result["AceDir"] = 'tw/ace33022';
+	result["VODir"] = result["AceDir"] + '/vo';
+	result["DAODir"] = result["AceDir"] + '/dao/Rhino';
+	result["BrowserUIDir"] = result["AceDir"] + '/program/browser';
+		
+	result["loggingPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/logging.properties';
+	result["log4jPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/log4j.properties';
+	
+	result["DelphiBaseDir"] = 'K:/ReThink/Pascal/ExecuteEnv';
+		
 	// if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {}
 	
 	/**

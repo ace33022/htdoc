@@ -31,17 +31,17 @@
 	var ancestor;
 	var accessVO;
 	
-	var result = function(conn) {
+	var result = function(connection) {
 
 		var serialVersionUID = new Number(1);     // 保留
 		
-		// root._.extend(this, new ancestor(conn));
-		_.extend(this, new ancestor(conn));
+		// root._.extend(this, new ancestor(connection));
+		_.extend(this, new ancestor(connection));
     // this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// this.setTableName('option_call_day_trn_log');
 		this.setAccessVO(accessVO);
-		this.setDAO(new Packages.tw.ace33022.dao.db.vo.OptionCallDayTrnLog(conn));
+		this.setDAO(new Packages.tw.ace33022.dao.db.vo.OptionCallDayTrnLog(connection));
 		
 		this.doInsert = function(vo) {
 

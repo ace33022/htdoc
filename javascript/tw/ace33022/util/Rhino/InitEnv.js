@@ -51,15 +51,29 @@
  */
 
 // 設定console輸出資料為BIG5編碼格式。
-Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'BIG5'));
-Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'BIG5'));
+// Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'BIG5'));
+// Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'BIG5'));
 
 // 設定console輸出資料為UTF8編碼格式。
 Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'UTF8'));
 Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'UTF8'));
 
+(function(root) {
+	
+	// @version 2015/11/21 替換Configuration的logger物件。
+	var loggerName = 'org.mozilla.javascript.tools.shell.Main';
+
+	if (typeof Configuration["loggerName"] !== 'undefined') loggerName = Configuration["loggerName"];
+
+  // @todo 2023/09/13 ace 在Tomcat環境下如何搭配使用ServletContext?
+	root.logger = Packages.tw.ace33022.functions.Misc.getLog(loggerName);
+})(this);
+
+// Packages.tw.ace33022.util.Misc.checkEnvironmentSetting(logger);
+Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
+
 // @version 2013/03/04 新增alert函數對應print函數。
-if (typeof print === 'undefined') print = function(msg) { Packages.java.lang.System.out.println(msg); }
+if (typeof print === 'undefined') print = function(msg) {Packages.java.lang.System.out.println(msg);}
 
 // if (typeof alert === 'undefined') alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
 if (typeof alert === 'undefined') alert = print;
@@ -81,6 +95,12 @@ if (typeof window === 'undefined') {
 }
 
 if (typeof console === 'undefined') console = window["console"];
+
+if (typeof Logger === 'undefined') {
+
+	Logger = {};
+	Logger.log = function(value) {console.log(value);}	// 對應Google Apps Script語法。
+}
 
 // @version 2014/12/11 新增全域變數JSLibDir。
 // @version 2015/02/25 全域變數JSLibDir改以Configuration.JSLibDir取代。
@@ -120,10 +140,9 @@ else if (typeof exports !== 'undefined') {
 	// load(Configuration.JSLibDir + '/tw/ace33022/util/Rhino/require.js');	
 }
 
-load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["js-logger"] + '.js');
+// load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["js-logger"] + '.js');
 
-// Logger.log = Logger.info;	// 對應Google Apps Script語法。
-
+/*
 Logger.useDefaults({
 
   "defaultLevel": Logger.INFO,
@@ -140,69 +159,8 @@ Logger.useDefaults({
 		messages.unshift(moment(new Date()).format('YYYY/MM/DD HH:mm:ss'), '[' + context["level"]["name"] + ']', '-');
   },
 });
+*/
 
-Logger.log("java.specification.version: " + Packages.java.lang.System.getProperty("java.specification.version"));
-Logger.log("java.version: " + Packages.java.lang.System.getProperty("java.version"));
-Logger.log("java.runtime.version: " + Packages.java.lang.System.getProperty("java.runtime.version"));
-
-(function(root) {
-	
-	// @version 2015/11/21 替換Configuration的logger物件。
-	var _logger = {};
-	var log;
-	var loggerName = 'org.mozilla.javascript.tools.shell.Main';
-	
-	if (typeof Configuration["loggerName"] !== 'undefined') loggerName = Configuration["loggerName"];
-
-	if (typeof Packages.org.apache.commons.logging.LogFactory === 'function') {
-
-		// commons-loggin
-		if (typeof Packages.org.apache.log4j.PropertyConfigurator.configure === 'function') {
-		
-			// Log4JLogger
-			Packages.java.lang.System.setProperty('org.apache.commons.logging.Log', 'org.apache.commons.logging.impl.Log4JLogger');
-			Packages.org.apache.log4j.PropertyConfigurator.configure(Configuration.log4jPropertiesFile);
-		}
-		else {
-			
-			// Jdk14Logger
-			Packages.java.lang.System.setProperty('org.apache.commons.logging.Log', 'org.apache.commons.logging.impl.Jdk14Logger');
-			Packages.java.lang.System.setProperty('java.util.logging.config.file', Configuration.loggingPropertiesFile);
-		}
-
-		_logger = Packages.org.apache.commons.logging.LogFactory.getLog(loggerName);
-	}
-	else {
-			
-		// java.util.logging
-		// 沒有載入commons-loggin套件時！
-		// java.util.logging.Logger使用log(Level level, String msg)處理日誌檔的存取；commons-loggin使用fatal、error、warn、info、debug、trace等函數處理日誌檔的存取。
-		// 需根據以下對照關係自行處理：
-		//   fatal = Level.SEVERE
-		//   error = Level.SEVERE
-		//   warn  = Level.WARNING
-		//   info  = Level.INFO
-		//   debug = Level.FINE
-		//   trace = Level.FINEST		
-
-		Packages.java.lang.System.setProperty('java.util.logging.config.file', Configuration.loggingPropertiesFile);
-	
-		// _logger = Configuration.logger;
-		
-		// _log = java.util.logging.Logger.getLogger(org.mozilla.javascript.tools.shell.Main);
-		_log = Packages.java.util.logging.Logger.getLogger(loggerName);
-		
-		_logger.fatal = function(value) { _log.log(java.util.logging.Level.SEVERE, value) };
-		_logger.error = function(value) { _log.log(java.util.logging.Level.SEVERE, value) };
-		_logger.warn  = function(value) { _log.log(java.util.logging.Level.WARNING, value) };
-		_logger.info  = function(value) { _log.log(java.util.logging.Level.INFO, value) };
-		_logger.debug = function(value) { _log.log(java.util.logging.Level.FINE, value) };
-		_logger.trace = function(value) { _log.log(java.util.logging.Level.FINEST, value) };
-	}
-	
-	// root.Configuration.logger = _logger;
-	root.logger = _logger;
-})(this);
 
 (function(window, undefined) {
 

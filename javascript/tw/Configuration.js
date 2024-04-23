@@ -21,7 +21,6 @@
  * @memo 2021/07/02 ace Rhino沒有提供startsWith函數？
  *
  */
-
 (function(root) {
 
 	var result;
@@ -32,8 +31,11 @@
 		
 		console.log('Process Configuration...');
 		
-		console.log('process.env.NODE_PATH: ' + process.env.NODE_PATH);
+		// console.log('process.env.NODE_PATH: ' + process.env.NODE_PATH);
 		// if (typeof process.env.NODE_PATH == 'undefined') throw new Error('NODE_PATH is undefined!');
+		
+		global.Logger = console;		// 模擬Google Apps Script的Logger物件。
+		global.print = console.log;	// 模擬Rhino的print函數。
 		
 		if (typeof nw !== 'undefined') {
 		
@@ -56,31 +58,49 @@
 		}
 	}
 	else {
+	
+    if (typeof AppsScript != 'undefined') {
+      
+      if (typeof root.tw == 'undefined') root.tw= AppsScript.tw;
+      if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = AppsScript.tw.ace33022;
+      if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = AppsScript.tw.ace33022.functions;
+      if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = AppsScript.tw.ace33022.vo;
+      if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = AppsScript.tw.ace33022.dao;
+      if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = AppsScript.tw.ace33022.dao.db;
+      if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = AppsScript.tw.ace33022.dao.db.vo;
+      if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = AppsScript.tw.ace33022.dao.ws;
+      if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = AppsScript.tw.ace33022.dao.ws.vo;
 
+      root.tw.ace33022.DefaultConfiguration = AppsScript.tw.ace33022.DefaultConfiguration;
+    }
+		
 		if (typeof Packages !== 'undefined') {
 
 			// Rhino執行環境
 			
 			// 從Java啟動來呼叫時，基本環境並沒有load。
-			if (typeof load === 'undefined') load = function(file) { Packages.tw.ace33022.util.RhinoUtil.load(context, scope, new Packages.java.io.File(file)); }
+			if (typeof load === 'undefined') load = function(file) {Packages.tw.ace33022.util.Rhino.load(context, scope, new Packages.java.io.File(file));}
 			
+			// if (Packages.java.lang.System.getProperty('WorkPath') == null) throw new Error('WorkPath is undefined!');
+			if (Packages.java.lang.System.getProperty('WorkDir') == null) throw new Error('WorkDir is undefined!');
 			if (Packages.java.lang.System.getProperty('JSLibDir') == null) throw new Error('JSLibDir is undefined!');
-			if (typeof print != 'undefined') print('JSLibDir:' + Packages.java.lang.System.getProperty('JSLibDir'));
+			
+			if (typeof print != 'undefined') print('JSLibDir: ' + Packages.java.lang.System.getProperty('JSLibDir'));
 
-			if (typeof print != 'undefined') print('load NameSpace...');
-			load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/NameSpace.js');
+			// if (typeof print != 'undefined') print('load NameSpace...');
+			// load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/NameSpace.js');
 
 			if (typeof print != 'undefined') print('load DefaultConfiguration...');
 			load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/DefaultConfiguration.js');
 		}
 
-		if (typeof root.tw === 'undefined') throw new Error('NameSpace is undefined!');
-		if (typeof root.tw.ace33022.DefaultConfiguration === 'undefined') throw new Error('DefaultConfiguration is undefined!');
+		if (typeof root.tw == 'undefined') throw new Error('NameSpace is undefined!');
+		if (typeof root.tw.ace33022.DefaultConfiguration == 'undefined') throw new Error('DefaultConfiguration is undefined!');
 		
 		result = root.tw.ace33022.DefaultConfiguration;
 	}
 	
-	if (typeof result === 'undefined') throw new Error('DefaultConfiguration is undefined!');
+	if (typeof result == 'undefined') throw new Error('DefaultConfiguration is undefined!');
 
 	/**
 	 *
@@ -112,8 +132,6 @@
 	 */
 	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
 	
-		result["UIStyle"] = 'bootstrap';
-		
 		/**
 		 *
 		 * @description loadCSS
@@ -217,19 +235,38 @@
 			return result;
 		}
 		
+		result.UIStyle = (function() {
+		
+			var result = 'bootstrap';
+			var index;
+
+			var metas = document.getElementsByTagName('meta');
+
+			for (index = 0; index < metas.length; index++) {
+			
+				if (metas[index].getAttribute('name') === 'ui-style') {
+
+					result = metas[index].getAttribute('content');
+					break;
+				}
+			}
+			
+			return result;
+		})();
+		
 		document.addEventListener('DOMContentLoaded', function() {
 		
 			// nwJS的location.protocol也是定義成chrome-extension:。
 			if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
 			
 				// NW.js由inject_js_end屬性載入執行。
-				if (typeof nw === 'undefined') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if ((typeof nw === 'undefined') && (result.loadNWInjectEnd() === 'Y')) result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
 			}
 			else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
 				
-				// if (result.loadNWInjectEnd() === 'Y') result.loadJS('nw_inject_end.js');
-				// if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-				if (result.loadNWInjectEnd() === 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				// if (result.loadNWInjectEnd() == 'Y') result.loadJS('nw_inject_end.js');
+				// if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
 			}
 		});
 	}
@@ -242,87 +279,97 @@
 	result["paths"]["tw.ace33022.util.InitReSetUtil"] = 'tw/ace33022/util/browser/InitReSetUtil';
 	result["paths"]["tw.ace33022.util.CommonUtil"] = 'tw/ace33022/util/browser/CommonUtil';
 	
+	result["pushbullet"] = new Object();
+	result["pushbullet"]["token"] = 'o.auSaSfpkxFijkoAwoA93GsSkl2ojlrnf';
+	// result["pushbullet"]["default_iden"] = 'ujDUuu4dFNQdjzWIEVDzOK';		// Xiaomi
+	result["pushbullet"]["default_iden"] = 'ujDUuu4dFNQdjAiVsKnSTs';			// chrome
+	
 	// result["paths"]["videojs"] = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/6.2.0/video.min';
 	// result["paths"]["videojs-hotkeys"] = 'https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min';
 	// result["paths"]["videojs-hotkeys"] = result["JSLibDir"] + '/tw/ace33022/util/browser/videojs.hotkeys.min';
 	
-	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
+	if ((typeof Packages == 'undefined') && (typeof document != 'undefined')) {
 	
 		if ((result.location.protocol.indexOf('http') == 0) && (result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 
-				result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
+			result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
-				// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
-				result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require';
-				
-				result["paths"]["underscore"] = 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min';
-				result["paths"]["backbone"] = 'https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min';
-				result["paths"]["tablesort"] = 'https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/tablesort.min';
-				result["paths"]["tablesort.number"] = 'https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/sorts/tablesort.number.min';
-				
-				result["paths"]["jquery"] = 'https://code.jquery.com/jquery-1.12.3.min';
-				result["paths"]["bootstrap"] = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min';
+			// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
+			result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require';
+			
+			result["paths"]["underscore"] = 'https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min';
+			result["paths"]["backbone"] = 'https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.3.3/backbone-min';
+			result["paths"]["tablesort"] = 'https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/tablesort.min';
+			result["paths"]["tablesort.number"] = 'https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.0.2/sorts/tablesort.number.min';
+			
+			result["paths"]["jquery"] = 'https://code.jquery.com/jquery-1.12.3.min';
 
-				result["paths"]["jquery.unveil"] = 'https://cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.min';
+			result["paths"]["jquery.unveil"] = 'https://cdnjs.cloudflare.com/ajax/libs/unveil/1.3.0/jquery.unveil.min';
 
-				result["paths"]["bootbox"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min';
-				result["paths"]["bootstrap-fileinput"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min';
-				result["paths"]["bootstrap-datetimepicker"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min';
-				result["paths"]["x-editable-bootstrap"] = 'https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/js/bootstrap-editable.min';
-				result["paths"]["x-editable-bootstrap3"] = 'https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min';
-					
-				result["paths"]["jasny-rowlink"] = 'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min';
-					
-				result["paths"]["highcharts"] = 'https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.1.9/highcharts.src';
+			result["paths"]["bootstrap"] = 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min';
+			
+			result["paths"]["bootstrap-fileinput"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.3.8/js/fileinput.min';
+			result["paths"]["bootstrap-datetimepicker"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min';
+			result["paths"]["x-editable-bootstrap"] = 'https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap-editable/js/bootstrap-editable.min';
+			result["paths"]["x-editable-bootstrap3"] = 'https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.1/bootstrap3-editable/js/bootstrap-editable.min';
+				
+			result["paths"]["jasny-rowlink"] = 'https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/js/jasny-bootstrap.min';
+			
+			result["paths"]["bootbox"] = 'https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min';
+				
+			result["paths"]["highcharts"] = 'https://cdnjs.cloudflare.com/ajax/libs/highcharts/4.1.9/highcharts.src';
 
-				result["paths"]["moment"] = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment';
-				result["paths"]["sprintfjs"] = 'https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.0.3/sprintf.min';
-				result["paths"]["papaparse"] = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min';
-				result["paths"]["filesaver"] = 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min';
-				result["paths"]["md5"] = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.7.0/js/md5.min';
-				
-				result["paths"]["js-logger"] = 'https://cdn.jsdelivr.net/npm/js-logger@1.6.1/src/logger.min';
-				
-				result["paths"]["wordcloud"] = 'https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.6/wordcloud2.min';
+			result["paths"]["moment"] = 'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.13.0/moment';
+			result["paths"]["sprintfjs"] = 'https://cdnjs.cloudflare.com/ajax/libs/sprintf/1.0.3/sprintf.min';
+			result["paths"]["papaparse"] = 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min';
+			result["paths"]["filesaver"] = 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.3/FileSaver.min';
+			result["paths"]["md5"] = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.7.0/js/md5.min';
+			
+			result["paths"]["js-logger"] = 'https://cdn.jsdelivr.net/npm/js-logger@1.6.1/src/logger.min';
+			
+			result["paths"]["wordcloud"] = 'https://cdnjs.cloudflare.com/ajax/libs/wordcloud2.js/1.0.6/wordcloud2.min';
 
-				result["paths"]["leaflet"] = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.3/leaflet';
-				result["paths"]["leaflet.EasyButton"] = 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.3.0/easy-button.min';
+			result["paths"]["leaflet"] = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.3/leaflet';
+			result["paths"]["leaflet.EasyButton"] = 'https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.3.0/easy-button.min';
+			
+			result["paths"]["toastr"] = 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min';
+			result["paths"]["peerjs"] = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min';
+			
+			// result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/live/3.0/firebase';
+			result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/5.3.1/firebase';
+			
+			result["packages"] = new Array();
+			
+			/**
+			 *
+			 * @see {@link https://stackoverflow.com/questions/36500713/loading-codemirror-with-requirejs-from-cdn|javascript - Loading CodeMirror with RequireJS from CDN - Stack Overflow}
+			 *
+			 */
+			result["packages"].push({
+			
+				"name": "codemirror",
+				"location": "https://cdn.jsdelivr.net/npm/codemirror@5.46.0",
+				"main": "lib/codemirror"
+			});
+			
+			result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
+			
+				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
+				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
 				
-				result["paths"]["toastr"] = 'https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min';
-				result["paths"]["peerjs"] = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min';
+				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 				
-				// result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/live/3.0/firebase';
-				result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/5.3.1/firebase';
-				
-				result["packages"] = new Array();
-				
-				/**
-				 *
-				 * @see {@link https://stackoverflow.com/questions/36500713/loading-codemirror-with-requirejs-from-cdn|javascript - Loading CodeMirror with RequireJS from CDN - Stack Overflow}
-				 *
-				 */
-				result["packages"].push({
-				
-					"name": "codemirror",
-					"location": "https://cdn.jsdelivr.net/npm/codemirror@5.46.0",
-					"main": "lib/codemirror"
-				});
-				
-				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
-				
-					// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
-					document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
-					
-					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+				if (result["UIStyle"] == 'bootstrap') {
 				
 					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css');
 					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css');
 				
 					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css');
 					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
-					
-					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
-				});
+				}
+			
+				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
+			});
 			/*
 			else {
 			
@@ -359,11 +406,14 @@
 				
 					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
 				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+					if (result["UIStyle"] == 'bootstrap') {
+					
+						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+					
+						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+						result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+					}
 				});
 			}
 		}
@@ -394,17 +444,22 @@
 			result["JSLibDir"] = Packages.java.lang.System.getProperty('JSLibDir');
 			result["DAODir"] = 'tw/ace33022/dao/Rhino';
 			
-			Packages.java.lang.System.setProperty(new Packages.java.lang.String('launch.configuration.ini'), new Packages.java.lang.String(Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'ReThink.ini'));
+			// Packages.java.lang.System.setProperty(new Packages.java.lang.String('launch.configuration.ini'), new Packages.java.lang.String(Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'ReThink.ini'));
 			
 			// root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'logging.properties';
 			// root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'log4j.properties';
 		
-			root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'logging.properties';
-			root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'log4j.properties';
+			// root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'logging.properties';
+			// root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getProperty('WEB-INFDir') + '/' + 'log4j.properties';
+			
+			// root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getProperty('WorkPath') + 'classes' + '/' + 'logging.properties';
+			// root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getProperty('WorkPath') + 'classes' + '/' + 'log4j.properties';
+			root["Configuration"]["loggingPropertiesFile"] = Packages.java.lang.System.getProperty('WorkDir') + '/classes/logging.properties';
+			root["Configuration"]["log4jPropertiesFile"] = Packages.java.lang.System.getProperty('WorkDir') + '/classes/log4j.properties';
 			
 			root["Configuration"]["Database"] = new function() {
 
-				var conn = null;
+				var connection = null;
 			
 				var DBDRIVER = '';
 				var DBURL = '';
@@ -424,32 +479,34 @@
 				
 				// DBURL = 'jdbc:sqlite:' + 'W:/tool/package/LangEnv/Java/apache-tomcat/webapps/ROOT/WEB-INF/db/SQLite/base.sqlite3';
 				// DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getenv('WEB-INFDir') + '/db/SQLite/base.sqlite3';
-				DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getProperty('WEB-INFDir') + '/db/SQLite/base.sqlite3';
-				// conn = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
+				// DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getProperty('WorkPath') + 'db/SQLite/base.sqlite3';
+				DBURL = 'jdbc:sqlite:' + Packages.java.lang.System.getProperty('WorkDir') + '/db/SQLite/base.sqlite3';
+				// connection = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
 				
 				// DBURL = 'jdbc:odbc:Driver={MicroSoft Access Driver (*.mdb)};DBQ=' + 'W:\\MyDoc\\Stock\\SrcData\\Access\\Stock.mdb';
-				// conn = java.sql.DriverManager.getConnection(DBURL, properties); 
+				// connection = java.sql.DriverManager.getConnection(DBURL, properties); 
 				
 				this.getConnection = function() { 
 				
-					if (conn == null) conn = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
+					if (connection == null) connection = java.sql.DriverManager.getConnection(DBURL, DBUSER, DBPASSWORD);
 					
-					return conn;
+					return connection;
 				}
 				
 				this.close = function() {
 				
-					if (conn != null) {
+					if (connection != null) {
 					
-						conn.close();
-						conn = null;
+						connection.close();
+						connection = null;
 					}
 				}
 			
 				return this;
 			};
 			
-			load(root["Configuration"]["JSLibDir"] + '/tw/ace33022/util/Rhino/InitEnv.js');
+			if (typeof print != 'undefined') print('load InitEnv...');
+			load(root["Configuration"]["JSLibDir"] + '/tw/ace33022/util/rhino/InitEnv.js');
 		}
 	}
 })(this);

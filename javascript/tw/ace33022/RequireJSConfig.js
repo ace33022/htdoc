@@ -55,7 +55,7 @@
  * @version 2018/08/08 ace 新增Leaflet - a JavaScript library for interactive maps(https://leafletjs.com/)。
  * @version 2018/08/08 ace 新增Leaflet.EasyButton(http://cliffcloud.github.io/Leaflet.EasyButton/v1/)。
  * @version 2018/09/01 ace 新增RLifeUtil。
- * @version 2018/09/17 ace 新增WunderlistUtil。
+ * @version 2018/09/17 ace 新增Wunderlist。
  * @version 2018/10/16 ace 新增mustache.js。
  * @version 2019/03/18 ace 新增toastr.js。
  * @version 2019/04/08 ace 新增peerjs。
@@ -64,6 +64,8 @@
  * @version 2020/12/04 ace 新增ValidateUtil。
  * @version 2021/07/07 ace 新增AndreaLombardo/BootSideMenu: BootSideMenu is a jQuery plugin to easily build a sliding menu in a Bootstrap based application.(https://github.com/AndreaLombardo/BootSideMenu)。
  * @version 2021/07/09 ace 新增tw.ace33022.vo.Lottery539Log。
+ * @version 2023/03/25 ace 新增RLife。
+ * @version 2023/10/11 ace 新增Sort。
  *
  * @author ace
  *
@@ -191,14 +193,18 @@
 			"js-logger": "js-logger-1.6.0/src/logger",	/* @version 2020/09/04 ace 新增GitHub - jonnyreeves/js-logger: Lightweight, unobtrusive, configurable JavaScript logger.(https://github.com/jonnyreeves/js-logger)。 */
 
 			// Cross Platform Util
-      "tw.ace33022.util.DateTimeUtil": acePath + 'util/DateTimeUtil',
 			"tw.ace33022.util.StringUtil": acePath + 'util/StringUtil',
-			"tw.ace33022.util.ValidateUtil": acePath + 'util/ValidateUtil',
 			"tw.ace33022.util.CodeMapUtil": acePath + 'util/CodeMapUtil',	/* @version 2017/02/22 新增CodeMapUtil.js。 */
 			"tw.ace33022.util.XLSXUtil": acePath + 'util/XLSXUtil',	/* @version 2017/02/22 新增XLSXUtil.js。 */
-			"tw.ace33022.util.WunderlistUtil": acePath + 'util/WunderlistUtil',	/* @version 2018/09/17 新增WunderlistUtil。 */
 			"tw.ace33022.util.RLifeUtil": acePath + 'util/RLifeUtil',	/* @version 2018/09/01 新增RLifeUtil。 */
+			"tw.ace33022.util.RLife": acePath + 'util/RLife',	/* @version 2023/03/25 ace 新增RLife。 */
 			"tw.ace33022.util.HTTPUtil": acePath + 'util/HTTPUtil',	/* @version 2020/08/12 新增HTTPUtil。 */
+			
+			"tw.ace33022.functions.Datetime": acePath + 'functions/Datetime',
+			"tw.ace33022.functions.Validate": acePath + 'functions/Validate',
+			"tw.ace33022.functions.DataStructure": acePath + 'functions/DataStructure',
+			"tw.ace33022.functions.Sort": acePath + 'functions/Sort',	/* @version 2023/10/11 ace 新增Sort。 */
+			// "tw.ace33022.functions.Wunderlist": acePath + 'functions/Wunderlist',	/* @version 2018/09/17 新增Wunderlist。 */
 			
 			"tw.ace33022.util.InitDataUtil": acePath + 'util/InitDataUtil',	/* @version 2017/06/19 新增tw.ace33022.ace33022.util.InitDataUtil。 */
 
@@ -428,7 +434,6 @@
 			'tw.ace33022.dao.db.vo.DealerFutureOptionDayTrnLog': daoPath + 'db/vo/DealerFutureOptionDayTrnLog',
 			'tw.ace33022.dao.db.vo.InvestFutureOptionDayTrnLog': daoPath + 'db/vo/InvestFutureOptionDayTrnLog',
 
-			'StocksDAO': daoPath + 'db/vo/StocksDAO',
 			'ForeignStocksDayTrnLogsDAO': daoPath + 'db/vo/ForeignStocksDayTrnLogsDAO',
 			'DealerStocksDayTrnLogsDAO': daoPath + 'db/vo/DealerStocksDayTrnLogsDAO',
 			'InvestStocksDayTrnLogsDAO': daoPath + 'db/vo/InvestStocksDayTrnLogsDAO',
@@ -787,10 +792,7 @@
 			},
 			"jquery.ui.sortable": {
 
-				deps: ["jquery.ui.core",
-							 "jquery.ui.widget",
-							 "jquery.ui.mouse"
-							]
+				deps: ["jquery.ui.core", "jquery.ui.widget", "jquery.ui.mouse"]
 			},
 			"bootstrap": {
 
@@ -802,18 +804,15 @@
 			},
 			"bootcards": {	/* @version 2016/10/26 新增Bootcards-1.1.2。 */
 
-				deps: ["jquery",
-				       "bootstrap"]
+				deps: ["jquery", "bootstrap"]
 			},
 			"bootstrap-fileinput": {	/* @version 2016/11/07 新增bootstrap-fileinput-4.3.5。 */
 
-				deps: ["jquery",
-				       "bootstrap"]
+				deps: ["jquery", "bootstrap"]
 			},
 			"jasny-rowlink": {
 
-				deps: ["jquery",
-				       "bootstrap"]
+				deps: ["jquery", "bootstrap"]
 			},
 			"bootstrap-datetimepicker": {	/* @version 2017/04/10 新增bootstrap-datetimepicker(https://github.com/Eonasdan/bootstrap-datetimepicker)。 */
 

@@ -65,7 +65,7 @@
 	}
 	else if (typeof exports !== 'undefined') {
 	
-		RequireJSConfig = require('tw/ace33022/utils/RequireJSConfig.js');
+		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 		
 		require(RequireJSConfig.paths["underscore"] + '.js');
 	
