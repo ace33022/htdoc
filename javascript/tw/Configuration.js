@@ -352,56 +352,6 @@
 				// console.log(location.origin + location.pathname + 'manifest.json');
 				if (result.loadManifest() == 'Y') result.loadLink(location.origin + location.pathname + 'manifest.json', 'manifest');
 				
-				if ('serviceWorker' in navigator) {
-				
-					// console.log('register service worker');
-					
-					// navigator.serviceWorker.register('program/GIT00070/service_worker.js').then(function(reg) {console.log('register complete.');}).catch(function(error) {console.log('register is error.');})
-					if (result.registerServiceWorker() == 'Y') {
-
-						if ('serviceWorker' in navigator) {
-						
-							navigator.serviceWorker
-							.register(location.origin + location.pathname + 'service_worker.js')
-							.then(function(registration) {
-							
-								console.log('register complete.');
-								
-								if ('Notification' in window) {
-
-									Notification.requestPermission(function(status) {
-									
-										console.log('Notification permission status:', status);
-										
-										if (Notification.permission == 'granted') {
-										
-											// displayNotification();
-											
-											var options = {
-												/* icon: './assets/images/android_048.png', */
-												"icon": "https://www.studytonight.com/css/resource.v2/icons/studytonight/st-icon-dark.png",
-												body: '歡迎加入 Angular 社群',
-												image: 'https://augt-forum-upload.s3-ap-southeast-1.amazonaws.com/original/1X/6b3cd55281b7bedea101dc36a6ef24034806390b.png'
-											};
-											
-											registration.showNotification('Angular User Group Taiwan', options);
-										}
-									});
-								}
-								else {
-								
-									console.log('Notification not in Navigator.');
-								}
-							})
-							.catch(function(error) {console.log('register is error.');})
-						}
-						else {
-						
-							console.log('Service Worker not in Navigator.');
-						}
-					}
-				} 
-				
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS('nw_inject_end.js');
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
 				if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
