@@ -5,8 +5,6 @@
  * @version 2015/11/13 ace 初始版本。
  * @version 2017/03/05 ace 新增Unveil.js(http://luis-almeida.github.io/unveil/)。
  * @version 2018/08/16 ace 新增requireJSFile屬性。
- * @version 2024/04/23 ace 新增loadLink函數。
- * @version 2024/04/23 ace favicon設定改以程式處理。
  *
  * @author ace
  *
@@ -132,29 +130,8 @@
 	 * @see {@link https://ithelp.ithome.com.tw/articles/10197335|重新認識 JavaScript 番外篇 (6) - 網頁的生命週期 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天}
 	 *
 	 */
-	if ((typeof Packages == 'undefined') && (typeof document != 'undefined')) {
+	if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {
 	
-		/**
-		 *
-		 * @description loadLink
-		 *
-		 * @version 2024/04/20 ace 初始版本。
-		 *
-		 * @author ace
-		 *
-		 */
-		result.loadLink = function(sourceFile, rel, type) {
-		
-			var link = document.createElement('link');
-			
-			link.setAttribute('href', sourceFile);
-			link.setAttribute('rel', rel);
-			
-			if (typeof type != 'undefined') link.setAttribute('type', type);
-			
-			document.head.appendChild(link);
-		}
-		
 		/**
 		 *
 		 * @description loadCSS
@@ -168,7 +145,16 @@
 		 * @see {@link https://stackoverflow.com/questions/10457870/is-there-any-way-to-load-css-and-javascript-from-a-string|html - Is there any way to load css and javascript from a string? - Stack Overflow}
 		 *
 		 */
-		result.loadCSS = function(sourceFile) {result.loadLink(sourceFile, 'stylesheet', 'text/css');}
+		result.loadCSS = function(src) {
+				
+			var link = document.createElement('link');
+			
+			link.setAttribute('type', 'text/css');
+			link.setAttribute('rel', 'stylesheet');
+			link.setAttribute('href', src);
+
+			document.head.appendChild(link);
+		}
 		
 		/**
 		 *
@@ -225,66 +211,9 @@
 			
 			script.setAttribute('src', sourceFile);
 			
-			script.onload = function() {if (typeof callback == 'function') callback();};
+			script.onload = function() { if (typeof callback === 'function') callback(); };
 			
 			document.head.appendChild(script);
-		}
-		
-		result.isIndependentFavicon = function() {
-		
-			var result = 'N';
-			var index;
-
-			var metas = document.getElementsByTagName('meta');
-
-			for (index = 0; index < metas.length; index++) {
-
-				if (metas[index].getAttribute('name') == 'is-independent-favicon') {
-
-					result = metas[index].getAttribute('content');
-					break;
-				}
-			}
-
-			return result;
-		}
-		
-		result.loadManifest = function() {
-		
-			var result = 'N';
-			var index;
-
-			var metas = document.getElementsByTagName('meta');
-
-			for (index = 0; index < metas.length; index++) {
-
-				if (metas[index].getAttribute('name') == 'load-manifest') {
-
-					result = metas[index].getAttribute('content');
-					break;
-				}
-			}
-
-			return result;
-		}
-		
-		result.registerServiceWorker = function() {
-		
-			var result = 'N';
-			var index;
-
-			var metas = document.getElementsByTagName('meta');
-
-			for (index = 0; index < metas.length; index++) {
-
-				if (metas[index].getAttribute('name') == 'register-service_worker') {
-
-					result = metas[index].getAttribute('content');
-					break;
-				}
-			}
-
-			return result;
 		}
 		
 		result.loadNWInjectEnd = function() {
@@ -315,7 +244,7 @@
 
 			for (index = 0; index < metas.length; index++) {
 			
-				if (metas[index].getAttribute('name') == 'ui-style') {
+				if (metas[index].getAttribute('name') === 'ui-style') {
 
 					result = metas[index].getAttribute('content');
 					break;
@@ -331,26 +260,9 @@
 			if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
 			
 				// NW.js由inject_js_end屬性載入執行。
-				if ((typeof nw == 'undefined') && (result.loadNWInjectEnd() == 'Y')) result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if ((typeof nw === 'undefined') && (result.loadNWInjectEnd() === 'Y')) result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
 			}
 			else if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
-			
-				// console.log(location.origin);
-				// console.log(location.pathname);
-				
-				/**
-				 *
-				 * @version 2024/04/23 ace favicon設定改以程式處理。
-				 *
-				 * @memo 2024/04/23 ace 改以程式載入favicon，可各別設定至各別程式有獨自的icon圖示。
-				 *
-				 */
-				// console.log(location.origin + location.pathname + '/' + 'icon/favicon.ico');
-				if (result.isIndependentFavicon() == 'Y') result.loadLink(location.origin + location.pathname + 'icon/favicon.ico', 'icon', 'image/png');
-				
-				// console.log(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'manifest.json');
-				// console.log(location.origin + location.pathname + 'manifest.json');
-				if (result.loadManifest() == 'Y') result.loadLink(location.origin + location.pathname + 'manifest.json', 'manifest');
 				
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS('nw_inject_end.js');
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
@@ -424,10 +336,7 @@
 			result["paths"]["peerjs"] = 'https://cdnjs.cloudflare.com/ajax/libs/peerjs/0.3.16/peer.min';
 			
 			// result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/live/3.0/firebase';
-			// result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/5.3.1/firebase';
-			// result["paths"]["firebase-app"] = 'https://www.gstatic.com/firebasejs/10.10.0/firebase-app';
-			// result["paths"]["firebase-analytics"] = 'https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics';
-			result["paths"]["firebase-database"] = 'https://www.gstatic.com/firebasejs/10.10.0/firebase-database-compat.js';
+			result["paths"]["firebase"] = 'https://www.gstatic.com/firebasejs/5.3.1/firebase';
 			
 			result["packages"] = new Array();
 			
@@ -481,7 +390,7 @@
 		else if ((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1) || (result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
 		
 			// worker執行環境中並沒有window物件可以操作。
-			if (typeof WorkerGlobalScope == 'undefined') {
+			if (typeof WorkerGlobalScope === 'undefined') {
 			
 				// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 			
@@ -495,10 +404,6 @@
 				
 				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 				
-					// result.loadJS('https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js');
-					// result.loadJS('https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js');
-					// result.loadJS('https://www.gstatic.com/firebasejs/10.10.0/firebase-analytics.js');
-			
 					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
 				
 					if (result["UIStyle"] == 'bootstrap') {
