@@ -435,7 +435,7 @@
 			result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 			
 				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
-				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
+				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
 				
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
 				
