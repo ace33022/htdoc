@@ -71,11 +71,27 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+    /**
+     *
+     * @see <a href="https://underscorejs.org/">Underscore.js</a>
+     * @see <a href="https://github.com/jashkenas/underscore">jashkenas/underscore: JavaScript's utility _ belt</a>
+     * @see <a href="https://github.com/simula-innovation/gas-underscore">simula-innovation/gas-underscore: Underscore for Google Apps Script</a>
+     *
+     * @memo ID:1PcEHcGVC1njZd8SfXtmgQk19djwVd2GrrW1gd7U5hNk033tzi6IUvIAV
+     * 
+     * @comment 2024/07/25 ace 引用Google Apps Script的Underscore資料庫。
+     * 
+     **/
+    if (typeof Underscore != 'undefined') {
+
+      if (typeof root._ == 'undefined') root._ = Underscore.load();
+    }
+		
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['underscore'] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['underscore'] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.OptionCallDayTrnLog === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['tw.ace33022.vo.OptionCallDayTrnLog'] + '.js');
+			if (typeof root.tw.ace33022.vo.OptionCallDayTrnLog == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['tw.ace33022.vo.OptionCallDayTrnLog'] + '.js');
 		}
 		
 		_ = root._;

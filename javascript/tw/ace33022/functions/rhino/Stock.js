@@ -12,6 +12,13 @@
  * @see <a href="https://mis.taifex.com.tw/futures/RegularSession/EquityIndices/Options/">臺灣期貨交易所行情資訊網</a>
  * @see <a href="https://mis.taifex.com.tw/futures/AfterHoursSession/EquityIndices/Options/">臺灣期貨交易所行情資訊網</a>
  *
+ * @see <a href="http://www.w3schools.com/js/js_try_catch.asp">JavaScript Try...Catch Statement</a>
+ * @see <a href="https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Error">Error</a>
+ * @see <a href="https://developer.mozilla.org/zh_tw/Core_JavaScript_1.5_%E6%95%99%E5%AD%B8/%E4%BE%8B%E5%A4%96%E8%99%95%E7%90%86%E8%AA%9E%E6%B3%95/try...catch_%E8%AA%9E%E6%B3%95">try...catch 語法</a>
+ * @see <a href="http://www.guan8.net/Java/468322.html">javascript中使用try{}catch{}語句 處理</a>
+ * @see <a href="http://www.javascriptkit.com/javatutors/trycatch.shtml">Handling runtime errors in JavaScript using try/catch/finally</a>
+ * @see <a href="http://www.javascriptkit.com/javatutors/trycatch2.shtml">The Error object and throwing your own errors</a>
+ *
  * @see <a href="https://stackoverflow.com/questions/41383336/curl-doesnt-encode-utf-8">jquery - CURL doesn't encode UTF-8 - Stack Overflow</a>
  * @see <a href="https://stackoverflow.com/questions/6408904/send-request-to-curl-with-post-data-sourced-from-a-file">http - Send request to cURL with post data sourced from a file - Stack Overflow</a>
  * @see <a href="https://stackoverflow.com/questions/7172784/how-do-i-post-json-data-with-curl">rest - How do I POST JSON data with cURL? - Stack Overflow</a>
@@ -32,8 +39,8 @@
 		load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.vo.OptionPutTrnLog"] + '.js');
 	}
 	
-	// var cURLPath = 'W:/tool/package/LangEnv/Java/apache-tomcat/webapps/ROOT/WEB-INF/tool/package/Net/curl/bin/curl.exe';
-	var cURLPath = 'T:/package/net/curl/bin/curl.exe';
+	// var cURLPath = 'T:/package/net/curl/bin/curl.exe';
+	// var cURLPath = tw.ace33022.DefaultConfiguration.getCURLExeFile();
 	
 	/**
 	 *
@@ -143,38 +150,6 @@
 	
 		function getData_1() {
 
-			var result = '';
-			
-			var errorMessage = '';
-
-			var process;
-			
-			var inputBufferedReader, errorBufferedReaded;
-			var temp;
-
-			// 採用curl傳送資料時，因為命令列模式的編碼未必符合指定的編碼，造成傳送的資料格式錯誤的狀況。
-			// var postData = '{ \\"AscDesc\\": \\"A\\", \\"CID\\": \\"\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", ' + '\\"MarketType\\": \\"' + getMarketType() + '\\", \\"PageNo\\": \\"\\", \\"RowSize\\": \\"全部\\", \\"SortColumn\\": \\"\\", \\"SymbolType\\": \\"F\\" } ';
-			// var postData = '{ \\"AscDesc\\": \\"A\\", \\"CID\\": \\"\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", ' + '\\"MarketType\\": \\"' + getMarketType() + '\\", \\"PageNo\\": \\"\\", \\"SortColumn\\": \\"\\", \\"SymbolType\\": \\"F\\" } ';
-									 
-			// logger.debug('postData: ' + postData);
-
-			process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-k -X POST -H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '--data-binary' + ' ' + '"@K:/JavaScript/Rhino/EXA92100/doc/mis.taifex.com.tw/getCmdyMonthDDLItemByKindPostData.json"');
-			
-			inputBufferedReader = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
-			while ((temp = inputBufferedReader.readLine()) != null) result += temp;
-			
-			errorBufferedReaded = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getErrorStream()));
-			while ((temp = errorBufferedReaded.readLine()) != null) errorMessage += temp;
-			
-			if (process.waitFor() !== 0) throw new Error(errorMessage);
-			
-			logger.debug('result: ' + result);
-			
-			return result;
-		}
-		
-		function getData_2() {
-
 			var result = '{}';
 			
 			var errorMessage = '';
@@ -189,18 +164,20 @@
 			// var postData = '{ \\"AscDesc\\": \\"A\\", \\"CID\\": \\"TXF\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", ' + '\\"MarketType\\": \\"' + getMarketType() + '\\", \\"PageNo\\": \\"\\", \\"SortColumn\\": \\"\\", \\"SymbolType\\": \\"F\\" } ';
 			// var postData = '{ \\"AscDesc\\": \\"A\\", \\"CID\\": \\"TXO\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", ' + '\\"MarketType\\": \\"' + getMarketType() + '\\", \\"PageNo\\": \\"\\", \\"SortColumn\\": \\"\\", \\"SymbolType\\": \\"O\\" } ';
 			
-			var postData;
+			var payload;
+			
+			logger.debug('arguments.length: ' + arguments.length);
 			
 			if (arguments.length != 0) {
 			
-				// logger.debug('arguments[0]: ' + arguments[0]);
-        console.log('arguments[0]: ' + arguments[0]);
+        logger.debug('arguments[0]: ' + arguments[0]);
 				
-				postData = '{ ' + '\\"AscDesc\\": \\"A\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", \\"PageNo\\": \\"\\", \\"SortColumn\\": \\"\\"' + ', \\"MarketType\\": \\"' + getMarketType() + '\\"' + ', \\"CID\\": \\"' + arguments[0] + '\\"' + ', \\"SymbolType\\": \\"' + arguments[0].substring(arguments[0].length - 1) + '\\"' + ' }';
+				payload = '{ ' + '\\"AscDesc\\": \\"A\\", \\"ExpireMonth\\": \\"\\", \\"KindID\\": \\"1\\", \\"PageNo\\": \\"\\", \\"SortColumn\\": \\"\\"' + ', \\"MarketType\\": \\"' + getMarketType() + '\\"' + ', \\"CID\\": \\"' + arguments[0] + '\\"' + ', \\"SymbolType\\": \\"' + arguments[0].substring(arguments[0].length - 1) + '\\"' + ' }';
 				
-				logger.debug('postData: ' + postData);
+				logger.debug('payload: ' + payload);
 				
-				process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-k -X POST -H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + postData + '"');
+				// process = Packages.java.lang.Runtime.getRuntime().exec(Configuration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '--data-binary' + ' ' + '"@K:/JavaScript/Rhino/EXA92100/doc/mis.taifex.com.tw/getCmdyMonthDDLItemByKindPostData.json"');
+				process = Packages.java.lang.Runtime.getRuntime().exec(Configuration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
 				
 				result = '';
 				
@@ -213,20 +190,23 @@
 				if (process.waitFor() !== 0) throw new Error(errorMessage);
 			}
 			
+			logger.debug('result: ' + result);
+			
 			return result;
 		}
 		
-		function getData_3() {
+		function getData_2() {
 
 			var result = '{}';
 			
-      var postData = {
+      var payload = {
 
         "AscDesc": "A",
         "ExpireMonth": "",
         "KindID": "1",
         "PageNo": "",
-        "SortColumn": ""
+        "SortColumn": "",
+				"MarketType": getMarketType()
       };
 
       var options = {
@@ -244,13 +224,12 @@
 			
         console.log('arguments[0]: ' + arguments[0]);
 
-        postData["MarketType"] = getMarketType();
-        postData["CID"] = arguments[0];
-        postData["SymbolType"] = arguments[0].substring(arguments[0].length - 1);
+        payload["CID"] = arguments[0];
+        payload["SymbolType"] = arguments[0].substring(arguments[0].length - 1);
 				
-        options["payload"] = JSON.stringify(postData);
+        options["payload"] = JSON.stringify(payload);
 
-        console.log('postData: ' + options["payload"]);
+				console.log('payload: ' + options["payload"]);
 
 			  httpResponse = UrlFetchApp.fetch('https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind', options);
 		
@@ -265,17 +244,19 @@
 			"con_month": []
 		};
 		
-		// var arrayConMonth = JSON.parse(getData_1())["RtData"]["Items"];
-		// var arrayConMonth = JSON.parse(getData_2.apply(null, arguments))["RtData"]["Items"];
 		var arrayConMonth = new Array();
 		
-		if (typeof UrlFetchApp != 'undefined') {
+		console.log(tw.ace33022.DefaultConfiguration.isGoogleAppsScriptPlatform());
 		
-			arrayConMonth = JSON.parse(getData_3.apply(null, arguments))["RtData"]["Items"];
+		if (typeof Packages != 'undefined') {
+		
+			arrayConMonth = JSON.parse(getData_1.apply(null, arguments))["RtData"]["Items"];
 		}
-		else {
+		else if (tw.ace33022.DefaultConfiguration.isGoogleAppsScriptPlatform()) {
 		
 			arrayConMonth = JSON.parse(getData_2.apply(null, arguments))["RtData"]["Items"];
+		}
+		else {
 		}
 		
 		arrayConMonth.forEach(function(element, index) {
@@ -317,7 +298,7 @@
 			console.log('postData: ' + postData);
 			console.log('for curl post data: ' + postData.replace(/"/g, '\\"'));
 			
-			process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteDetail"' + ' ' + '-k -X POST -H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + postData.replace(/"/g, '\\"') + '"');
+			process = Packages.java.lang.Runtime.getRuntime().exec(tw.ace33022.DefaultConfiguration.getCURLExeFile() + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteDetail"' + ' ' + '-k -X POST -H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + postData.replace(/"/g, '\\"') + '"');
 			
 			inputBufferedReader = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
 			while ((temp = inputBufferedReader.readLine()) != null) result += temp;
@@ -424,27 +405,25 @@
 	 */
 	function getOptionRealTimeTrnLog(productCode, conMonth) {
 	
-		function getData(productCode, conMonth, marketType) {
+		function getData_1(productCode, conMonth, marketType) {
 		
 			var result = '';
 			
 			var errorMessage = '';
 
-			var process;
-			
 			var inputBufferedReader, errorBufferedReaded;
 			var temp;
 			
-			var postData = '{\\"AscDesc\\": \\"A\\", '
-									 + ' \\"CID\\": \\"' + productCode + '\\", '
-									 + ' \\"ExpireMonth\\": \\"' + conMonth + '\\", '
-									 + ' \\"KindID\\": \\"1\\", '	
-									 + ' \\"MarketType\\": \\"' + marketType + '\\", '	// '0'：一般交易時段行情；'1'；盤後交易時段行情。
-									 + ' \\"PageNo\\": \\"\\", '
-									 // + ' \\"RowSize\\": \\"全部\\", '	// 中文字傳輸問題？！
-									 + ' \\"SortColumn\\": \\"\\", '
-									 + ' \\"SymbolType\\": \\"O\\" }';
-			process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-k -X POST -H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + postData + '"');
+			var payload = '{\\"AscDesc\\": \\"A\\", '
+								  + ' \\"CID\\": \\"' + productCode + '\\", '
+									+ ' \\"ExpireMonth\\": \\"' + conMonth + '\\", '
+									+ ' \\"KindID\\": \\"1\\", '	
+									+ ' \\"MarketType\\": \\"' + marketType + '\\", '	// '0'：一般交易時段行情；'1'；盤後交易時段行情。
+									+ ' \\"PageNo\\": \\"\\", '
+									// + ' \\"RowSize\\": \\"全部\\", '	// 中文字傳輸問題？！
+									+ ' \\"SortColumn\\": \\"\\", '
+									+ ' \\"SymbolType\\": \\"O\\" }';
+			var process = Packages.java.lang.Runtime.getRuntime().exec(tw.ace33022.DefaultConfiguration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
 			
 			inputBufferedReader = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
 			while ((temp = inputBufferedReader.readLine()) != null) result += temp;
@@ -454,148 +433,115 @@
 			
 			if (process.waitFor() !== 0) throw new Error(errorMessage);
 			
+			// logger.debug(result);
+			
 			return result;
 		}
 		
-		var result = {};
+		function getData_2(productCode, conMonth, marketType) {
 		
-		var marketType = '0';
+			var result = JSON.stringify({});
+			
+      var options = {
+
+        "method": "post",
+        "contentType": "application/json;charset=UTF-8",
+        "userAgent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"
+      };
+
+      options["payload"] = JSON.stringify({
+			
+				"AscDesc": "A",
+				"CID": productCode,
+				"ExpireMonth": conMonth,
+				"KindID": "1",
+				"MarketType": marketType,
+				"PageNo": "",
+				"SortColumn": "",
+				"SymbolType": "0"
+			});
+
+      // console.log(options);
+
+      httpResponse = UrlFetchApp.fetch('https://mis.taifex.com.tw/futures/api/getQuoteListOption', options);
+
+      // console.log(httpResponse);
+
+      if (httpResponse.getResponseCode() == 200) result = httpResponse.getContentText();
+			
+			return result;
+		}
+		
+		var result = {
+		
+			"call": new Array(),
+			"put": new Array()
+		};
+		
+		var arrayQuoteList = new Array();
 		
 		var index;
 		
-		var arrQuoteList;
+		if (typeof Packages != 'undefined') {
 		
-		var arrOptionCall = new Array();
-		var arrOptionPut = new Array();
+			arrayQuoteList = JSON.parse(getData_1(productCode, conMonth, getMarketType()))["RtData"]["QuoteList"];
+		}
+		else if (tw.ace33022.DefaultConfiguration.isGoogleAppsScriptPlatform()) {
 		
-		if (((new Date()).getHours() >= 14) || ((new Date()).getHours() <= 5)) marketType = '1';	// '0'：一般交易時段行情；'1'；盤後交易時段行情。
+			arrayQuoteList = JSON.parse(getData_2(productCode, conMonth, getMarketType()))["RtData"]["QuoteList"];
+		}
 		
-		arrQuoteList = JSON.parse(getData(productCode, conMonth, marketType))["RtData"]["QuoteList"];
+		for (index = 0; index < arrayQuoteList.length; index++) {
 		
-		for (index = 0; index < arrQuoteList.length; index++) {
-		
-			if (arrQuoteList[index]["CP"] == 'C') {
+			if (arrayQuoteList[index]["CP"] == 'C') {
 
 				vo = new tw.ace33022.vo.OptionCallTrnLog();
 				
 				vo.setProductCode(productCode);
 				vo.setConMonth(conMonth);
-				vo.setTrnDate(arrQuoteList[index]["CDate"]);
-				vo.setStrikePrice(arrQuoteList[index]["StrikePrice"]);
-				vo.setOpenPrice(arrQuoteList[index]["COpenPrice"]);
-				vo.setHighPrice(arrQuoteList[index]["CHighPrice"]);
-				vo.setLowPrice(arrQuoteList[index]["CLowPrice"]);
-				vo.setClosePrice(arrQuoteList[index]["CLastPrice"]);
-				vo.setLastCalPrice(arrQuoteList[index]["CLastPrice"]);
-				vo.setTrnQty(arrQuoteList[index]["CTotalVolume"]);
-				vo.setStayQty(arrQuoteList[index]["OpenInterest"]);
-				vo.setBestAskPrice(arrQuoteList[index]["CBestAskPrice"]);
-				vo.setBestAskQty(arrQuoteList[index]["CBestAskSize"]);
-				vo.setBestBidPrice(arrQuoteList[index]["CBestBidPrice"]);
-				vo.setBestBidQty(arrQuoteList[index]["CBestBidSize"]);
+				vo.setTrnDate(arrayQuoteList[index]["CDate"]);
+				vo.setStrikePrice(arrayQuoteList[index]["StrikePrice"]);
+				vo.setOpenPrice(arrayQuoteList[index]["COpenPrice"]);
+				vo.setHighPrice(arrayQuoteList[index]["CHighPrice"]);
+				vo.setLowPrice(arrayQuoteList[index]["CLowPrice"]);
+				vo.setClosePrice(arrayQuoteList[index]["CLastPrice"]);
+				vo.setLastCalPrice(arrayQuoteList[index]["CLastPrice"]);
+				vo.setTrnQty(arrayQuoteList[index]["CTotalVolume"]);
+				vo.setStayQty(arrayQuoteList[index]["OpenInterest"]);
+				vo.setBestAskPrice(arrayQuoteList[index]["CBestAskPrice"]);
+				vo.setBestAskQty(arrayQuoteList[index]["CBestAskSize"]);
+				vo.setBestBidPrice(arrayQuoteList[index]["CBestBidPrice"]);
+				vo.setBestBidQty(arrayQuoteList[index]["CBestBidSize"]);
 				
-				arrOptionCall.push(vo);
+				result["call"].push(vo.toJSONObject());
 			}
-			else if (arrQuoteList[index]["CP"] == 'P') {
+			else if (arrayQuoteList[index]["CP"] == 'P') {
 			
 				vo = new tw.ace33022.vo.OptionPutTrnLog();
 				
 				vo.setProductCode(productCode);
 				vo.setConMonth(conMonth);
-				vo.setTrnDate(arrQuoteList[index]["CDate"]);
-				vo.setStrikePrice(arrQuoteList[index]["StrikePrice"]);
-				vo.setOpenPrice(arrQuoteList[index]["COpenPrice"]);
-				vo.setHighPrice(arrQuoteList[index]["CHighPrice"]);
-				vo.setLowPrice(arrQuoteList[index]["CLowPrice"]);
-				vo.setClosePrice(arrQuoteList[index]["CLastPrice"]);
-				vo.setLastCalPrice(arrQuoteList[index]["CLastPrice"]);
-				vo.setTrnQty(arrQuoteList[index]["CTotalVolume"]);
-				vo.setStayQty(arrQuoteList[index]["OpenInterest"]);
-				vo.setBestAskPrice(arrQuoteList[index]["CBestAskPrice"]);
-				vo.setBestAskQty(arrQuoteList[index]["CBestAskSize"]);
-				vo.setBestBidPrice(arrQuoteList[index]["CBestBidPrice"]);
-				vo.setBestBidQty(arrQuoteList[index]["CBestBidSize"]);
+				vo.setTrnDate(arrayQuoteList[index]["CDate"]);
+				vo.setStrikePrice(arrayQuoteList[index]["StrikePrice"]);
+				vo.setOpenPrice(arrayQuoteList[index]["COpenPrice"]);
+				vo.setHighPrice(arrayQuoteList[index]["CHighPrice"]);
+				vo.setLowPrice(arrayQuoteList[index]["CLowPrice"]);
+				vo.setClosePrice(arrayQuoteList[index]["CLastPrice"]);
+				vo.setLastCalPrice(arrayQuoteList[index]["CLastPrice"]);
+				vo.setTrnQty(arrayQuoteList[index]["CTotalVolume"]);
+				vo.setStayQty(arrayQuoteList[index]["OpenInterest"]);
+				vo.setBestAskPrice(arrayQuoteList[index]["CBestAskPrice"]);
+				vo.setBestAskQty(arrayQuoteList[index]["CBestAskSize"]);
+				vo.setBestBidPrice(arrayQuoteList[index]["CBestBidPrice"]);
+				vo.setBestBidQty(arrayQuoteList[index]["CBestBidSize"]);
 				
-				arrOptionPut.push(vo);
+				result["put"].push(vo.toJSONObject());
 			}
 		}
 		
-		result["call"] = new Array();
-		result["put"] = new Array();
-		
-		for (index = 0; index < arrOptionCall.length; index++) result["call"].push(arrOptionCall[index].toJSONObject());
-		for (index = 0; index < arrOptionPut.length; index++) result["put"].push(arrOptionPut[index].toJSONObject());
-		
-		// return getData(productCode, conMonth, marketType);
 		return JSON.stringify(result);
 	}
 	
-	/**
-	 *
-	 * @description getAllOptionRealTimeTrnLog
-	 *
-	 * @param productCode 商品編號。
-	 *
-	 * @version 2021/02/02 ace Initial
-	 *
-	 * @author ace
-	 *  
-	 */
-	function getAllOptionRealTimeTrnLog(productCode) {
-	
-		function getData_1(productCode) {
-		
-			var result = {};
-		
-			var arrConMonth = JSON.parse(getConMonth());
-			
-			var index;
-			
-			var quoteList;
-			
-			result["call"] = new Array();
-			result["put"] = new Array();
-			
-			for (index = 0; index < arrConMonth.length; index++) {
-			
-				quoteList = JSON.parse(getOptionRealTimeTrnLog(productCode, arrConMonth[index]));
-				
-				result["call"] = result["call"].concat(quoteList["call"]);
-				result["put"] = result["put"].concat(quoteList["put"]);
-			}
-			
-			return JSON.stringify(result);
-		}
-		
-		function getData_2(productCode) {
-		
-			var result = '';
-			
-			var errorMessage = '';
-
-			var process;
-			
-			var inputBufferedReader, errorBufferedReaded;
-			var temp;
-			
-			// process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://script.google.com/macros/s/AKfycbx1sNI2HiGWuK_o9oFB_JrTHR6saAA1hQ6IvwPkSHBv0mdX5kvWQyneDX_AGXwxJyl3/exec"' + ' -k -L ');
-			process = Packages.java.lang.Runtime.getRuntime().exec(cURLPath + ' ' + '"https://script.google.com/macros/s/AKfycbz9p6eDD50vIILu3_i_ehXPrDmNgzMkuCdDvMLbGQDST6UoaEiAZHh7E2ZEXuTQsuef/exec"' + ' -k -L ');
-			
-			inputBufferedReader = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
-			while ((temp = inputBufferedReader.readLine()) != null) result += temp;
-			
-			errorBufferedReaded = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getErrorStream()));
-			while ((temp = errorBufferedReaded.readLine()) != null) errorMessage += temp;
-			
-			if (process.waitFor() !== 0) throw new Error(errorMessage);
-			
-			return result;
-		}
-		
-		// return getData_1(productCode);
-		return getData_2(productCode);
-	}
-	 
 	if (typeof define == 'function') {
 	
 		define([], function() { 
@@ -607,8 +553,7 @@
 				getCurrentTaifexCloseDate: getCurrentTaifexCloseDate,
 				getConMonth: getConMonth,
 				getSAndNearestFQuoteDetail: getSAndNearestFQuoteDetail,
-				getOptionRealTimeTrnLog: getOptionRealTimeTrnLog,
-				getAllOptionRealTimeTrnLog: getAllOptionRealTimeTrnLog
+				getOptionRealTimeTrnLog: getOptionRealTimeTrnLog
 			}
 		});
 	}
@@ -620,7 +565,6 @@
 		module.exports = getConMonth;
 		module.exports = getSAndNearestFQuoteDetail;
 		module.exports = getOptionRealTimeTrnLog;
-		module.exports = getAllOptionRealTimeTrnLog;
 	}
 	else {
 	
@@ -632,6 +576,5 @@
 		root.tw.ace33022.functions.Stock.getConMonth = getConMonth;
 		root.tw.ace33022.functions.Stock.getSAndNearestFQuoteDetail = getSAndNearestFQuoteDetail;
 		root.tw.ace33022.functions.Stock.getOptionRealTimeTrnLog = getOptionRealTimeTrnLog;
-		root.tw.ace33022.functions.Stock.getAllOptionRealTimeTrnLog = getAllOptionRealTimeTrnLog;
 	}
 })(this);

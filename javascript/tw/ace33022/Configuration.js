@@ -7,6 +7,7 @@
  * @version 2018/08/16 ace 新增requireJSFile屬性。
  * @version 2024/04/23 ace 新增loadLink函數。
  * @version 2024/04/23 ace favicon設定改以程式處理。
+ * @version 2024/09/17 ace 新增傳入參數JavaScriptLibDir。
  *
  * @author ace
  *
@@ -63,7 +64,7 @@
 	
     if (typeof AppsScript != 'undefined') {
       
-      if (typeof root.tw == 'undefined') root.tw= AppsScript.tw;
+      if (typeof root.tw == 'undefined') root.tw = AppsScript.tw;
       if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = AppsScript.tw.ace33022;
       if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = AppsScript.tw.ace33022.functions;
       if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = AppsScript.tw.ace33022.vo;
@@ -76,24 +77,27 @@
       root.tw.ace33022.DefaultConfiguration = AppsScript.tw.ace33022.DefaultConfiguration;
     }
 		
-		if (typeof Packages !== 'undefined') {
+		if (typeof Packages != 'undefined') {
 
 			// Rhino執行環境
 			
 			// 從Java啟動來呼叫時，基本環境並沒有load。
 			if (typeof load === 'undefined') load = function(file) {Packages.tw.ace33022.util.Rhino.load(context, scope, new Packages.java.io.File(file));}
 			
+			if (typeof print != 'undefined') print('JSLibDir: ' + Packages.java.lang.System.getProperty('JSLibDir'));
+			if (typeof print != 'undefined') print('JavaScriptLibDir: ' + Packages.java.lang.System.getProperty('JavaScriptLibDir'));
+
 			// if (Packages.java.lang.System.getProperty('WorkPath') == null) throw new Error('WorkPath is undefined!');
 			if (Packages.java.lang.System.getProperty('WorkDir') == null) throw new Error('WorkDir is undefined!');
-			if (Packages.java.lang.System.getProperty('JSLibDir') == null) throw new Error('JSLibDir is undefined!');
+			// if (Packages.java.lang.System.getProperty('JSLibDir') == null) throw new Error('JSLibDir is undefined!');
+			if (Packages.java.lang.System.getProperty('JavaScriptLibDir') == null) throw new Error('JavaScriptLibDir is undefined!');
 			
-			if (typeof print != 'undefined') print('JSLibDir: ' + Packages.java.lang.System.getProperty('JSLibDir'));
-
 			// if (typeof print != 'undefined') print('load NameSpace...');
 			// load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/NameSpace.js');
 
 			if (typeof print != 'undefined') print('load DefaultConfiguration...');
-			load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/DefaultConfiguration.js');
+			// load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/DefaultConfiguration.js');
+			load(Packages.java.lang.System.getProperty('JavaScriptLibDir') + '/tw/ace33022/DefaultConfiguration.js');
 		}
 
 		if (typeof root.tw == 'undefined') throw new Error('NameSpace is undefined!');
@@ -103,7 +107,7 @@
 	}
 	
 	if (typeof result == 'undefined') throw new Error('DefaultConfiguration is undefined!');
-
+	
 	/**
 	 *
 	 * @description window.onload
@@ -185,7 +189,7 @@
 		 */
 		result.loadJS = function() {
 			
-			function RemoveAfterLoaded() {
+			function removeAfterLoaded() {
 			
 				var eleScripts = document.getElementsByTagName('head')[0].getElementsByTagName('script');
 				var index;
@@ -203,7 +207,7 @@
 			
 			script.setAttribute('type', 'text/javascript');
 			
-			if (arguments.length === 3) {
+			if (arguments.length == 3) {
 			
 				sourceFile = arguments[1];
 				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
@@ -333,9 +337,12 @@
 				// console.log(location.origin + location.pathname + 'manifest.json');
 				if (result.loadManifest() == 'Y') result.loadLink(location.origin + location.pathname + 'manifest.json', 'manifest');
 
+				// console.log('location.origin: ' + location.origin);			// http://127.0.0.1:8088
+				// console.log('location.pathname: ' + location.pathname);	// /program/SEX00010
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS('nw_inject_end.js');
 				// if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
-				if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				// if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.origin + location.pathname.substring(0, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js');
+				if (result.loadNWInjectEnd() == 'Y') result.loadJS(location.origin + location.pathname + '/' + 'nw_inject_end.js');
 			}
 		});
 	}
@@ -362,6 +369,7 @@
 		if ((result.location.protocol.indexOf('http') == 0) && (result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 
 			result["JSLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
+			result["JavaScriptLibDir"] = 'https://ace33022.github.io/htdoc/javascript';
 
 			// result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.js';
 			result["requirejsFile"] = 'https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require';
@@ -424,7 +432,7 @@
 				"main": "lib/codemirror"
 			});
 			
-			result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
+			result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 			
 				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
 				document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', '/');
@@ -442,22 +450,6 @@
 			
 				result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 			});
-			/*
-			else {
-			
-				// http://localhost/
-				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
-				
-					result.loadCSS('stylesheet/Font-Awesome/css/font-awesome.css');
-				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
-				
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-					result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
-				});
-			}
-			*/
 		}
 		else if ((result.location.origin.indexOf('127.0.0.1') != -1) || (result.location.origin.indexOf('localhost') != -1) || (result.location.protocol == 'file:') || (result.location.protocol == 'chrome-extension:') || (typeof nw !== 'undefined')) {
 		
@@ -474,7 +466,7 @@
 				
 				// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 				
-				result.loadJS(result["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
+				result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 				
 					// result.loadJS('https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js');
 					// result.loadJS('https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js');
@@ -484,22 +476,22 @@
 				
 					if (result["UIStyle"] == 'bootstrap') {
 					
-						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
-						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
+						result.loadCSS(result["JavaScriptLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap.css');
+						result.loadCSS(result["JavaScriptLibDir"] + '/bootstrap/bootstrap/dist/css/bootstrap-theme.css');
 					
-						result.loadCSS(result["JSLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
-						result.loadCSS(result["JSLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
+						result.loadCSS(result["JavaScriptLibDir"] + '/bootstrap/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css');
+						result.loadCSS(result["JavaScriptLibDir"] + '/bootstrap/jasny-bootstrap/dist/css/jasny-bootstrap.css');
 					}
 				});
 			}
 		}
 	}
 	
-	if (typeof process !== 'undefined') {
+	if (typeof process != 'undefined') {
 	
 		// nodeJS執行環境
 		
-		if ((typeof nw !== 'undefined') && (typeof module === 'undefined')) {
+		if ((typeof nw != 'undefined') && (typeof module == 'undefined')) {
 		
 			// NW.js執行環境
 			
@@ -515,9 +507,10 @@
 	
 		root["Configuration"] = result;
 		
-		if (typeof Packages !== 'undefined') {
+		if (typeof Packages != 'undefined') {
 		
 			result["JSLibDir"] = Packages.java.lang.System.getProperty('JSLibDir');
+			result["JavaScriptLibDir"] = Packages.java.lang.System.getProperty('JavaScriptLibDir');
 			result["DAODir"] = 'tw/ace33022/dao/Rhino';
 			
 			// Packages.java.lang.System.setProperty(new Packages.java.lang.String('launch.configuration.ini'), new Packages.java.lang.String(Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'ReThink.ini'));
@@ -583,7 +576,7 @@
 			
 			if (typeof print != 'undefined') print('load InitEnv...');
 			
-			load(root["Configuration"]["JSLibDir"] + '/tw/ace33022/util/rhino/InitEnv.js');
+			load(root["Configuration"]["JavaScriptLibDir"] + '/tw/ace33022/util/rhino/InitEnv.js');
 		}
 	}
 })(this);

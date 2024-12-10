@@ -110,6 +110,8 @@
 	}
 	else {
 	
+		root.tw.ace33022.functions.Validate = {};
+		
 		root.tw.ace33022.functions.Validate.validateEmailAddress = validateEmailAddress;
 		root.tw.ace33022.functions.Validate.validateInvoiceNo = validateInvoiceNo;
 		root.tw.ace33022.functions.Validate.validateNaturalPersonCertificate = validateNaturalPersonCertificate;

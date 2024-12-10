@@ -126,18 +126,18 @@
 	var daoPath;
 	var browserUIPath;
 	
-	if (typeof process !== 'undefined') {
+	if (typeof process != 'undefined') {
 
 		// nodeJS enviroment
 		
 		console.log('Process RequireJSConfig...');
 
-		if (typeof nw !== 'undefined') {
+		if (typeof nw != 'undefined') {
 		
 			// NW.js執行環境
 		
 			// 採用HTML標籤引入資料時不會有module物件。
-			if (typeof module === 'undefined') {
+			if (typeof module == 'undefined') {
 			
 				Configuration = root.Configuration;
 			}
@@ -160,7 +160,7 @@
 		Configuration = root["Configuration"];
 	}
 
-	if (typeof Configuration === 'undefined') throw new Error('Configuration is undefined!');
+	if (typeof Configuration == 'undefined') throw new Error('Configuration is undefined!');
 
 	acePath = Configuration["AceDir"] + '/';
 	voPath = Configuration["VODir"] + '/';
@@ -176,7 +176,8 @@
 
 		// baseUrl: '../javascripts',
 		// baseUrl: Configuration.JSLibDir + '/',
-		"baseUrl": Configuration["JSLibDir"],
+		// "baseUrl": Configuration["JSLibDir"],
+		"baseUrl": Configuration["JavaScriptLibDir"],
 
     "paths": {
 
@@ -850,9 +851,9 @@
     }
 	};
 	
-	if (typeof Configuration["paths"] !== 'undefined') for (var path in Configuration["paths"]) result.paths[path] = Configuration.paths[path];
+	if (typeof Configuration["paths"] != 'undefined') for (var path in Configuration["paths"]) result.paths[path] = Configuration.paths[path];
 	
-	if (typeof Configuration["packages"] !== 'undefined') {
+	if (typeof Configuration["packages"] != 'undefined') {
 	
 		Configuration["packages"].forEach(function(element) {
 		

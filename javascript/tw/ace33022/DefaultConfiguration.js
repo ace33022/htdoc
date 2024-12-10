@@ -18,10 +18,11 @@
 	var result = {
 
 		"DateFormatString": "yyyyMMdd",
-		"date_format_string": "yyyyMMdd",
+		"dateFormatString": "yyyyMMdd",
 		"SaveDateFormatString": "yyyyMMdd",
 		"ShowDateFormatString": "yyyy/MM/dd",
 		"TimeFormatString": "HHmmss",
+		"timeFormatString": "HHmmss",
 		"SaveTimeFormatString": "HHmmss",
 		"ShowTimeFormatString": "HH:mm:ss",
 		"RESTfulRelativePath": "ws/rs/",
@@ -29,12 +30,13 @@
 	};
 	
   var jsLibDir = 'javascript';
+	var javaScriptLibDir = 'javascript';
 	
 	var Database = function() {return null;}
 	
 	/**
 	 *
-	 * 連線主機資訊
+	 * 連線主機資訊。
 	 *
 	 * @description 設定DAO元件的連線主機資訊，在瀏覽器環境使用window.location物件，在nwJS環境則可自行指定對應的主機資訊。
 	 *
@@ -52,7 +54,9 @@
 	 * @comment 2015/10/28 nwJS環境下發生物件屬性是function時，取值會直接回傳該function程式碼，而非執行結果。目前的處理方式採用立即函數處理，等查明原因後再改寫？
 	 *
 	 */
-	var ServerInfo = function() {
+	var LocationInformation = function() {
+	
+		var result = this;
 
 		var protocol =  'http:';
 		var hostname = '127.0.0.1';
@@ -65,14 +69,9 @@
 		this.host = (function() {return hostname + ':' + new String(port)})();
 		this.origin = (function() {return protocol + '//' + hostname + ':' + new String(port)})();
 
-		if (typeof window !== 'undefined') {
-
-			return window.location;
-		}
-		else {
-
-			return this;
-		}
+		if (typeof window != 'undefined') result = window.location;
+		
+		return result;
 	}
 
 	/**
@@ -121,7 +120,7 @@
 
 		return this;
 	}
-
+	
 	if (typeof root.tw == 'undefined') root.tw = {};
 	if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = {};
 	if (typeof root.tw.ace33022.util == 'undefined') root.tw.ace33022.util = {};
@@ -133,13 +132,13 @@
 	if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = {};
 	if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = {};
 	
-	if (typeof process !== 'undefined') {
+	if (typeof process != 'undefined') {
 
     // nodeJS執行環境
 		
 		// console.log('Process DefaultConfiguration...');
 		
-		if (typeof nw !== 'undefined') {
+		if (typeof nw != 'undefined') {
 		
 			// process.env.NODE_DIR = process.env.NODE_PATH;
 		}
@@ -152,22 +151,33 @@
 	}
 	else {
 
-    if (typeof Packages !== 'undefined') {
+    if (typeof Packages != 'undefined') {
 
       // Rhino執行環境
 			
       jsLibDir = Packages.java.lang.System.getProperty('JSLibDir');
+			javaScriptLibDir = Packages.java.lang.System.getProperty('JavaScriptLibDir');
     }
 	}
 	
 	result["Database"] = new Database();
-	result["location"] = new ServerInfo();
+	result["location"] = new LocationInformation();
 	result["logger"] = new logger();
+	result["isGoogleAppsScriptPlatform"] = function() {
+	
+		var result = false;
+		
+		if (typeof ScriptApp != 'undefined') result = true;
+		
+		return result;
+	}
+	result["getCURLExeFile"] = function() {return 'T:/package/net/curl/bin/curl.exe';}
 	
 	result["paths"] = new Object();
 	
 	result["JSLibDir"] = jsLibDir;
 	result["JSLibPath"] = jsLibDir + '/';
+	result["JavaScriptLibDir"] = javaScriptLibDir;
 	result["AceDir"] = 'tw/ace33022';
 	result["VODir"] = result["AceDir"] + '/vo';
 	result["DAODir"] = result["AceDir"] + '/dao/Rhino';
@@ -176,22 +186,23 @@
 	result["loggingPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/logging.properties';
 	result["log4jPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/log4j.properties';
 	
+	result["userSpaceDir"] = 'W:/UserSpace';
+	result["tempDir"] = 'O:/tmp';
 	result["DelphiBaseDir"] = 'K:/ReThink/Pascal/ExecuteEnv';
 		
 	// if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {}
 	
 	/**
 	 *
-	 * 字元重複函數。
+	 * 字串左邊補空白函數。
 	 *  
 	 * @author ace
 	 * 
 	 * @version 2010/10/14 ace 初始版本。   
 	 *   
-	 * @param {String} 重複字元。
-	 * @param {Integer} 重複次數。    
+	 * @param {Integer} 字串延長後長度。
 	 *   
-	 * @return 字元重複後之字串。 
+	 * @return 延長後的字串。 
 	 * @type String 
 	 *   
 	 * @requires 
@@ -199,19 +210,29 @@
 	 * @see <a href="http://www.dotblogs.com.tw/wxvbbo/archive/2008/03/31/2368.aspx">利用JAVA SCRIPT來格式化日期</a> 
 	 *
 	 */
-	String.prototype.repeat = function(chr, times) {         
-
-		var result = "";
-		var count;
+	String.prototype.paddingLeft = function(totalLength) {
+	
+		var result = this;
+	
+		if (!isNaN(parseInt(totalLength)) && ((totalLength - this.length) > 1)) {
 		
-		for (count = 0; count < times; count++) result += chr;
+			result = (function(character, time) {
+			
+				var result = '';
+				var count;
+				
+				for (count = 0; count < time; count++) result += character;
 
-		return result; 
+				return result; 
+			})(' ', totalLength - this.length) + result;
+		}
+		
+		return result;
 	}
-	
+
 	/**
 	 *
-	 * 字串延長函數(左邊延長)。
+	 * 字串右邊補空白函數。
 	 *  
 	 * @author ace
 	 * 
@@ -228,51 +249,24 @@
 	 * @see <a href="http://www.dotblogs.com.tw/wxvbbo/archive/2008/03/31/2368.aspx">利用JAVA SCRIPT來格式化日期</a> 
 	 *
 	 */
-	String.prototype.padL = function(len, pad) {  
+	String.prototype.paddingRight = function(totalLength) {
 	
-		if (!len) return this;        
-		if (len < 1) return this;
+		var result = this;
 
-		if (!pad) pad = ' ';
-
-		var subLen = len - this.length;     
-
-		if (subLen < 1) return this.substr(0, length);      
-
-		return (String.repeat(pad, subLen) + this).substr(0, length);     
-	}
-
-	/**
-	 *
-	 * 字串延長函數(右邊延長)。
-	 *  
-	 * @author ace
-	 * 
-	 * @version 2010/10/14 ace 初始版本。   
-	 *   
-	 * @param {Integer} 字串延長後長度。
-	 * @param {String} 若字串長度未達參數length指定之長度，則以此字元延長。    
-	 *   
-	 * @return 延長後的字串。 
-	 * @type String 
-	 *   
-	 * @requires 
-	 *     
-	 * @see <a href="http://www.dotblogs.com.tw/wxvbbo/archive/2008/03/31/2368.aspx">利用JAVA SCRIPT來格式化日期</a> 
-	 *
-	 */
-	String.prototype.padR = function(len, pad) {     
-
-		if (!len) return this;        
-		if (len < 1) return this;
+		if (!isNaN(parseInt(totalLength)) && ((totalLength - this.length) > 1)) {
+		
+			result += (function(character, time) {
 			
-		if (!pad) pad = " ";     
+				var result = '';
+				var count;
+				
+				for (count = 0; count < time; count++) result += character;
 
-		var subLen = len - this.length     
-			
-		if (subLen < 1) this.substr(0, length);
-
-		return (this + String.repeat(pad, subLen)).substr(0, length); 
+				return result; 
+			})(' ', totalLength - this.length);
+		}
+		
+		return result;
 	}
 
 	if (!String.prototype.startsWith) {
@@ -300,7 +294,7 @@
 		
 			var pos = position > 0 ? position | 0 : 0;
 			
-      return this.substring(pos, pos + searchString.length) === searchString;
+      return this.substring(pos, pos + searchString.length) == searchString;
 		}
 	}
 
@@ -383,11 +377,11 @@
 		return format; 
 	}
 	
-	if (typeof process !== 'undefined') {
+	if (typeof process != 'undefined') {
 
 		// nodeJS執行環境
 		
-		if ((typeof nw !== 'undefined') && (typeof module === 'undefined')) {
+		if ((typeof nw != 'undefined') && (typeof module == 'undefined')) {
 		
 			// NW.js執行環境
 			

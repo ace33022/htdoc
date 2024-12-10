@@ -69,8 +69,9 @@ Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.
 	root.logger = Packages.tw.ace33022.functions.Misc.getLog(loggerName);
 })(this);
 
+// @memo 2024/09/05 ace 應該由各別程式顯示系統狀態，初始化過程執行這個動作會有重複執行的困擾。
 // Packages.tw.ace33022.util.Misc.checkEnvironmentSetting(logger);
-Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
+// Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
 
 // @version 2013/03/04 新增alert函數對應print函數。
 if (typeof print === 'undefined') print = function(msg) {Packages.java.lang.System.out.println(msg);}
@@ -114,9 +115,11 @@ if (typeof Logger === 'undefined') {
 
 // json2.js中使用alert函數進行警告提示，在沒有定義alert的狀況下載入會造成例外狀況發生。
 // @version 2015/02/25 全域變數JSLibDir改以Configuration.JSLibDir取代。
-load(Configuration["JSLibDir"] + '/tw/ace33022/json2.js');
+// load(Configuration["JSLibDir"] + '/tw/ace33022/json2.js');
+load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/json2.js');
 	
-load(Configuration["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js');
+// load(Configuration["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js');
+load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js');
 
 if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSConfig.baseUrl += '/';
 
