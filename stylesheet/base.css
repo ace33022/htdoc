@@ -1,0 +1,159 @@
+/** resets **/
+
+*, *:before, *:after {
+
+	box-sizing: border-box;
+}
+
+:root {
+
+	--gold:     #8C704E;
+	--gray-100: #FAFAFA;
+	--gray-200: #CCCCCC;
+	--gray-600: #555555;
+	--gray-900: #202020;
+	--red-500:  #A52020;
+	
+	--font-xxl:      2rem;
+	--font-xl:     1.5rem;
+	--font-l:     1.25rem;
+	--font-m:    1.125rem;
+	--font-base:     1rem;
+	--font-s:    0.875rem;
+	--font-xs:    0.75rem;
+}
+
+::selection {background: #A4DCEC;}
+::-moz-selection {background: #A4DCEC;}
+::-webkit-selection {background: #A4DCEC;}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+			
+	color: #CCC;
+	font-style: italic;
+}
+			
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+			
+	color: #CCC;
+	font-style: italic;
+}
+			
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+			
+	color: #CCC;
+	font-style: italic;
+}
+			
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+			
+	color: #CCC !important;
+	font-style: italic;  
+}
+
+br { 
+
+	display: block; 
+	line-height: 2.2em; 
+} 
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block;}
+
+blockquote, q {quotes: none;}
+
+blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
+
+strong {font-weight: bold;} 
+
+ol, ul {list-style: none;}
+
+table {border-collapse: collapse; border-spacing: 0;}
+
+input, textarea { 
+			
+	-webkit-font-smoothing: antialiased;
+	
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	
+	outline: none; 
+}
+			
+.text--xxl {
+
+	font-size: var(--font-xxl);
+}
+
+.text--xl {
+
+	font-size: var(--font-xl);
+}
+
+.text--l {
+
+	font-size: var(--font-l);
+}
+
+.text--m {
+
+	font-size: var(--font-m);
+}
+
+.text--s {
+
+	font-size: var(--font-s);
+}
+
+.text--xs {
+
+	font-size: var(--font-xs);
+}
+
+.mt-4 {
+
+	margin-top: 2rem;
+}
+
+.mr-2 {
+
+	margin-right: .5rem;
+}
+
+.mr-3 {
+
+	margin-right: 1rem;
+}
+
+.mr-4 {
+
+	margin-right: 2rem;
+}
+
+.mr-5 {
+
+	margin-right: 2.5rem;
+}
+
+.mr-6 {
+
+	margin-right: 3rem;
+}
+
+.ml-2 {
+
+	margin-left: .5rem;
+}
+
+.ml-3 {
+
+	margin-left: 1rem;
+}
+
+.ml-4 {
+
+	margin-left: 2rem;
+}
