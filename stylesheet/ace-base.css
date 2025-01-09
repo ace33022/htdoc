@@ -9,9 +9,9 @@ html {
 	
 	scroll-behavior: smooth;
 	
-	vertical-align: baseline;
-	
 	text-rendering: optimizeLegibility;
+	
+	/* vertical-align: baseline; */
 	
 	/* font: inherit; */
 	/* font-size: 100%; */
