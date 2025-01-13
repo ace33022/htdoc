@@ -20,6 +20,8 @@ function main() {
 	
 	var index;
 	
+	// logger.debug('Packages: ' + Packages);
+	
 	logger.debug('arguments.length: ' + arguments.length);
 	
 	if (arguments.length != 0) {
