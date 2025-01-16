@@ -7,6 +7,10 @@
  * @author ace
  *
  * @see {@link https://developers.google.com/apps-script/reference/|Reference Overview  |  Apps Script  |  Google Developers}
+ *
+ * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof">typeof</a>
+ *
+ * @see <a href="http://fred-zone.blogspot.tw/2012/05/javascript_22.html">簡單理解 JavaScript 的記憶體管理機制 ~ Fred's blog</a>
  * 
  */
  

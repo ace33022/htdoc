@@ -124,7 +124,7 @@
 		"USE_PROXY": "Use Proxy"
 	};
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define([""], function() { 
 		
@@ -134,12 +134,12 @@
 			}
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		module.exports.Status = StatusCodeMap;
 	}
 	else {
 	
-		root.tw.ace33022.util.HTTPUtil.Status = StatusCodeMap;
+		root.tw.ace33022.util.HTTP.Status = StatusCodeMap;
 	}
 })(this);

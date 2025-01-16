@@ -1,6 +1,6 @@
 /**
  *
- * @description InitEnv(Rhino環境初始設定)
+ * @description InitalizeEnvironment(Rhino環境初始設定)
  *
  * @version 2011/08/22 ace 初始版本。
  * @version 2013/03/04 ace 新增alert函數對應print函數。
@@ -63,7 +63,7 @@ Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.
 	// @version 2015/11/21 替換Configuration的logger物件。
 	var loggerName = 'org.mozilla.javascript.tools.shell.Main';
 
-	if (typeof Configuration["loggerName"] !== 'undefined') loggerName = Configuration["loggerName"];
+	if (typeof Configuration["loggerName"] != 'undefined') loggerName = Configuration["loggerName"];
 
   // @todo 2023/09/13 ace 在Tomcat環境下如何搭配使用ServletContext?
 	root.logger = Packages.tw.ace33022.functions.Misc.getLog(loggerName);
@@ -74,30 +74,30 @@ Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.
 // Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
 
 // @version 2013/03/04 新增alert函數對應print函數。
-if (typeof print === 'undefined') print = function(msg) {Packages.java.lang.System.out.println(msg);}
+if (typeof print == 'undefined') print = function(msg) {Packages.java.lang.System.out.println(msg);}
 
-// if (typeof alert === 'undefined') alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
-if (typeof alert === 'undefined') alert = print;
+// if (typeof alert == 'undefined') alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
+if (typeof alert == 'undefined') alert = print;
 
-if (typeof module === 'undefined') {
+if (typeof module == 'undefined') {
 
 	// CommonJS功能改由Rhino-Require處理。
 	// module = {};
 	// module.exports = {};
 }
 
-if (typeof window === 'undefined') {
+if (typeof window == 'undefined') {
 
 	window = {};
 	
-	if (typeof window["document"] === 'undefined') window["document"] = {};
-	if (typeof window["console"] === 'undefined') window["console"] = {};
-	if (typeof window["console"]["log"] === 'undefined') window["console"]["log"] = print;
+	if (typeof window["document"] == 'undefined') window["document"] = {};
+	if (typeof window["console"] == 'undefined') window["console"] = {};
+	if (typeof window["console"]["log"] == 'undefined') window["console"]["log"] = print;
 }
 
-if (typeof console === 'undefined') console = window["console"];
+if (typeof console == 'undefined') console = window["console"];
 
-if (typeof Logger === 'undefined') {
+if (typeof Logger == 'undefined') {
 
 	Logger = {};
 	Logger.log = function(value) {console.log(value);}	// 對應Google Apps Script語法。
@@ -130,14 +130,14 @@ if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSCon
 // 是否使用require功能應該由各別程式自行指定。
 // load(JSLibDir + 'tw/ace33022/Rhino/require.js');
 
-if (typeof define === 'function') {
+if (typeof define == 'function') {
 
 	// @version 2015/11/13 載入RequireJS時，新增定義requirejs函數。
 	requirejs = require;
 		
 	requirejs.config(tw.ace33022.util.RequireJSConfig);
 }	
-else if (typeof exports !== 'undefined') {
+else if (typeof exports != 'undefined') {
 
 	// 沒有載入RequireJS時則載入Rhino-Require(會有node_modules目錄讀取問題)？
 	// load(Configuration.JSLibDir + '/tw/ace33022/util/Rhino/require.js');	

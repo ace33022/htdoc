@@ -75,7 +75,7 @@
 	 * @author ace
 	 *
 	 * @comment 2021/03/14 ace https://mis.taifex.com.tw/futures/_nuxt/8dcb1df.js
-	 *  
+	 *
 	 */
 	function getCurrTaifexMYCode() {
 	
@@ -97,27 +97,51 @@
 	 * @author ace
 	 *
 	 * @comment 2021/03/14 ace https://mis.taifex.com.tw/futures/_nuxt/8dcb1df.js
-	 *  
+	 *
 	 */
 	function getCurrentTaifexCloseDate() {
 	
-		var date;
-		var cal, firstWeekBeforeDays;
+		var result;
 	
-		(date = new Date()).setDate(1);
+		var date = new Date();
+		
+		var cal;
+		var firstWeekBeforeDays = 0;
+		
+		console.log('arguments.length: ' + arguments.length);
+		
+		if (arguments.length != 0) {
+		
+			date = tw.ace33022.functions.Datetime.doDateStringToDatetime(arguments[0]);
+		}
+		
+		result = tw.ace33022.functions.Datetime.doDatetimeToDatetimeString(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 14, 30, 0));
+		
+		date.setDate(1);
+		
+		console.log('date(1): ' + date);
+		console.log('date(1).getDay(): ' + date.getDay());
 		
 		// n = (e = 0 == (f = new Date(d.getTime())).getDay() ? 7 : f.getDay()) < 3 ? 3 - e : 7 - (e - 3);
 		// n += 14, 
-		firstWeekBeforeDays = (cal = 0 == date.getDay() ? 7 : date.getDay()) < 3 ? 3 - cal : 7 - (cal - 3);
+		firstWeekBeforeDays = (cal = 0 == date.getDay() ? 7 : date.getDay()) <= 3 ? 3 - cal : 7 - (cal - 3);
 		
-		logger.debug('firstWeekBeforeDays: ' + firstWeekBeforeDays);	// 周三之前的天數。
+		console.log('firstWeekBeforeDays: ' + firstWeekBeforeDays);	// 周三之前的天數。
 
 		date.setDate(date.getDate() + 14 + firstWeekBeforeDays);
 		
-		logger.debug('date: ' + date);
+		console.log('date: ' + date);
 		
-		// m = new Date(f.getFullYear(), f.getMonth(), f.getDate(), 14, 30, 0), 
-		return tw.ace33022.functions.Datetime.doDatetimeToDatetimeString(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 14, 30, 0));
+		// m = new Date(f.getFullYear(), f.getMonth(), f.getDate(), 14, 30, 0) 
+		result = tw.ace33022.functions.Datetime.doDatetimeToDatetimeString(new Date(date.getFullYear(), date.getMonth(), date.getDate(), 14, 30, 0));
+		
+		if (tw.ace33022.functions.Datetime.doDatetimeStringToDatetime(result) < (new Date())) {
+		
+			// 超過本月份結算日期時間則取下月份結算日期時間。
+			// result = getCurrentTaifexCloseDate(tw.ace33022.functions.Datetime.doDatetimeToDateString(new Date(date.getFullYear(), date.getMonth() + 1, 1)));
+		}
+		
+		return result;
 	}
 	
 	/**

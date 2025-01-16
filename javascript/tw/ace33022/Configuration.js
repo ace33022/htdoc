@@ -589,9 +589,9 @@
 				return this;
 			};
 			
-			if (typeof print != 'undefined') print('load InitEnv...');
+			if (typeof print != 'undefined') print('load Rhino InitializeEnvironment.js');
 			
-			load(root["Configuration"]["JavaScriptLibDir"] + '/tw/ace33022/util/rhino/InitEnv.js');
+			load(root["Configuration"]["JavaScriptLibDir"] + '/tw/ace33022/rhino/InitializeEnvironment.js');
 		}
 	}
 })(this);
