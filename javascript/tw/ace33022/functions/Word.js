@@ -12,7 +12,7 @@
 
 (function(root) {
 
-	var characterCodeMap;
+	var characterCode;
 	
 	/**
 	 *
@@ -91,7 +91,7 @@
 
 		while (left.length > 0) {
 	
-			cr = encodeUTF8ToBig5SUB(left, characterCodeMap.mapUTF8ToBIG5);
+			cr = encodeUTF8ToBig5SUB(left, characterCode.UTF8ToBIG5);
 		
 			left = cr.left;
 			result += cr.result;
@@ -161,9 +161,9 @@
 	
 	if (typeof define == 'function') {
 	
-		define(["tw.ace33022.util.CharacterCodeMap"], function(CharacterCodeMap) { 
+		define(["tw.ace33022.util.map.CharacterCode"], function(CharacterCode) { 
 		
-			characterCodeMap = CharacterCodeMap;
+			characterCode = CharacterCode;
 		
 			return {
   
@@ -174,16 +174,16 @@
 	}
 	else if (typeof exports != 'undefined') {
 	
-		characterCodeMap = require('tw/ace33022/util/CharacterCodeMap.js');
+		characterCode = require('tw/ace33022/util/map/CharacterCode.js');
 	
 		module.exports.encodeUTF8ToBig5 = encodeUTF8ToBig5;
 		module.exports.repeat = repeat;
 	}
 	else {
 	
-		load(root.tw.ace33022.RequireJSConfig.baseUrl + root.tw.ace33022.RequireJSConfig.paths["CharacterCodeMap"] + '.js');
+		load(root.tw.ace33022.RequireJSConfig.baseUrl + root.tw.ace33022.RequireJSConfig.paths["tw.ace33022.util.map.CharacterCode"] + '.js');
 		
-		characterCodeMap = root.tw.ace33022.util.CharacterCodeMap;
+		characterCode = root.tw.ace33022.util.map.CharacterCode;
 	
 		if (typeof root.tw.ace33022.functions.Word == 'undefined') root.tw.ace33022.functions.Word = {};
 		

@@ -72,6 +72,7 @@
  * @version 2025/11/10 ace 新增Math。
  * @version 2025/12/24 ace 新增Misc。
  * @version 2025/12/29 ace 新增CharacterCodeMap。
+ * @version 2025/12/29 ace 新增CharacterCode。
  * @version 2025/12/29 ace 新增Word。
  *
  * @author ace
@@ -205,14 +206,13 @@
 			"js-logger": "js-logger-1.6.0/src/logger",	/* @version 2020/09/04 ace 新增GitHub - jonnyreeves/js-logger: Lightweight, unobtrusive, configurable JavaScript logger.(https://github.com/jonnyreeves/js-logger)。 */
 
 			// Cross Platform Util
-			"tw.ace33022.util.StringUtil": acePath + 'util/StringUtil',
-			"tw.ace33022.util.CodeMapUtil": acePath + 'util/CodeMapUtil',	/* @version 2017/02/22 新增CodeMapUtil.js。 */
 			"tw.ace33022.util.XLSXUtil": acePath + 'util/XLSXUtil',	/* @version 2017/02/22 新增XLSXUtil.js。 */
 			"tw.ace33022.util.RLifeUtil": acePath + 'util/RLifeUtil',	/* @version 2018/09/01 新增RLifeUtil。 */
 			"tw.ace33022.util.RLife": acePath + 'util/RLife',	/* @version 2023/03/25 ace 新增RLife。 */
-			"tw.ace33022.util.HTTPUtil": acePath + 'util/HTTPUtil',	/* @version 2020/08/12 新增HTTPUtil。 */
 			
-			"tw.ace33022.util.CharacterCodeMap": acePath + 'util/CharacterCodeMap',	/* @version 2025/12/29 ace 新增CharacterCodeMap。 */
+			"tw.ace33022.util.CharacterCodeMap": acePath + 'util/CharacterCodeMap',		/* @version 2025/12/29 ace 新增CharacterCodeMap。 */
+			"tw.ace33022.util.map.CharacterCode": acePath + 'util/map/CharacterCode',	/* @version 2025/12/29 ace 新增CharacterCode。 */
+			"tw.ace33022.util.map.HttpCode": acePath + 'util/map/HttpCode',						/* @version 2025/12/29 ace 新增HttpCode。 */
 			
 			"tw.ace33022.DataStructure": acePath + 'DataStructure',	/* @version 2025/11/04 ace 新增DataStructure。 */
 			
@@ -227,7 +227,8 @@
 			
 			"tw.ace33022.browser.functions.Misc": acePath + 'browser/functions/Misc',	/* @version 2025/12/24 ace 新增Misc。 */
 			
-			"tw.ace33022.browser.component.test-component-01": acePath + 'browser/component/test-component-01',	/* @version 2025/12/24 ace 新增Misc。 */
+			// UI
+			"tw.ace33022.browser.component.test-component-01": acePath + 'browser/ui/component/test-component-01',	/* @version 2025/12/24 ace 新增Misc。 */
 			
 			"tw.ace33022.rhino.functions.Stock": acePath + 'rhino/functions/Stock',	/* @version 2025/08/19 ace 新增Stock。 */
 			
