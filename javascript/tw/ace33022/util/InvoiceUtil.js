@@ -12,33 +12,29 @@
 	 * @comment 傳入的發票獎項陣列資料不再判斷年月，故傳入前應處理成只有對獎月份的陣列資料。
 	 * 
 	 */
-	var doGetInvoicePrizeItem = function(arrInvoicePrizeLogs, invoiceNo) {
+	var doGetInvoicePrizeItem = function(invoiceNo, arrayInvoicePrizeLog) {
 
 		var result = '';
 			
 		var index;
-		var invoicePrizeLogs;
 		var parizeItem;
-		var itemIndex;
 		
-		for (index = 0; index < arrInvoicePrizeLogs.length; index++) {
+		for (index = 0; index < arrayInvoicePrizeLog.length; index++) {
 		
-			invoicePrizeLogs = arrInvoicePrizeLogs[index];
+			if (arrayInvoicePrizeLog[index].getPrizeItem() == '0001') {
 			
-			if (invoicePrizeLogs.getPrizeItem() == '0001') {
-			
-				prizeItem = parseInt(invoicePrizeLogs.getPrizeItem());
+				prizeItem = parseInt(arrayInvoicePrizeLog[index].getPrizeItem());
 				
 				for (prizeItem; prizeItem <= 6; prizeItem++) {
 
-					if (doCheckInvoicePrize(invoiceNo, invoicePrizeLogs.getInvoiceNo().substring(prizeItem - 1), root.sprintf('%04d', prizeItem))) result = root.sprintf('%04d', prizeItem);
+					if (doCheckInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo().substring(prizeItem - 1), root.sprintf('%04d', prizeItem))) result = root.sprintf('%04d', prizeItem);
 					
 					if (result != '') break;
 				}
 			}
 			else {
 
-				if (doCheckInvoicePrize(invoiceNo, invoicePrizeLogs.getInvoiceNo(), invoicePrizeLogs.getPrizeItem())) result = invoicePrizeLogs.getPrizeItem();	
+				if (doCheckInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo(), arrayInvoicePrizeLog[index].getPrizeItem())) result = arrayInvoicePrizeLog[index].getPrizeItem();	
 			}
 			
 			if (result != '') break;
@@ -59,6 +55,7 @@
 	var doCheckInvoicePrize = function(invoiceNo, invoicePrizeNo, prizeItem) {
 	
 		var result = false;
+		
 		var no = invoiceNo;
 	
 		// 發票號碼10碼表示包含前置2個英文字母。
@@ -104,7 +101,7 @@
 		return result;
 	};
 	
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define([], function() { 
 		
@@ -115,7 +112,7 @@
 			}
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		module.exports = doGetInvoicePrizeItem;
 		module.exports = doCheckInvoicePrize;

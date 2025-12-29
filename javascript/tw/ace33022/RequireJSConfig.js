@@ -61,11 +61,18 @@
  * @version 2019/04/08 ace 新增peerjs。
  * @version 2020/08/12 ace 新增HTTPUtil。
  * @version 2020/09/04 ace 新增GitHub - jonnyreeves/js-logger: Lightweight, unobtrusive, configurable JavaScript logger.(https://github.com/jonnyreeves/js-logger)。
- * @version 2020/12/04 ace 新增ValidateUtil。
+ * @version 2020/12/04 ace 新增Validate。
  * @version 2021/07/07 ace 新增AndreaLombardo/BootSideMenu: BootSideMenu is a jQuery plugin to easily build a sliding menu in a Bootstrap based application.(https://github.com/AndreaLombardo/BootSideMenu)。
  * @version 2021/07/09 ace 新增tw.ace33022.vo.Lottery539Log。
  * @version 2023/03/25 ace 新增RLife。
  * @version 2023/10/11 ace 新增Sort。
+ * @version 2025/07/17 ace 新增Google。
+ * @version 2025/08/19 ace 新增Stock。
+ * @version 2025/11/04 ace 新增DataStructure。
+ * @version 2025/11/10 ace 新增Math。
+ * @version 2025/12/24 ace 新增Misc。
+ * @version 2025/12/29 ace 新增CharacterCodeMap。
+ * @version 2025/12/29 ace 新增Word。
  *
  * @author ace
  *
@@ -124,6 +131,7 @@
 	var acePath;
 	var voPath;
 	var daoPath;
+	var pathDAO;
 	var browserUIPath;
 	
 	if (typeof process != 'undefined') {
@@ -144,13 +152,13 @@
 			else {
 			
 				// result = require(process.env.NODE_PATH + '/' + 'tw/ace33022/Configuration.js');
-				Configuration = require('tw/Configuration.js');
+				Configuration = require('tw/ace33022/Configuration.js');
 			}
 		}
 		else {
 		
 			// Configuration = require(process.env.ConfigurationFile);
-			Configuration = require('tw/Configuration.js');
+			Configuration = require('tw/ace33022/Configuration.js');
 		}
 	}
 	else {
@@ -164,7 +172,9 @@
 
 	acePath = Configuration["AceDir"] + '/';
 	voPath = Configuration["VODir"] + '/';
-	daoPath = Configuration["DAODir"] + '/';
+	// daoPath = Configuration["DAODir"] + '/';
+	daoPath = Configuration["dirDAO"] + '/';
+	pathDAO = Configuration["dirDAO"] + '/';
 	browserUIPath = Configuration["BrowserUIDir"] + '/';
 	
 	result = {
@@ -177,7 +187,8 @@
 		// baseUrl: '../javascripts',
 		// baseUrl: Configuration.JSLibDir + '/',
 		// "baseUrl": Configuration["JSLibDir"],
-		"baseUrl": Configuration["JavaScriptLibDir"],
+		// "baseUrl": Configuration["JavaScriptLibDir"],
+		"baseUrl": Configuration["dirJavaScriptLib"] + '/',
 
     "paths": {
 
@@ -201,11 +212,24 @@
 			"tw.ace33022.util.RLife": acePath + 'util/RLife',	/* @version 2023/03/25 ace 新增RLife。 */
 			"tw.ace33022.util.HTTPUtil": acePath + 'util/HTTPUtil',	/* @version 2020/08/12 新增HTTPUtil。 */
 			
+			"tw.ace33022.util.CharacterCodeMap": acePath + 'util/CharacterCodeMap',	/* @version 2025/12/29 ace 新增CharacterCodeMap。 */
+			
+			"tw.ace33022.DataStructure": acePath + 'DataStructure',	/* @version 2025/11/04 ace 新增DataStructure。 */
+			
 			"tw.ace33022.functions.Datetime": acePath + 'functions/Datetime',
 			"tw.ace33022.functions.Validate": acePath + 'functions/Validate',
-			"tw.ace33022.functions.DataStructure": acePath + 'functions/DataStructure',
+			"tw.ace33022.functions.Word": acePath + 'functions/Word',	/* @version 2025/12/29 ace 新增Word。 */
+			"tw.ace33022.functions.Math": acePath + 'functions/Math',	/* @version 2025/11/10 ace 新增Math。 */
 			"tw.ace33022.functions.Sort": acePath + 'functions/Sort',	/* @version 2023/10/11 ace 新增Sort。 */
+			"tw.ace33022.functions.Stock": acePath + 'functions/Stock',	/* @version 2025/08/19 ace 新增Stock。 */
+			"tw.ace33022.functions.Google": acePath + 'functions/Google',	/* @version 2025/07/17 ace 新增Google。 */
 			// "tw.ace33022.functions.Wunderlist": acePath + 'functions/Wunderlist',	/* @version 2018/09/17 新增Wunderlist。 */
+			
+			"tw.ace33022.browser.functions.Misc": acePath + 'browser/functions/Misc',	/* @version 2025/12/24 ace 新增Misc。 */
+			
+			"tw.ace33022.browser.component.test-component-01": acePath + 'browser/component/test-component-01',	/* @version 2025/12/24 ace 新增Misc。 */
+			
+			"tw.ace33022.rhino.functions.Stock": acePath + 'rhino/functions/Stock',	/* @version 2025/08/19 ace 新增Stock。 */
 			
 			"tw.ace33022.util.InitDataUtil": acePath + 'util/InitDataUtil',	/* @version 2017/06/19 新增tw.ace33022.ace33022.util.InitDataUtil。 */
 
@@ -364,7 +388,6 @@
 			'tw.ace33022.vo.ForeignFutureOptionDayTrnLog': voPath + 'ForeignFutureOptionDayTrnLog',
 			'tw.ace33022.vo.DealerFutureOptionDayTrnLog': voPath + 'DealerFutureOptionDayTrnLog',
 			'tw.ace33022.vo.InvestFutureOptionDayTrnLog': voPath + 'InvestFutureOptionDayTrnLog',
-			'Stocks': voPath + 'Stocks',
 			'ForeignStocksDayTrnLogs': voPath + 'ForeignStocksDayTrnLogs',
 			'DealerStocksDayTrnLogs': voPath + 'DealerStocksDayTrnLogs',
 			'InvestStocksDayTrnLogs': voPath + 'InvestStocksDayTrnLogs',
@@ -406,34 +429,34 @@
 			'UserTels': voPath + 'UserTels',
 
 			// dao
-			"tw.ace33022.dao.Ancestor": daoPath + 'Ancestor',
-			"tw.ace33022.dao.db.Ancestor": daoPath + 'db/Ancestor',
-			"tw.ace33022.dao.ws.Ancestor": daoPath + 'ws/Ancestor',
-			"tw.ace33022.dao.ls.Ancestor": daoPath + 'ls/Ancestor',
+			"tw.ace33022.dao.Ancestor": pathDAO + 'Ancestor',
+			"tw.ace33022.dao.db.Ancestor": pathDAO + 'db/Ancestor',
+			"tw.ace33022.dao.ws.Ancestor": pathDAO + 'ws/Ancestor',
+			"tw.ace33022.dao.ls.Ancestor": pathDAO + 'ls/Ancestor',
 
 			// dao.db.vo
-			"tw.ace33022.dao.db.vo.Ancestor": daoPath + 'db/vo/Ancestor',
-			'tw.ace33022.dao.db.vo.TWSEDayTrnLog': daoPath + 'db/vo/TWSEDayTrnLog',
-			'tw.ace33022.dao.db.vo.FoundationAmountDayTrnLog': daoPath + 'db/vo/FoundationAmountDayTrnLog',
-			'tw.ace33022.dao.db.vo.ForeignHandedStockLog': daoPath + 'db/vo/ForeignHandedStockLog',
-			'tw.ace33022.dao.db.vo.FutureDayTrnLog': daoPath + 'db/vo/FutureDayTrnLog',
-			'tw.ace33022.dao.db.vo.ForeignFutureDayTrnLog': daoPath + 'db/vo/ForeignFutureDayTrnLog',
-			'tw.ace33022.dao.db.vo.DealerFutureDayTrnLog': daoPath + 'db/vo/DealerFutureDayTrnLog',
-			'tw.ace33022.dao.db.vo.InvestFutureDayTrnLog': daoPath + 'db/vo/InvestFutureDayTrnLog',
-			'tw.ace33022.dao.db.vo.FutureLargeStayAllLog': daoPath + 'db/vo/FutureLargeStayAllLog',
-			'tw.ace33022.dao.db.vo.FutureLargeStayLog': daoPath + 'db/vo/FutureLargeStayLog',
-			'tw.ace33022.dao.db.vo.OptionCallDayTrnLog': daoPath + 'db/vo/OptionCallDayTrnLog',
-			'tw.ace33022.dao.db.vo.OptionPutDayTrnLog': daoPath + 'db/vo/OptionPutDayTrnLog',
-			'tw.ace33022.dao.db.vo.ForeignOptionDayTrnLog': daoPath + 'db/vo/ForeignOptionDayTrnLog',
-			'tw.ace33022.dao.db.vo.DealerOptionDayTrnLog': daoPath + 'db/vo/DealerOptionDayTrnLog',
-			'tw.ace33022.dao.db.vo.InvestOptionDayTrnLog': daoPath + 'db/vo/InvestOptionDayTrnLog',
-			'tw.ace33022.dao.db.vo.OptionCallLargeStayAllLog': daoPath + 'db/vo/OptionCallLargeStayAllLog',
-			'tw.ace33022.dao.db.vo.OptionCallLargeStayLog': daoPath + 'db/vo/OptionCallLargeStayLog',
-			'tw.ace33022.dao.db.vo.OptionPutLargeStayAllLog': daoPath + 'db/vo/OptionPutLargeStayAllLog',
-			'tw.ace33022.dao.db.vo.OptionPutLargeStayLog': daoPath + 'db/vo/OptionPutLargeStayLog',
-			'tw.ace33022.dao.db.vo.ForeignFutureOptionDayTrnLog': daoPath + 'db/vo/ForeignFutureOptionDayTrnLog',
-			'tw.ace33022.dao.db.vo.DealerFutureOptionDayTrnLog': daoPath + 'db/vo/DealerFutureOptionDayTrnLog',
-			'tw.ace33022.dao.db.vo.InvestFutureOptionDayTrnLog': daoPath + 'db/vo/InvestFutureOptionDayTrnLog',
+			"tw.ace33022.dao.db.vo.Ancestor": pathDAO + 'db/vo/Ancestor',
+			'tw.ace33022.dao.db.vo.TWSEDayTrnLog': pathDAO + 'db/vo/TWSEDayTrnLog',
+			'tw.ace33022.dao.db.vo.FoundationAmountDayTrnLog': pathDAO + 'db/vo/FoundationAmountDayTrnLog',
+			'tw.ace33022.dao.db.vo.ForeignHandedStockLog': pathDAO + 'db/vo/ForeignHandedStockLog',
+			'tw.ace33022.dao.db.vo.FutureDayTrnLog': pathDAO + 'db/vo/FutureDayTrnLog',
+			'tw.ace33022.dao.db.vo.ForeignFutureDayTrnLog': pathDAO + 'db/vo/ForeignFutureDayTrnLog',
+			'tw.ace33022.dao.db.vo.DealerFutureDayTrnLog': pathDAO + 'db/vo/DealerFutureDayTrnLog',
+			'tw.ace33022.dao.db.vo.InvestFutureDayTrnLog': pathDAO + 'db/vo/InvestFutureDayTrnLog',
+			'tw.ace33022.dao.db.vo.FutureLargeStayAllLog': pathDAO + 'db/vo/FutureLargeStayAllLog',
+			'tw.ace33022.dao.db.vo.FutureLargeStayLog': pathDAO + 'db/vo/FutureLargeStayLog',
+			'tw.ace33022.dao.db.vo.OptionCallDayTrnLog': pathDAO + 'db/vo/OptionCallDayTrnLog',
+			'tw.ace33022.dao.db.vo.OptionPutDayTrnLog': pathDAO + 'db/vo/OptionPutDayTrnLog',
+			'tw.ace33022.dao.db.vo.ForeignOptionDayTrnLog': pathDAO + 'db/vo/ForeignOptionDayTrnLog',
+			'tw.ace33022.dao.db.vo.DealerOptionDayTrnLog': pathDAO + 'db/vo/DealerOptionDayTrnLog',
+			'tw.ace33022.dao.db.vo.InvestOptionDayTrnLog': pathDAO + 'db/vo/InvestOptionDayTrnLog',
+			'tw.ace33022.dao.db.vo.OptionCallLargeStayAllLog': pathDAO + 'db/vo/OptionCallLargeStayAllLog',
+			'tw.ace33022.dao.db.vo.OptionCallLargeStayLog': pathDAO + 'db/vo/OptionCallLargeStayLog',
+			'tw.ace33022.dao.db.vo.OptionPutLargeStayAllLog': pathDAO + 'db/vo/OptionPutLargeStayAllLog',
+			'tw.ace33022.dao.db.vo.OptionPutLargeStayLog': pathDAO + 'db/vo/OptionPutLargeStayLog',
+			'tw.ace33022.dao.db.vo.ForeignFutureOptionDayTrnLog': pathDAO + 'db/vo/ForeignFutureOptionDayTrnLog',
+			'tw.ace33022.dao.db.vo.DealerFutureOptionDayTrnLog': pathDAO + 'db/vo/DealerFutureOptionDayTrnLog',
+			'tw.ace33022.dao.db.vo.InvestFutureOptionDayTrnLog': pathDAO + 'db/vo/InvestFutureOptionDayTrnLog',
 
 			'ForeignStocksDayTrnLogsDAO': daoPath + 'db/vo/ForeignStocksDayTrnLogsDAO',
 			'DealerStocksDayTrnLogsDAO': daoPath + 'db/vo/DealerStocksDayTrnLogsDAO',

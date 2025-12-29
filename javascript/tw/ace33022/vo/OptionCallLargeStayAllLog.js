@@ -49,29 +49,29 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setProductCode = function(value) { if (value) productCode = value; return value; }
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setPreFiveBuy = function(value) { if (value) preFiveBuy = value; return value; }
-		this.setPreFiveJurBuy = function(value) { if (value) preFiveJurBuy = value; return value; }
-		this.setPreTenBuy = function(value) { if (value) preTenBuy = value; return value; }
-		this.setPreTenJurBuy = function(value) { if (value) preTenJurBuy = value; return value; }
-		this.setPreFiveSell = function(value) { if (value) preFiveSell = value; return value; }
-		this.setPreFiveJurSell = function(value) { if (value) preFiveJurSell = value; return value; }
-		this.setPreTenSell = function(value) { if (value) preTenSell = value; return value; }
-		this.setPreTenJurSell = function(value) { if (value) preTenJurSell = value; return value; }
-		this.setStayQty = function(value) { if (value) stayQty = value; return value; }
+		this.setProductCode = function(value) {if (value) productCode = value; return value;}
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setPreFiveBuy = function(value) {if (value) preFiveBuy = value; return value;}
+		this.setPreFiveJurBuy = function(value) {if (value) preFiveJurBuy = value; return value;}
+		this.setPreTenBuy = function(value) {if (value) preTenBuy = value; return value;}
+		this.setPreTenJurBuy = function(value) {if (value) preTenJurBuy = value; return value;}
+		this.setPreFiveSell = function(value) {if (value) preFiveSell = value; return value;}
+		this.setPreFiveJurSell = function(value) {if (value) preFiveJurSell = value; return value;}
+		this.setPreTenSell = function(value) {if (value) preTenSell = value; return value;}
+		this.setPreTenJurSell = function(value) {if (value) preTenJurSell = value; return value;}
+		this.setStayQty = function(value) {if (value) stayQty = value; return value;}
 		
-		this.getProductCode = function() { return productCode; }
-		this.getTrnDate = function() { return trnDate; }
-		this.getPreFiveBuy = function() { return preFiveBuy; }
-		this.getPreFiveJurBuy = function() { return preFiveJurBuy; }
-		this.getPreTenBuy = function() { return preTenBuy; }
-		this.getPreTenJurBuy = function() { return preTenJurBuy; }
-		this.getPreFiveSell = function() { return preFiveSell; }
-		this.getPreFiveJurSell = function() { return preFiveJurSell; }
-		this.getPreTenSell = function() { return preTenSell; }
-		this.getPreTenJurSell = function() { return preTenJurSell; }
-		this.getStayQty = function() { return stayQty; }
+		this.getProductCode = function() {return productCode;}
+		this.getTrnDate = function() {return trnDate;}
+		this.getPreFiveBuy = function() {return preFiveBuy;}
+		this.getPreFiveJurBuy = function() {return preFiveJurBuy;}
+		this.getPreTenBuy = function() {return preTenBuy;}
+		this.getPreTenJurBuy = function() {return preTenJurBuy;}
+		this.getPreFiveSell = function() {return preFiveSell;}
+		this.getPreFiveJurSell = function() {return preFiveJurSell;}
+		this.getPreTenSell = function() {return preTenSell;}
+		this.getPreTenJurSell = function() {return preTenJurSell;}
+		this.getStayQty = function() {return stayQty;}
   
 		// JSON物件資料。
 		this.toJSONObject = function() {
@@ -134,7 +134,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.Ancestor", "underscore"], function(Ancestor) {
 		
@@ -145,7 +145,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -159,11 +159,11 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
+			if (typeof root.tw.ace33022.vo.Ancestor == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
 		}
 		
 		_ = root._;

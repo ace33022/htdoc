@@ -10,6 +10,7 @@
  * @version 2021/07/11 ace 新增String物件預設函數。
  * @version 2022/10/17 ace 合併NameSpace原有功能，減少另外建立檔案處理命名空間的問題。
  * @version 2024/12/29 ace 新增enableJVMExternalCLibrary屬性。
+ * @version 2025/04/21 ace 新增GoogleAppsScriptMacroUrl屬性。
  *
  * @author ace
  *
@@ -26,12 +27,10 @@
 		"timeFormatString": "HHmmss",
 		"SaveTimeFormatString": "HHmmss",
 		"ShowTimeFormatString": "HH:mm:ss",
+		"sexy_novel_directory_name": "SexyNovel",
 		"RESTfulRelativePath": "ws/rs/",
 		"requirejsFile": "javascript/requirejs/require.js"
 	};
-	
-  var jsLibDir = 'javascript';
-	var javaScriptLibDir = 'javascript';
 	
 	var Database = function() {return null;}
 	
@@ -96,12 +95,12 @@
 
 		var out;
 
-		if (typeof console !== 'undefined') {
+		if (typeof console != 'undefined') {
 
 			// nodeJS執行環境
 			out = console.log;
 		}
-		else if (typeof print !== 'undefined') {
+		else if (typeof print != 'undefined') {
 
 			// Rhino執行環境
 			out = print;
@@ -122,77 +121,142 @@
 		return this;
 	}
 	
+	// Namespace
 	if (typeof root.tw == 'undefined') root.tw = {};
 	if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = {};
+	
+  if (typeof root.tw.ace33022.po == 'undefined') root.tw.ace33022.po = {};
+	if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = {};
+  if (typeof root.tw.ace33022.bo == 'undefined') root.tw.ace33022.bo = {};
+	
 	if (typeof root.tw.ace33022.util == 'undefined') root.tw.ace33022.util = {};
 	if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = {};
-	if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = {};
+	
 	if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = {};
 	if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = {};
+  if (typeof root.tw.ace33022.dao.db.po == 'undefined') root.tw.ace33022.dao.db.po = {};
 	if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = {};
+	if (typeof root.tw.ace33022.dao.db.program == 'undefined') root.tw.ace33022.dao.db.program = {};
 	if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = {};
 	if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = {};
+	if (typeof root.tw.ace33022.dao.ws.program == 'undefined') root.tw.ace33022.dao.ws.program = {};
 	
-	if (typeof process != 'undefined') {
-
-    // nodeJS執行環境
-		
-		// console.log('Process DefaultConfiguration...');
-		
-		if (typeof nw != 'undefined') {
-		
-			// process.env.NODE_DIR = process.env.NODE_PATH;
-		}
-		else {
-		
-			// if (!process.env.NODE_DIR) throw new Error('NODE_DIR is undefined!');
-		}
-
-    // jsLibDir = process.env.NODE_DIR;
-	}
-	else {
-
-    if (typeof Packages != 'undefined') {
-
-      // Rhino執行環境
-			
-      jsLibDir = Packages.java.lang.System.getProperty('JSLibDir');
-			javaScriptLibDir = Packages.java.lang.System.getProperty('JavaScriptLibDir');
-    }
-	}
+	if (typeof root.tw.ace33022.rhino == 'undefined') root.tw.ace33022.rhino = {};
+	if (typeof root.tw.ace33022.rhino.functions == 'undefined') root.tw.ace33022.rhino.functions = {};
+	if (typeof root.tw.ace33022.rhino.google == 'undefined') root.tw.ace33022.rhino.google = {};
+	if (typeof root.tw.ace33022.rhino.google.apps == 'undefined') root.tw.ace33022.rhino.google.apps = {};
+	if (typeof root.tw.ace33022.rhino.google.apps.script == 'undefined') root.tw.ace33022.rhino.google.apps.script = {};
+	
+	if (typeof root.tw.ace33022.google == 'undefined') root.tw.ace33022.google = {};
+	if (typeof root.tw.ace33022.google.apps == 'undefined') root.tw.ace33022.google.apps = {};
+	if (typeof root.tw.ace33022.google.apps.functions == 'undefined') root.tw.ace33022.google.apps.functions = {};
+	
+	if (typeof console != 'undefined') console.log('Execute DefaultConfiguration');
 	
 	result["Database"] = new Database();
 	result["location"] = new LocationInformation();
 	result["logger"] = new logger();
-	result["isGoogleAppsScriptPlatform"] = function() {
-	
-		var result = false;
-		
-		if (typeof ScriptApp != 'undefined') result = true;
-		
-		return result;
-	}
-	result["getCURLExeFile"] = function() {return 'T:/package/net/curl/bin/curl.exe';}
 	
 	result["paths"] = new Object();
 	
-	result["JSLibDir"] = jsLibDir;
-	result["JSLibPath"] = jsLibDir + '/';
-	result["JavaScriptLibDir"] = javaScriptLibDir;
+	result["isRhinoPlatform"] = function() {return (typeof Packages != 'undefined') ? true : false;}
+	result["isGoogleAppsScriptPlatform"] = function() {return (typeof ScriptApp != 'undefined') ? true : false;}
+	result["enableJVMExternalCLibrary"] = 1;	// @memo 2024/12/29 ace 控制JVM是否使用載入dll檔案執行功能(如果有對應的dll檔案與函數)。
+	
 	result["AceDir"] = 'tw/ace33022';
 	result["VODir"] = result["AceDir"] + '/vo';
 	result["DAODir"] = result["AceDir"] + '/dao/Rhino';
 	result["BrowserUIDir"] = result["AceDir"] + '/program/browser';
-		
-	result["loggingPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/logging.properties';
-	result["log4jPropertiesFile"] = jsLibDir + '/tw/ace33022/util/Rhino/log4j.properties';
 	
-	result["userSpaceDir"] = 'W:/UserSpace';
-	result["tempDir"] = 'O:/tmp';
-	result["DelphiBaseDir"] = 'K:/ReThink/Pascal/ExecuteEnv';
-	result["enableJVMExternalCLibrary"] = 1;	// @memo 2024/12/29 ace 控制JVM是否使用載入dll檔案執行功能(如果有對應的dll檔案與函數)。
+	result["workDir"] = 'W:';
+	
+	result["JSLibDir"] = 'javascript';
+	// result["JSLibPath"] = jsLibDir + '/';
+	result["JavaScriptLibDir"] = 'javascript';
+	result["dirJavaScriptLib"] = 'javascript';
+	
+	if (result["isRhinoPlatform"]()) {
+
+		// Rhino執行環境
 		
-	// if ((typeof Packages === 'undefined') && (typeof document !== 'undefined')) {}
+		if (Packages.java.lang.System.getProperty('WorkDir') != null) result["workDir"] = Packages.java.lang.System.getProperty('WorkDir');
+		
+		// if (Packages.java.lang.System.getProperty('JSLibDir') != null) result["JSLibDir"] = 'javascript';
+		// if (Packages.java.lang.System.getProperty('JavaScriptLibDir') != null) result["JavaScriptLibDir"] = 'javascript';
+		
+		result["dirJavaScriptLib"] = result["workDir"] + '/' + 'javascript';
+		
+		result["JSLibDir"] = result["dirJavaScriptLib"];
+		result["JavaScriptLibDir"] = result["dirJavaScriptLib"];
+		
+		result["loggingPropertiesFile"] = result["dirJavaScriptLib"] + '/tw/ace33022/util/Rhino/logging.properties';
+		result["log4jPropertiesFile"] = result["dirJavaScriptLib"] + '/tw/ace33022/util/Rhino/log4j.properties';
+		
+		result["userSpaceDir"] = result["workDir"] + '/' + 'UserSpace';
+		result["tempDir"] = 'O:/tmp';
+	}
+	
+	if (!String.prototype.startsWith) {
+	
+		/**
+		 *
+		 * This method lets you determine whether or not a string begins with another string. This method is case-sensitive.
+		 *  
+		 * @author ace
+		 * 
+		 * @version 2021/07/11 ace 初始版本。   
+		 *   
+		 * @param {String} The characters to be searched for at the start of this string.
+		 * @param {Integer} The position in this string at which to begin searching for searchString. Defaults to 0.
+		 *   
+		 * @return true if the given characters are found at the beginning of the string; otherwise, false.
+		 * @type Boolean
+		 *   
+		 * @requires 
+		 *     
+		 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> 
+		 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith">String.prototype.startsWith() - JavaScript | MDN</a> 
+		 * @see <a href="https://mozilla.github.io/rhino/compat/engines.html">Rhino ES2015/ES6, ES2016 and ES2017 support</a> 
+		 *
+		 */
+		String.prototype.startsWith = function(searchString, position) {
+		
+			var startsPosition = position > 0 ? position || 0 : 0;
+			
+      return this.substring(startsPosition, startsPosition + searchString.length) == searchString;
+		}
+	}
+
+	if (!String.prototype.endsWith) {
+	
+		/**
+		 *
+		 * This method lets you determine whether or not a string ends with another string. This method is case-sensitive.
+		 *  
+		 * @author ace
+		 * 
+		 * @version 2025/09/01 ace 初始版本。   
+		 *   
+		 * @param {String} The characters to be searched for at the end of str. Cannot be a regex. All values that are not regexes are coerced to strings, so omitting it or passing undefined causes endsWith() to search for the string "undefined", which is rarely what you want.
+		 * @param {Integer} The end position at which searchString is expected to be found (the index of searchString's last character plus 1). Defaults to str.length.
+		 *   
+		 * @return true if the given characters are found at the end of the string, including when searchString is an empty string; otherwise, false.
+		 * @type Boolean
+		 *   
+		 * @requires 
+		 * 
+		 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a> 
+		 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith">String.prototype.endsWith()</a> 
+		 * @see <a href="https://mozilla.github.io/rhino/compat/engines.html">Rhino ES2015/ES6, ES2016 and ES2017 support</a> 
+		 *
+		 */
+		String.prototype.endsWith = function(searchString, position) {
+		
+			var endPosition = position > 0 ? position || this.length - searchString.length : this.length - searchString.length;
+			
+      return this.substring(endPosition) == searchString;
+		}
+	}
 	
 	/**
 	 *
@@ -270,36 +334,7 @@
 		
 		return result;
 	}
-
-	if (!String.prototype.startsWith) {
 	
-		/**
-		 *
-		 * This method lets you determine whether or not a string begins with another string. This method is case-sensitive.
-		 *  
-		 * @author ace
-		 * 
-		 * @version 2021/07/11 ace 初始版本。   
-		 *   
-		 * @param {String} The characters to be searched for at the start of this string.
-		 * @param {Integer} The position in this string at which to begin searching for searchString. Defaults to 0.
-		 *   
-		 * @return true if the given characters are found at the beginning of the string; otherwise, false.
-		 * @type Boolean
-		 *   
-		 * @requires 
-		 *     
-		 * @see <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/startsWith">String.prototype.startsWith() - JavaScript | MDN</a> 
-		 *
-		 */
-		String.prototype.startsWith = function(searchString, position) {
-		
-			var pos = position > 0 ? position | 0 : 0;
-			
-      return this.substring(pos, pos + searchString.length) == searchString;
-		}
-	}
-
 	/**
 	 *
 	 * 格式化日期。
@@ -320,7 +355,7 @@
 	 * @see <a href="http://www.dotblogs.com.tw/wxvbbo/archive/2008/03/31/2368.aspx">利用JAVA SCRIPT來格式化日期</a>  
 	 *
 	 */
-	Date.prototype.formatDate = function(format) {     
+	Date.prototype.formatDate = function(format) {
 
 		var date = this;
 		

@@ -46,7 +46,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(['tw.ace33022.vo.OptionCallDayTrnLog', 'underscore'], function(OptionCallDayTrnLog) {
 		
@@ -57,7 +57,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	

@@ -33,6 +33,66 @@
 
 	/**
 	 *
+	 * @description 統一編號驗證
+	 *
+	 * @see <a href="https://www.fia.gov.tw/">財政部財政資訊中心</a>
+	 * @see <a href="https://www.fia.gov.tw/singlehtml/3?cntId=c4d9cff38c8642ef8872774ee9987283">營利事業統一編號檢查碼邏輯修正說明-財政部財政資訊中心</a>
+	 * @see <a href="https://www.fia.gov.tw/download/ff9c37611e9e46dab952676d24dc0b67">附件-營利事業統一編號檢查碼邏輯修正說明</a>
+	 *
+	 * @see <a href="https://www.skrnet.com/skrjs/demo/js0161.htm">統一編號檢查實作</a>
+	 * @see <a href="https://syj0905.github.io/javascript/20191119/2134109134/">JavaScript - 統一編號驗證實作 | Cloud F2E Blog</a>
+	 * @see <a href="https://cynthiachuang.github.io/Check-Tax-ID-Number/">ID驗證系列｜公司統一編號驗 | 辛西亞的技能樹</a>
+	 * @see <a href="https://yarnpkg.com/package?name=taiwan-id-validator">taiwan-id-validator | Yarn</a>
+	 *
+	 * @see <a href="https://www.webtech.tw/info.php?tid=JavaScript_%E7%9A%84%E9%99%A4%E6%B3%95">JavaScript 的除法 - 網頁設計教學站</a>
+	 * 
+	 * @version 2025/04/23 ace 初始版本。
+	 *  
+	 * @author ace
+	 *
+	 */
+	function validateTaiwanUID(value) {
+
+		var result = false;
+		
+		var sumWeight = 0;
+		
+		if (/\d{8}/.test(value)) {
+		
+			// console.log(value[0]);	// '0'
+			// console.log(value.charCodeAt(0));	// 48
+			
+			sumWeight = parseInt(value[0]) + parseInt(value[2]) + parseInt(value[4]) + parseInt(value[7]);
+			
+			sumWeight += Math.floor((parseInt(value[1]) * 2) / 10);	// 取十位數
+			sumWeight += (parseInt(value[1]) * 2) % 10;							// 取個位數
+			
+			sumWeight += Math.floor((parseInt(value[3]) * 2) / 10);	// 取十位數
+			sumWeight += (parseInt(value[3]) * 2) % 10;							// 取個位數
+			
+			sumWeight += Math.floor((parseInt(value[5]) * 2) / 10);	// 取十位數
+			sumWeight += (parseInt(value[5]) * 2) % 10;							// 取個位數
+			
+			if (!(value[6] == '7')) {
+			
+				sumWeight += Math.floor((parseInt(value[6]) * 4) / 10);	// 取十位數
+				sumWeight += (parseInt(value[6]) * 4) % 10;							// 取個位數
+
+				if ((sumWeight % 5) == 0) result = true;
+			}
+			else {
+			
+				if ((sumWeight % 5) == 0) result = true;
+
+				if ((!result) && (((sumWeight + 1) % 5) == 0)) result = true;
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 *
 	 * @description 發票格式檢查
 	 *
 	 * @version 2015/06/15 ace 初始版本。
@@ -95,6 +155,7 @@
 			return {
   
 				validateEmailAddress: validateEmailAddress,
+				validateTaiwanUID: validateTaiwanUID,
 				validateInvoiceNo: validateInvoiceNo,
 				validateNaturalPersonCertificate: validateNaturalPersonCertificate,
 				validateMobileVehicleCode: validateMobileVehicleCode
@@ -104,6 +165,7 @@
 	else if (typeof exports !== 'undefined') {
 	
 		module.exports = validateEmailAddress;
+		module.exports = validateTaiwanUID;
 		module.exports = validateInvoiceNo;
 		module.exports = validNaturalPersonCertificate;
 		module.exports = validateMobileVehicleCode;
@@ -113,6 +175,7 @@
 		root.tw.ace33022.functions.Validate = {};
 		
 		root.tw.ace33022.functions.Validate.validateEmailAddress = validateEmailAddress;
+		root.tw.ace33022.functions.Validate.validateTaiwanUID = validateTaiwanUID;
 		root.tw.ace33022.functions.Validate.validateInvoiceNo = validateInvoiceNo;
 		root.tw.ace33022.functions.Validate.validateNaturalPersonCertificate = validateNaturalPersonCertificate;
 		root.tw.ace33022.functions.Validate.validateMobileVehicleCode = validateMobileVehicleCode;

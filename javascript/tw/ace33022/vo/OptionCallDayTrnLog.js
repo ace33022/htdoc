@@ -49,29 +49,29 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setProductCode = function(value) { if (value) productCode = value; return value; }
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setConMonth = function(value) { if (value) conMonth = value; return value; }
-		this.setStrikePrice = function(value) { if (value) strikePrice = value; return value; }
-		this.setOpenPrice = function(value) { if (value) openPrice = value; return value; }
-		this.setHighPrice = function(value) { if (value) highPrice = value; return value; }
-		this.setLowPrice = function(value) { if (value) lowPrice = value; return value; }
-		this.setClosePrice = function(value) { if (value) closePrice = value; return value; }
-		this.setLastCalPrice = function(value) { if (value) lastCalPrice = value; return value; }
-		this.setTrnQty = function(value) { if (value) trnQty = value; return value; }
-		this.setStayQty = function(value) { if (value) stayQty = value; return value; }
+		this.setProductCode = function(value) {if (value) productCode = value; return value;}
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setConMonth = function(value) {if (value) conMonth = value; return value;}
+		this.setStrikePrice = function(value) {if (value) strikePrice = value; return value;}
+		this.setOpenPrice = function(value) {if (value) openPrice = value; return value;}
+		this.setHighPrice = function(value) {if (value) highPrice = value; return value;}
+		this.setLowPrice = function(value) {if (value) lowPrice = value; return value;}
+		this.setClosePrice = function(value) {if (value) closePrice = value; return value;}
+		this.setLastCalPrice = function(value) {if (value) lastCalPrice = value; return value;}
+		this.setTrnQty = function(value) {if (value) trnQty = value; return value;}
+		this.setStayQty = function(value) {if (value) stayQty = value; return value;}
   
-		this.getProductCode = function() { return productCode; }
-		this.getTrnDate	= function() { return trnDate; }
-		this.getConMonth = function() { return conMonth; }
-		this.getStrikePrice = function() { return strikePrice; }
-		this.getOpenPrice = function() { return openPrice; }
-		this.getHighPrice = function() { return highPrice; }
-		this.getLowPrice = function() { return lowPrice; }
-		this.getClosePrice = function() { return closePrice; }
-		this.getLastCalPrice = function() { return lastCalPrice; }
-		this.getTrnQty = function() { return trnQty; }
-		this.getStayQty = function() { return stayQty; }
+		this.getProductCode = function() {return productCode;}
+		this.getTrnDate	= function() {return trnDate;}
+		this.getConMonth = function() {return conMonth;}
+		this.getStrikePrice = function() {return strikePrice;}
+		this.getOpenPrice = function() {return openPrice;}
+		this.getHighPrice = function() {return highPrice;}
+		this.getLowPrice = function() {return lowPrice;}
+		this.getClosePrice = function() {return closePrice;}
+		this.getLastCalPrice = function() {return lastCalPrice;}
+		this.getTrnQty = function() {return trnQty;}
+		this.getStayQty = function() {return stayQty;}
   
 		// JSON物件資料。
 		this.toJSONObject = function () {

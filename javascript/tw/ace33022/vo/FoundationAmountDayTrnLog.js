@@ -45,25 +45,25 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setDealerBuy = function(value) { if (value) dealerBuy = value; return value; }
-		this.setDealerSell = function(value) { if (value) dealerSell = value; return value; }
-		this.setDealerHedgeBuy = function(value) { if (value) dealerHedgeBuy = value; return value; }
-		this.setDealerHedgeSell = function(value) { if (value) dealerHedgeSell = value; return value; }
-		this.setInvestBuy = function(value) { if (value) investBuy = value; return value; }
-		this.setInvestSell = function(value) { if (value) investSell = value; return value; }
-		this.setForeignBuy = function(value) { if (value) foreignBuy = value; return value; }
-		this.setForeignSell = function(value) { if (value) foreignSell = value; return value; }
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setDealerBuy = function(value) {if (value) dealerBuy = value; return value;}
+		this.setDealerSell = function(value) {if (value) dealerSell = value; return value;}
+		this.setDealerHedgeBuy = function(value) {if (value) dealerHedgeBuy = value; return value;}
+		this.setDealerHedgeSell = function(value) {if (value) dealerHedgeSell = value; return value;}
+		this.setInvestBuy = function(value) {if (value) investBuy = value; return value;}
+		this.setInvestSell = function(value) {if (value) investSell = value; return value;}
+		this.setForeignBuy = function(value) {if (value) foreignBuy = value; return value;}
+		this.setForeignSell = function(value) {if (value) foreignSell = value; return value;}
   
-		this.getTrnDate = function() { return trnDate; }
-		this.getDealerBuy = function() { return dealerBuy; }
-		this.getDealerSell = function() { return dealerSell; }
-		this.getDealerHedgeBuy = function() { return dealerHedgeBuy; }
-		this.getDealerHedgeSell = function() { return dealerHedgeSell; }
-		this.getInvestBuy = function() { return investBuy; }
-		this.getInvestSell = function() { return investSell; }
-		this.getForeignBuy = function() { return foreignBuy; }
-		this.getForeignSell = function() { return foreignSell; }
+		this.getTrnDate = function() {return trnDate;}
+		this.getDealerBuy = function() {return dealerBuy;}
+		this.getDealerSell = function() {return dealerSell;}
+		this.getDealerHedgeBuy = function() {return dealerHedgeBuy;}
+		this.getDealerHedgeSell = function() {return dealerHedgeSell;}
+		this.getInvestBuy = function() {return investBuy;}
+		this.getInvestSell = function() {return investSell;}
+		this.getForeignBuy = function() {return foreignBuy;}
+		this.getForeignSell = function() {return foreignSell;}
   
 		// JSON物件資料。
 		this.toJSONObject = function() {
@@ -91,8 +91,8 @@
 			this.setTrnDate(value["trn_date"]);
 			this.setDealerBuy(value["dealer_buy"]);
 			this.setDealerSell(value["dealer_sell"]);
-			this.setHedgeDealerBuy(value["dealer_hedge_buy"]);
-			this.setHedgeDealerSell(value["dealer_hedge_sell"]);
+			this.setDealerHedgeBuy(value["dealer_hedge_buy"]);
+			this.setDealerHedgeSell(value["dealer_hedge_sell"]);
 			this.setInvestBuy(value["invest_buy"]);
 			this.setInvestSell(value["invest_sell"]);
 			this.setForeignBuy(value["foreign_buy"]);
@@ -120,7 +120,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.Ancestor", "underscore"], function(Ancestor) {
 		
@@ -131,7 +131,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -145,11 +145,11 @@
 
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
+			if (typeof root.tw.ace33022.vo.Ancestor == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
 		}
 			
 		_ = root._;

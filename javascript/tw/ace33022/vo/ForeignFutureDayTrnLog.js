@@ -46,27 +46,27 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setProductCode = function(value) { if (value) productCode = value; return value; }
-		this.setBuyQty = function(value) { if (value) buyQty = value; return value; }
-		this.setBuyTotal = function(value) { if (value) buyTotal = value; return value; }
-		this.setSellQty = function(value) { if (value) sellQty = value; return value; }
-		this.setSellTotal = function(value) { if (value) sellTotal = value; return value; }
-		this.setStayBuyQty = function(value) { if (value) stayBuyQty = value; return value; }
-		this.setStayBuyTotal = function(value) { if (value) stayBuyTotal = value; return value; }
-		this.setStaySellQty = function(value) { if (value) staySellQty = value; return value; }
-		this.setStaySellTotal = function(value) { if (value) staySellTotal = value; return value; }
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setProductCode = function(value) {if (value) productCode = value; return value;}
+		this.setBuyQty = function(value) {if (value) buyQty = value; return value;}
+		this.setBuyTotal = function(value) {if (value) buyTotal = value; return value;}
+		this.setSellQty = function(value) {if (value) sellQty = value; return value;}
+		this.setSellTotal = function(value) {if (value) sellTotal = value; return value;}
+		this.setStayBuyQty = function(value) {if (value) stayBuyQty = value; return value;}
+		this.setStayBuyTotal = function(value) {if (value) stayBuyTotal = value; return value;}
+		this.setStaySellQty = function(value) {if (value) staySellQty = value; return value;}
+		this.setStaySellTotal = function(value) {if (value) staySellTotal = value; return value;}
   
-		this.getTrnDate = function() { return trnDate; }
-		this.getProductCode = function() { return productCode; }
-		this.getBuyQty = function() { return buyQty; }
-		this.getBuyTotal = function() { return buyTotal; }
-		this.getSellQty = function() { return sellQty; }
-		this.getSellTotal = function() { return sellTotal; }
-		this.getStayBuyQty = function() { return stayBuyQty; }
-		this.getStayBuyTotal = function() { return stayBuyTotal; }
-		this.getStaySellQty = function() { return staySellQty; }
-		this.getStaySellTotal = function() { return staySellTotal; }
+		this.getTrnDate = function() {return trnDate;}
+		this.getProductCode = function() {return productCode;}
+		this.getBuyQty = function() {return buyQty;}
+		this.getBuyTotal = function() {return buyTotal;}
+		this.getSellQty = function() {return sellQty;}
+		this.getSellTotal = function() {return sellTotal;}
+		this.getStayBuyQty = function() {return stayBuyQty;}
+		this.getStayBuyTotal = function() {return stayBuyTotal;}
+		this.getStaySellQty = function() {return staySellQty;}
+		this.getStaySellTotal = function() {return staySellTotal;}
   
 		// JSON物件資料。
 		this.toJSONObject = function() {
@@ -88,9 +88,9 @@
 			return _.extend(result, uber.toJSONObject());
 		}
   
-		this.setValueFromJSON = function(value) {
+		this.setValueFromJSONObject = function(value) {
   
-			uber.setValueFromJSON(value);
+			uber.setValueFromJSONObject(value);
     
 			this.setTrnDate(value["trn_date"]);
 			this.setProductCode(value["product_code"]);
@@ -126,7 +126,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.Ancestor", "underscore"], function(Ancestor) {
 		
@@ -137,7 +137,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -151,11 +151,11 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
+			if (typeof root.tw.ace33022.vo.Ancestor == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.Ancestor"] + '.js');
 		}
 		
 		_ = root._;

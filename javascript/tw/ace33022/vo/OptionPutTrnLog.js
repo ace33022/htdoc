@@ -42,7 +42,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(['tw.ace33022.vo.OptionCallTrnLog', 'underscore'], function(OptionCallTrnLog) {
 		
@@ -53,7 +53,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -83,7 +83,7 @@
       if (typeof root._ == 'undefined') root._ = Underscore.load();
     }
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
 			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['underscore'] + '.js');
 			

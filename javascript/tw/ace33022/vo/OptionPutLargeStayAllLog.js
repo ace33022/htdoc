@@ -47,7 +47,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.OptionCallLargeStayAllLog", "underscore"], function(OptionCallLargeStayAllLog) {
 		
@@ -58,7 +58,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -72,11 +72,11 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 		
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.OptionCallLargeStayAllLog === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
+			if (typeof root.tw.ace33022.vo.OptionCallLargeStayAllLog == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
 		}
 		
 		_ = root._;

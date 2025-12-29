@@ -39,7 +39,7 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setConMonth = function(value) { if (value) conMonth = value; return value; }
+		this.setConMonth = function(value) {if (value) conMonth = value; return value;}
   
 		this.getConMonth = function() {return conMonth;}
   
@@ -74,7 +74,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.OptionCallLargeStayAllLog", "underscore"], function(OptionCallLargeStayAllLog) {
 		
@@ -85,7 +85,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -99,11 +99,11 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.OptionCallLargeStayAllLog === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
+			if (typeof root.tw.ace33022.vo.OptionCallLargeStayAllLog == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
 		}
 		
 		_ = root._;

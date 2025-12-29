@@ -40,15 +40,15 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setStockCode = function(value) { if (value) stockCode = value; return value; }
-		this.setPublishedQty = function(value) { if (value) publishedQty = value; return value; }
-		this.setHandedQty = function(value) { if (value) handedQty = value; return value; }
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setStockCode = function(value) {if (value) stockCode = value; return value;}
+		this.setPublishedQty = function(value) {if (value) publishedQty = value; return value;}
+		this.setHandedQty = function(value) {if (value) handedQty = value; return value;}
   
-		this.getTrnDate = function() { return trnDate; }
-		this.getStockCode = function() { return stockCode; }
-		this.getPublishedQty = function() { return publishedQty; }
-		this.getHandedQty = function() { return handedQty; }
+		this.getTrnDate = function() {return trnDate;}
+		this.getStockCode = function() {return stockCode;}
+		this.getPublishedQty = function() {return publishedQty;}
+		this.getHandedQty = function() {return handedQty;}
   
 		// JSON物件資料。
 		this.toJSONObject = function() {
@@ -64,9 +64,9 @@
 			return _.extend(result, uber.toJSONObject());
 		}
   
-		this.setValueFromJSON = function(value) {
+		this.setValueFromJSONObject = function(value) {
   
-			uber.setValueFromJSON(value);
+			uber.setValueFromJSONObject(value);
     
 			this.setTrnDate(value["trn_date"]);
 			this.setStockCode(value["stock_code"]);

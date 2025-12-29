@@ -40,7 +40,7 @@
 		this.getConMonth = function() { return conMonth; }
   
 		// @version 2015/04/02 JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setConMonth = function(value) { if (value) conMonth = value; return value; }
+		this.setConMonth = function(value) {if (value) conMonth = value; return value;}
   
 		// JSON物件資料。
 		this.toJSONObject = function() {
@@ -53,9 +53,9 @@
 			return _.extend(result, uber.toJSONObject());
 		}
   
-		this.setValueFromJSON = function(value) {
+		this.setValueFromJSONObject = function(value) {
   
-			uber.setValueFromJSON(value);
+			uber.setValueFromJSONObject(value);
     
 			this.setConMonth(value["con_month"]);
 		}
@@ -70,7 +70,7 @@
     }
 	}
 	
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.FutureLargeStayAllLog", "underscore"], function(Ancestor) {
 		
@@ -81,7 +81,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -95,11 +95,11 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 	
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["underscore"] + '.js');
 			
-			if (typeof root.tw.ace33022.vo.FutureLargeStayAllLog === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.FutureLargeStayAllLog"] + '.js');
+			if (typeof root.tw.ace33022.vo.FutureLargeStayAllLog == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.vo.FutureLargeStayAllLog"] + '.js');
 		}
 			
 		_ = root._;

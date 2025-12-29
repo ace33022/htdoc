@@ -188,7 +188,7 @@
 		saveAs(blob, filename);
 	};
 	
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["js-xlsx", "filesaver", "blob"], function() { 
 		
@@ -200,7 +200,7 @@
 			}
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		module.exports = Workbook;
 		module.exports = getSheetFromArrayOfArrays;
@@ -208,7 +208,7 @@
 	}
 	else {
 	
-		if (typeof root.tw.ace33022.RequireJSConfig === 'undefined') throw new Error('tw.ace33022.RequireJSConfig is undefined.');
+		if (typeof root.tw.ace33022.RequireJSConfig == 'undefined') throw new Error('tw.ace33022.RequireJSConfig is undefined.');
 		
 		root.tw.ace33022.utils.XLSXUtils.Workbook = Workbook;
 		root.tw.ace33022.utils.XLSXUtils.getSheetFromArrayOfArrays = getSheetFromArrayOfArrays;

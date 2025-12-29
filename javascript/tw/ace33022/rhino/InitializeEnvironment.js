@@ -67,17 +67,35 @@ Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.
 
   // @todo 2023/09/13 ace 在Tomcat環境下如何搭配使用ServletContext?
 	root.logger = Packages.tw.ace33022.functions.Misc.getLog(loggerName);
+	
+	// @version 2013/03/04 新增alert函數對應print函數。
+	if (typeof root.print == 'undefined') root.print = function(msg) {Packages.java.lang.System.out.println(msg);}
+	
+	// if (typeof root.alert == 'undefined') root.alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
+	if (typeof root.alert == 'undefined') root.alert = root.print;
+	
+	if (typeof root["window"] == 'undefined') {
+
+		root["window"] = {};
+		
+		if (typeof root["window"]["document"] == 'undefined') root["document"] = {};
+		
+		if (typeof root["window"]["console"] == 'undefined') root["window"]["console"] = {};
+		if (typeof root["window"]["console"]["log"] == 'undefined') root["window"]["console"]["log"] = print;
+	}
+	
+	if (typeof root["console"] == 'undefined') root["console"] = root["window"]["console"];
+	
+	if (typeof root["Logger"] == 'undefined') {
+
+		root["Logger"] = {};
+		root["Logger"]["log"] = function(value) {root.console.log(value);}	// 對應Google Apps Script語法。
+	}
 })(this);
 
-// @memo 2024/09/05 ace 應該由各別程式顯示系統狀態，初始化過程執行這個動作會有重複執行的困擾。
+// @memo 2024/09/05 ace 由各別程式顯示系統狀態，初始化過程執行這個動作會有重複執行的困擾。
 // Packages.tw.ace33022.util.Misc.checkEnvironmentSetting(logger);
 // Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
-
-// @version 2013/03/04 新增alert函數對應print函數。
-if (typeof print == 'undefined') print = function(msg) {Packages.java.lang.System.out.println(msg);}
-
-// if (typeof alert == 'undefined') alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
-if (typeof alert == 'undefined') alert = print;
 
 if (typeof module == 'undefined') {
 
@@ -85,27 +103,6 @@ if (typeof module == 'undefined') {
 	// module = {};
 	// module.exports = {};
 }
-
-if (typeof window == 'undefined') {
-
-	window = {};
-	
-	if (typeof window["document"] == 'undefined') window["document"] = {};
-	if (typeof window["console"] == 'undefined') window["console"] = {};
-	if (typeof window["console"]["log"] == 'undefined') window["console"]["log"] = print;
-}
-
-if (typeof console == 'undefined') console = window["console"];
-
-if (typeof Logger == 'undefined') {
-
-	Logger = {};
-	Logger.log = function(value) {console.log(value);}	// 對應Google Apps Script語法。
-}
-
-// @version 2014/12/11 新增全域變數JSLibDir。
-// @version 2015/02/25 全域變數JSLibDir改以Configuration.JSLibDir取代。
-// var JSLibDir = 'L:/js';
 
 // @version 2013/10/14 新增載入require.js(https://github.com/micmath/Rhino-Require)。
 // @version 2013/11/24 取消載入require.js(https://github.com/micmath/Rhino-Require)，與require.js(http://requirejs.org/)衝突。
@@ -116,12 +113,16 @@ if (typeof Logger == 'undefined') {
 // json2.js中使用alert函數進行警告提示，在沒有定義alert的狀況下載入會造成例外狀況發生。
 // @version 2015/02/25 全域變數JSLibDir改以Configuration.JSLibDir取代。
 // load(Configuration["JSLibDir"] + '/tw/ace33022/json2.js');
-load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/json2.js');
+// load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/json2.js');
+load(Configuration["dirJavaScriptLib"] + '/tw/ace33022/json2.js');
 	
 // load(Configuration["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js');
-load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js');
+// load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js');
+load(Configuration["dirJavaScriptLib"] + '/tw/ace33022/RequireJSConfig.js');
 
-if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSConfig.baseUrl += '/';
+// @memo 2025/08/07 ace rhitno的早期版本還沒有提供endsWith()函數。
+// if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSConfig.baseUrl += '/';
+if (tw.ace33022.RequireJSConfig.baseUrl.substring(tw.ace33022.RequireJSConfig.baseUrl.length - 1) != '/') tw.ace33022.RequireJSConfig.baseUrl += '/';
 
 // importClass(Packages.javax.swing.JOptionPane); JOptionPane.showMessageDialog(null, 'Start Load');
 // Libre Office的Rhino版本進行load的順序有問題？改成各別檔案依需求增加判斷再載入。
@@ -163,7 +164,6 @@ Logger.useDefaults({
   },
 });
 */
-
 
 (function(window, undefined) {
 

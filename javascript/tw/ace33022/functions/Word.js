@@ -12,6 +12,94 @@
 
 (function(root) {
 
+	var characterCodeMap;
+	
+	/**
+	 *
+	 * @description 將encodeURI編碼的中文字UTF8碼對照encodedUTF8ToBIG5Map轉換成BIG5碼。
+	 *
+	 * @param {String} source 來源字串。
+	 *
+	 * @return {String} 結果字串。
+	 *
+	 * @memberof module:StringUtils
+	 *
+	 * @version 2017/02/20 ace 初始版本。
+	 *
+	 * @author ace
+	 *
+	 * @see {@link https://www.w3schools.com/jsref/jsref_escape.asp|JavaScript escape() Function}
+	 * @see {@link https://www.w3schools.com/jsref/jsref_unescape.asp|JavaScript unescape() Function}
+	 * @see {@link https://www.w3schools.com/jsref/jsref_encodeuri.asp|JavaScript encodeURI() Function}
+	 * @see {@link https://www.w3schools.com/jsref/jsref_decodeuri.asp|JavaScript decodeURI() Function}
+	 * @see {@link https://www.w3schools.com/jsref/jsref_encodeuricomponent.asp|JavaScript encodeURIComponent() Function}
+	 * @see {@link https://www.w3schools.com/jsref/jsref_decodeuricomponent.asp|JavaScript decodeURIComponent() Function}
+	 *
+	 * @see {@link http://www.findbestopensource.com/product/utf8tobig5|Utf8tobig5 - A Javascript code which encode utf8 to big5}
+	 * @see {@link https://code.google.com/archive/p/utf8tobig5/|Google Code Archive - Long-term storage for Google Code Project Hosting.}
+	 *
+	 */
+	function encodeUTF8ToBig5(source) {
+
+		function encodeUTF8ToBig5SUB(source, table) {
+
+			if (source[0] == "%") {
+		
+				// var temp = source.substring(0, 3).toLowerCase();
+				var temp = source.substring(0, 3).toUpperCase();
+			
+				if (table[temp]) {
+		 
+					var r = table[temp];
+				
+					if (typeof r == 'string') {
+			 
+						return {
+				 
+							"left": source.substring(3),
+							"result": r
+						};   
+					} 
+					else {
+				
+						return encodeUTF8ToBig5SUB(source.substring(3), r);
+					}
+				}	 
+				else {
+		 
+					return {
+			 
+						"left": source.substring(3),
+						"result": temp
+					};
+				}
+			} 
+			else {
+		
+				return {
+			
+					"left": source.substring(1),
+					"result": source[0]
+				};
+			}
+		};
+		
+		var result = '';
+		var left = source;
+	
+		var cr;
+
+		while (left.length > 0) {
+	
+			cr = encodeUTF8ToBig5SUB(left, characterCodeMap.mapUTF8ToBIG5);
+		
+			left = cr.left;
+			result += cr.result;
+		}
+
+		return result;
+	};
+	
 	/**
 	 *
 	 * @description 刪除字串前後的空白、不可列印控制字元。
@@ -73,22 +161,33 @@
 	
 	if (typeof define == 'function') {
 	
-		define([], function() { 
+		define(["tw.ace33022.util.CharacterCodeMap"], function(CharacterCodeMap) { 
+		
+			characterCodeMap = CharacterCodeMap;
 		
 			return {
   
+				"encodeUTF8ToBig5": encodeUTF8ToBig5,
 				"repeat": repeat
 			}
 		});
 	}
 	else if (typeof exports != 'undefined') {
 	
+		characterCodeMap = require('tw/ace33022/util/CharacterCodeMap.js');
+	
+		module.exports.encodeUTF8ToBig5 = encodeUTF8ToBig5;
 		module.exports.repeat = repeat;
 	}
 	else {
 	
-		root.tw.ace33022.functions.Word = {};
+		load(root.tw.ace33022.RequireJSConfig.baseUrl + root.tw.ace33022.RequireJSConfig.paths["CharacterCodeMap"] + '.js');
 		
+		characterCodeMap = root.tw.ace33022.util.CharacterCodeMap;
+	
+		if (typeof root.tw.ace33022.functions.Word == 'undefined') root.tw.ace33022.functions.Word = {};
+		
+		root.tw.ace33022.functions.Word.encodeUTF8ToBig5 = encodeUTF8ToBig5;
 		root.tw.ace33022.functions.Word.repeat = repeat;
 	}
 })(this);

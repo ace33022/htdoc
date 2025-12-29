@@ -8,8 +8,8 @@
  * @version 2024/04/23 ace 新增loadLink函數。
  * @version 2024/04/23 ace favicon設定改以程式處理。
  * @version 2024/09/17 ace 新增傳入參數JavaScriptLibDir。
- *
- * @author ace
+ * @version 2025/05/12 ace 增加shuffle函數到Array的原型鏈。
+ * @version 2025/07/16 ace 新增googleAppsMacroId屬性。
  *
  * @see {@link https://developer.mozilla.org/en-US/docs/Web|Web technology for developers | MDN}
  * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript|JavaScript | MDN}
@@ -21,14 +21,16 @@
  * @see {@link http://www.javascriptkit.com/javatutors/|JavaScript Kit Advanced JavaScript Tutorials}
  * @see {@link http://www.javascriptkit.com/javatutors/trycatch2.shtml|The Error object and throwing your own errors}
  *
- * @memo 2021/07/02 ace Rhino沒有提供startsWith函數？
+ * @author ace
  *
  */
 (function(root) {
 
 	var result;
 	
-	if (typeof process !== 'undefined') {
+	if (typeof console != 'undefined') console.log('Execute Configuration');
+	
+	if (typeof process != 'undefined') {
 
 		// nodeJS執行環境
 		
@@ -62,46 +64,44 @@
 	}
 	else {
 	
-    if (typeof AppsScript != 'undefined') {
-      
-      if (typeof root.tw == 'undefined') root.tw = AppsScript.tw;
-      if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = AppsScript.tw.ace33022;
-      if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = AppsScript.tw.ace33022.functions;
-      if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = AppsScript.tw.ace33022.vo;
-      if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = AppsScript.tw.ace33022.dao;
-      if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = AppsScript.tw.ace33022.dao.db;
-      if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = AppsScript.tw.ace33022.dao.db.vo;
-      if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = AppsScript.tw.ace33022.dao.ws;
-      if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = AppsScript.tw.ace33022.dao.ws.vo;
-
-      root.tw.ace33022.DefaultConfiguration = AppsScript.tw.ace33022.DefaultConfiguration;
-    }
-		
 		if (typeof Packages != 'undefined') {
 
 			// Rhino執行環境
 			
-			// 從Java啟動來呼叫時，基本環境並沒有load。
-			if (typeof load === 'undefined') load = function(file) {Packages.tw.ace33022.util.Rhino.load(context, scope, new Packages.java.io.File(file));}
+			// 從Java啟動來呼叫時，基本環境並沒有print。
+			if (typeof print == 'undefined') print = function(message) {Packages.java.lang.System.out.println(message);}
 			
-			if (typeof print != 'undefined') print('JSLibDir: ' + Packages.java.lang.System.getProperty('JSLibDir'));
-			if (typeof print != 'undefined') print('JavaScriptLibDir: ' + Packages.java.lang.System.getProperty('JavaScriptLibDir'));
+			// 從Java啟動來呼叫時，基本環境並沒有load。
+			if (typeof load == 'undefined') load = function(file) {Packages.tw.ace33022.functions.Rhino.load(context, scope, new Packages.java.io.File(file));}
+			
+			if (typeof print != 'undefined') print('WorkDir: ' + Packages.java.lang.System.getProperty('WorkDir'));
 
-			// if (Packages.java.lang.System.getProperty('WorkPath') == null) throw new Error('WorkPath is undefined!');
-			if (Packages.java.lang.System.getProperty('WorkDir') == null) throw new Error('WorkDir is undefined!');
-			// if (Packages.java.lang.System.getProperty('JSLibDir') == null) throw new Error('JSLibDir is undefined!');
-			if (Packages.java.lang.System.getProperty('JavaScriptLibDir') == null) throw new Error('JavaScriptLibDir is undefined!');
+			if (Packages.java.lang.System.getProperty('WorkDir') == null) throw new Error('Property WorkDir is undefined!');
 			
 			// if (typeof print != 'undefined') print('load NameSpace...');
 			// load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/NameSpace.js');
 
 			if (typeof print != 'undefined') print('load DefaultConfiguration...');
-			// load(Packages.java.lang.System.getProperty('JSLibDir') + '/tw/ace33022/DefaultConfiguration.js');
-			load(Packages.java.lang.System.getProperty('JavaScriptLibDir') + '/tw/ace33022/DefaultConfiguration.js');
+			load(Packages.java.lang.System.getProperty('WorkDir') + '/javascript/tw/ace33022/DefaultConfiguration.js');
+			
+			if (typeof print != 'undefined') print('load UrlFetchApp...');
+			load(Packages.java.lang.System.getProperty('WorkDir') + '/javascript/tw/ace33022/rhino/google/apps/script/UrlFetchApp.js');
 		}
 
 		if (typeof root.tw == 'undefined') throw new Error('NameSpace is undefined!');
 		if (typeof root.tw.ace33022.DefaultConfiguration == 'undefined') throw new Error('DefaultConfiguration is undefined!');
+		
+    if (typeof AppsScript != 'undefined') {
+      
+			if (typeof root.tw == 'undefined') root.tw = AppsScript.tw;
+			
+      // root.tw.ace33022.DefaultConfiguration = AppsScript.tw.ace33022.DefaultConfiguration;
+    }
+		
+		if (root.tw.ace33022.DefaultConfiguration.isRhinoPlatform()) {
+		
+			if (typeof root.UrlFetchApp == 'undefined') root.UrlFetchApp = root.tw.ace33022.rhino.google.apps.script.UrlFetchApp;
+		}
 		
 		result = root.tw.ace33022.DefaultConfiguration;
 	}
@@ -281,7 +281,7 @@
 
 			for (index = 0; index < metas.length; index++) {
 
-				if (metas[index].getAttribute('name') === 'load-nw_inject_end') {
+				if (metas[index].getAttribute('name') == 'load-nw_inject_end') {
 
 					result = metas[index].getAttribute('content');
 					break;
@@ -306,6 +306,9 @@
 					break;
 				}
 			}
+			
+			// if (result == '') result = 'bootstrap';
+			result = result == '' ? 'bootstrap' : result;
 			
 			return result;
 		})();
@@ -360,6 +363,7 @@
 	// Browser environment
 	// result["JSLibDir"] = 'javascript';
 	result["DAODir"] = 'tw/ace33022/dao/browser';
+	result["dirDAO"] = 'tw/ace33022/dao/browser';
 	result["BrowserUIDir"] = 'tw/ace33022/program/browser/bootstrap';
 	
 	result["paths"]["tw.ace33022.util.InitReSetUtil"] = 'tw/ace33022/util/browser/InitReSetUtil';
@@ -369,6 +373,13 @@
 	result["pushbullet"]["token"] = 'o.auSaSfpkxFijkoAwoA93GsSkl2ojlrnf';
 	// result["pushbullet"]["default_iden"] = 'ujDUuu4dFNQdjzWIEVDzOK';		// Xiaomi
 	result["pushbullet"]["default_iden"] = 'ujDUuu4dFNQdjAiVsKnSTs';			// chrome
+	
+	// @version 2025/07/16 ace 新增googleAppsMacroId屬性。
+	result["googleAppsMacroId"] = {};
+	result["googleAppsMacroId"]["optionRealtimeTrnData"] = "AKfycbxBfr7SJTZz0-Ugkn8fDf3M-2Z_RJe5qHyWgnBWVQUlRKvND6DAquXiGe6yB93So7bJuw";
+	result["googleAppsMacroId"]["OptionPromptTrnLog"] = "AKfycbxBfr7SJTZz0-Ugkn8fDf3M-2Z_RJe5qHyWgnBWVQUlRKvND6DAquXiGe6yB93So7bJuw";
+	result["googleAppsMacroId"]["sexyNovel"] = "AKfycbzdC0V6hzmQwoxMjro4em2SCzPJVFHCQhO8kL1JEf0Mokk7DbYJo8MmwngJttWYVLGi";
+	result["googleAppsMacroId"]["reEditSexyNovel"] = "AKfycbync8PpBEcDH04b4Bh_QLFmS7pqDjdkNRwXs8LyHudetkX4l8FuoZL9DQUBPT1WTV8FHA";
 	
 	// result["paths"]["videojs"] = 'https://cdnjs.cloudflare.com/ajax/libs/video.js/6.2.0/video.min';
 	// result["paths"]["videojs-hotkeys"] = 'https://cdn.sc.gl/videojs-hotkeys/0.2/videojs.hotkeys.min';
@@ -442,6 +453,11 @@
 				"main": "lib/codemirror"
 			});
 			
+			result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/functions/Sort.js', function() {
+			
+				// Array.prototype.shuffle = root.tw.ace33022.functions.Sort.shuffle;
+			});
+			
 			result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 			
 				// document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].setAttribute('href', 'https://ace33022.github.io/htdoc/');
@@ -475,6 +491,12 @@
 				// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/3.1.3/css/jasny-bootstrap.min.css');
 				
 				// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
+				
+				result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/functions/Sort.js', function() {
+				
+					// @version 2025/05/12 ace 增加shuffle函數到Array的原型鏈。
+					// Array.prototype.shuffle = root.tw.ace33022.functions.Sort.shuffle;
+				});
 				
 				result.loadJS(result["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js', function() {
 				
@@ -522,11 +544,18 @@
 	
 		root["Configuration"] = result;
 		
+		root.tw.ace33022.Configuration = result;
+
+		// @memo 2025/09/03 ace Google Apps Script資料庫有自己的context，與Rhino會共用context的方式不同，所以採用注入的方式設定AppsScript.Configuration，可以採用外部提供的Configuration。
+    if (typeof AppsScript != 'undefined') {
+
+      AppsScript.Configuration = result;
+    }
+		
 		if (typeof Packages != 'undefined') {
 		
-			result["JSLibDir"] = Packages.java.lang.System.getProperty('JSLibDir');
-			result["JavaScriptLibDir"] = Packages.java.lang.System.getProperty('JavaScriptLibDir');
-			result["DAODir"] = 'tw/ace33022/dao/Rhino';
+			// result["DAODir"] = 'tw/ace33022/dao/Rhino';
+			result["dirDAO"] = 'tw/ace33022/rhino/dao';
 			
 			// Packages.java.lang.System.setProperty(new Packages.java.lang.String('launch.configuration.ini'), new Packages.java.lang.String(Packages.java.lang.System.getenv('WEB-INFDir') + '/' + 'ReThink.ini'));
 			
@@ -591,7 +620,11 @@
 			
 			if (typeof print != 'undefined') print('load Rhino InitializeEnvironment.js');
 			
-			load(root["Configuration"]["JavaScriptLibDir"] + '/tw/ace33022/rhino/InitializeEnvironment.js');
+			load(root["tw"]["ace33022"]["Configuration"]["dirJavaScriptLib"] + '/tw/ace33022/rhino/InitializeEnvironment.js');
+			
+			// load(root["Configuration"]["dirJavaScriptLib"] + '/tw/ace33022/functions/Sort.js');
+			
+			// Array.prototype.shuffle = root.tw.ace33022.functions.Sort.shuffle;
 		}
 	}
 })(this);

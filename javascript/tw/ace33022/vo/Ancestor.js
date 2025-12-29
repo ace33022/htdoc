@@ -155,7 +155,7 @@
 		this.initInsertDateTime();
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 
 		define(["tw.ace33022.functions.Datetime"], function(Datetime) {
 		
@@ -165,7 +165,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 		
@@ -178,7 +178,7 @@
 	
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 
 			// load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.util.DatetimeUtil"] + '.js');
 			load(RequireJSConfig.baseUrl + RequireJSConfig.paths["tw.ace33022.functions.Datetime"] + '.js');

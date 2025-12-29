@@ -8,6 +8,7 @@
  * @require tw.ace33022.vo.Ancestor
  *
  * @version 2021/01/31 ace 初始版本。
+ * @version 2025/09/03 ace 增加保證金欄位。
  *
  * @author ace
  *
@@ -29,6 +30,7 @@
 		var bestAskQty = 0; 	// 委賣量
 		var bestBidPrice = 0; // 委買價
 		var bestBidQty = 0; 	// 委買量
+		var marginPrice = 0;	// 保證金
 
 		var uber = new ancestor();
 		
@@ -36,15 +38,17 @@
 		// this.prototype = uber;	// 保留原型鍊。
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
 	
-		this.setBestAskPrice = function(value) { if (value) bestAskPrice = value; return value; }
-		this.setBestAskQty = function(value) { if (value) bestAskQty = value; return value; }
-		this.setBestBidPrice = function(value) { if (value) bestBidPrice = value; return value; }
-		this.setBestBidQty = function(value) { if (value) bestBidQty = value; return value; }
+		this.setBestAskPrice = function(value) {if (value) bestAskPrice = value; return value;}
+		this.setBestAskQty = function(value) {if (value) bestAskQty = value; return value;}
+		this.setBestBidPrice = function(value) {if (value) bestBidPrice = value; return value;}
+		this.setBestBidQty = function(value) {if (value) bestBidQty = value; return value;}
+		this.setMarginPrice = function(value) {if (value) marginPrice = value; return value;}
 
-	  this.getBestAskPrice = function() { return bestAskPrice; }
-    this.getBestAskQty = function() { return bestAskQty; }
-		this.getBestBidPrice = function() { return bestBidPrice; }
-		this.getBestBidQty = function() { return bestBidQty; }
+	  this.getBestAskPrice = function() {return bestAskPrice;}
+    this.getBestAskQty = function() {return bestAskQty;}
+		this.getBestBidPrice = function() {return bestBidPrice;}
+		this.getBestBidQty = function() {return bestBidQty;}
+		this.getMarginPrice = function() {return marginPrice;}
 		
 		this.setValueFromJSONObject = function(value) {
   
@@ -54,6 +58,7 @@
 			if (typeof value["best_ask_qty"] != 'undefined') this.setBestAskQty(value["best_ask_qty"]);
 			if (typeof value["best_bid_price"] != 'undefined') this.setBestBidPrice(value["best_bid_price"]);
 			if (typeof value["best_bid_qty"] != 'undefined') this.setBestBidQty(value["best_bid_qty"]);
+			if (typeof value["margin_price"] != 'undefined') this.setMarginPrice(value["margin_price"]);
 		}
 		
 		this.toJSONObject = function () {
@@ -63,7 +68,8 @@
 				"best_ask_price": bestAskPrice,
 				"best_ask_qty": bestAskQty,
 				"best_bid_price": bestBidPrice,
-				"best_bid_qty": bestBidQty
+				"best_bid_qty": bestBidQty,
+				"margin_price": marginPrice
 			};
     
 			return _.extend(result, uber.toJSONObject());

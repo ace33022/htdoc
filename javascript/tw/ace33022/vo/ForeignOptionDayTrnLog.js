@@ -56,43 +56,43 @@
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
   
 		// @version 2015/04/02 ace JavaScript的資料型別並沒有所謂的null(用於表示物件)，JSON資料傳遞內容並沒有所謂的null資料；因此從資料表取得null資料不適合直接寫入要傳遞的JSON資料傳遞內容。
-		this.setProductCode = function(value) { if (value) productCode = value; return value; }
-		this.setTrnDate = function(value) { if (value) trnDate = value; return value; }
-		this.setCallBuyQty = function(value) { if (value) callBuyQty = value; return value; }
-		this.setCallBuyTotal = function(value) { if (value) callBuyTotal = value; return value; }
-		this.setCallSellQty = function(value) { if (value) callSellQty = value; return value; }
-		this.setCallSellTotal = function(value) { if (value) callSellTotal = value; return value; }
-		this.setPutBuyQty = function(value) { if (value) putBuyQty = value; return value; }
-		this.setPutBuyTotal = function(value) { if (value) putBuyTotal = value; return value; }
-		this.setPutSellQty = function(value) { if (value) putSellQty = value; return value; }
-		this.setPutSellTotal = function(value) { if (value) putSellTotal = value; return value; }
-		this.setStayCallBuyQty = function(value) { if (value) stayCallBuyQty = value; return value; }
-		this.setStayCallBuyTotal = function(value) { if (value) stayCallBuyTotal = value; return value; }
-		this.setStayCallSellQty = function(value) { if (value) stayCallSellQty = value; return value; }
-		this.setStayCallSellTotal = function(value) { if (value) stayCallSellTotal = value; return value; }
-		this.setStayPutBuyQty = function(value) { if (value) stayPutBuyQty = value; return value; }
-		this.setStayPutBuyTotal = function(value) { if (value) stayPutBuyTotal = value; return value; }
-		this.setStayPutSellQty = function(value) { if (value) stayPutSellQty = value; return value; }
-		this.setStayPutSellTotal = function(value) { if (value) stayPutSellTotal = value; return value; }
+		this.setProductCode = function(value) {if (value) productCode = value; return value;}
+		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
+		this.setCallBuyQty = function(value) {if (value) callBuyQty = value; return value;}
+		this.setCallBuyTotal = function(value) {if (value) callBuyTotal = value; return value;}
+		this.setCallSellQty = function(value) {if (value) callSellQty = value; return value;}
+		this.setCallSellTotal = function(value) {if (value) callSellTotal = value; return value;}
+		this.setPutBuyQty = function(value) {if (value) putBuyQty = value; return value;}
+		this.setPutBuyTotal = function(value) {if (value) putBuyTotal = value; return value;}
+		this.setPutSellQty = function(value) {if (value) putSellQty = value; return value;}
+		this.setPutSellTotal = function(value) {if (value) putSellTotal = value; return value;}
+		this.setStayCallBuyQty = function(value) {if (value) stayCallBuyQty = value; return value;}
+		this.setStayCallBuyTotal = function(value) {if (value) stayCallBuyTotal = value; return value;}
+		this.setStayCallSellQty = function(value) {if (value) stayCallSellQty = value; return value;}
+		this.setStayCallSellTotal = function(value) {if (value) stayCallSellTotal = value; return value;}
+		this.setStayPutBuyQty = function(value) {if (value) stayPutBuyQty = value; return value;}
+		this.setStayPutBuyTotal = function(value) {if (value) stayPutBuyTotal = value; return value;}
+		this.setStayPutSellQty = function(value) {if (value) stayPutSellQty = value; return value;}
+		this.setStayPutSellTotal = function(value) {if (value) stayPutSellTotal = value; return value;}
   
-		this.getProductCode = function() { return productCode; }
-		this.getTrnDate = function() { return trnDate; }
-		this.getCallBuyQty = function() { return callBuyQty; }
-		this.getCallBuyTotal = function() { return callBuyTotal; }
-		this.getCallSellQty = function() { return callSellQty; }
-		this.getCallSellTotal = function() { return callSellTotal; }
-		this.getPutBuyQty = function() { return putBuyQty; }
-		this.getPutBuyTotal = function() { return putBuyTotal; }
-		this.getPutSellQty = function() { return putSellQty; }
-		this.getPutSellTotal = function() { return putSellTotal; }
-		this.getStayCallBuyQty = function() { return stayCallBuyQty; }
-		this.getStayCallBuyTotal = function() { return stayCallBuyTotal; }
-		this.getStayCallSellQty = function() { return stayCallSellQty; }
-		this.getStayCallSellTotal = function() { return stayCallSellTotal; }
-		this.getStayPutBuyQty = function() { return stayPutBuyQty; }
-		this.getStayPutBuyTotal = function() { return stayPutBuyTotal; }
-		this.getStayPutSellQty = function() { return stayPutSellQty; }
-		this.getStayPutSellTotal = function() { return stayPutSellTotal; }
+		this.getProductCode = function() {return productCode;}
+		this.getTrnDate = function() {return trnDate;}
+		this.getCallBuyQty = function() {return callBuyQty;}
+		this.getCallBuyTotal = function() {return callBuyTotal;}
+		this.getCallSellQty = function() {return callSellQty;}
+		this.getCallSellTotal = function() {return callSellTotal;}
+		this.getPutBuyQty = function() {return putBuyQty;}
+		this.getPutBuyTotal = function() {return putBuyTotal;}
+		this.getPutSellQty = function() {return putSellQty;}
+		this.getPutSellTotal = function() {return putSellTotal;}
+		this.getStayCallBuyQty = function() {return stayCallBuyQty;}
+		this.getStayCallBuyTotal = function() {return stayCallBuyTotal;}
+		this.getStayCallSellQty = function() {return stayCallSellQty;}
+		this.getStayCallSellTotal = function() {return stayCallSellTotal;}
+		this.getStayPutBuyQty = function() {return stayPutBuyQty;}
+		this.getStayPutBuyTotal = function() {return stayPutBuyTotal;}
+		this.getStayPutSellQty = function() {return stayPutSellQty;}
+		this.getStayPutSellTotal = function() {return stayPutSellTotal;}
   
 		// JSON物件資料。
 		this.toJSONObject = function () {
@@ -176,7 +176,7 @@
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(['tw.ace33022.vo.Ancestor', 'underscore'], function(Ancestor) {
 		
@@ -187,7 +187,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	
@@ -201,11 +201,11 @@
 
 		RequireJSConfig = root.tw.ace33022.RequireJSConfig;
 		
-		if (typeof load !== 'undefined') {
+		if (typeof load != 'undefined') {
 
-			if (typeof root._ === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['underscore'] + '.js');
+			if (typeof root._ == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['underscore'] + '.js');
 
-			if (typeof root.tw.ace33022.vo.Ancestor === 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['tw.ace33022.vo.Ancestor'] + '.js');
+			if (typeof root.tw.ace33022.vo.Ancestor == 'undefined') load(RequireJSConfig.baseUrl + RequireJSConfig.paths['tw.ace33022.vo.Ancestor'] + '.js');
 		}
 		
 		_ = root._;
