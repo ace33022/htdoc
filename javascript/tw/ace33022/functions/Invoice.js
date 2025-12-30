@@ -12,7 +12,7 @@
 	 * @comment 傳入的發票獎項陣列資料不再判斷年月，故傳入前應處理成只有對獎月份的陣列資料。
 	 * 
 	 */
-	var doGetInvoicePrizeItem = function(invoiceNo, arrayInvoicePrizeLog) {
+	var getInvoicePrizeItem = function(invoiceNo, arrayInvoicePrizeLog) {
 
 		var result = '';
 			
@@ -27,14 +27,14 @@
 				
 				for (prizeItem; prizeItem <= 6; prizeItem++) {
 
-					if (doCheckInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo().substring(prizeItem - 1), root.sprintf('%04d', prizeItem))) result = root.sprintf('%04d', prizeItem);
+					if (checkInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo().substring(prizeItem - 1), root.sprintf('%04d', prizeItem))) result = root.sprintf('%04d', prizeItem);
 					
 					if (result != '') break;
 				}
 			}
 			else {
 
-				if (doCheckInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo(), arrayInvoicePrizeLog[index].getPrizeItem())) result = arrayInvoicePrizeLog[index].getPrizeItem();	
+				if (checkInvoicePrize(invoiceNo, arrayInvoicePrizeLog[index].getInvoiceNo(), arrayInvoicePrizeLog[index].getPrizeItem())) result = arrayInvoicePrizeLog[index].getPrizeItem();	
 			}
 			
 			if (result != '') break;
@@ -52,7 +52,7 @@
 	 * @author ace
 	 *
 	 */
-	var doCheckInvoicePrize = function(invoiceNo, invoicePrizeNo, prizeItem) {
+	var checkInvoicePrize = function(invoiceNo, invoicePrizeNo, prizeItem) {
 	
 		var result = false;
 		
@@ -107,19 +107,21 @@
 		
 			return {
   
-				doGetInvoicePrizeItem: doGetInvoicePrizeItem,
-				doCheckInvoicePrize: doCheckInvoicePrize
+				getInvoicePrizeItem: getInvoicePrizeItem,
+				checkInvoicePrize: checkInvoicePrize
 			}
 		});
 	}
 	else if (typeof exports != 'undefined') {
 	
-		module.exports = doGetInvoicePrizeItem;
-		module.exports = doCheckInvoicePrize;
+		module.exports = getInvoicePrizeItem;
+		module.exports = checkInvoicePrize;
 	}
 	else {
 	
-		root.tw.ace33022.utils.CommonUtils.doGetInvoicePrizeItem = doGetInvoicePrizeItem;
-		root.tw.ace33022.utils.CommonUtils.doCheckInvoicePrize = doCheckInvoicePrize;
+		if (typeof root.tw.ace33022.functions.Invoice == 'undefined') root.tw.ace33022.functions.Invoice = {};
+	
+		root.tw.ace33022.functions.Invoice.gtInvoicePrizeItem = getInvoicePrizeItem;
+		root.tw.ace33022.functions.Invoice.checkInvoicePrize = checkInvoicePrize;
 	}
 })(this);

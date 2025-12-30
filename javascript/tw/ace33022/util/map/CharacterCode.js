@@ -15,7 +15,7 @@
 	}
 	else if (typeof exports != 'undefined') {
 	
-		module.exports.UTF8ToBIG5 = UTF8ToBIG5;
+		module.exports = UTF8ToBIG5;
 	}
 	else {
 	

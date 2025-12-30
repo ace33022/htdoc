@@ -54,7 +54,6 @@
  * @version 2018/07/18 ace 新增tristen/tablesort: A small tablesorter in plain JavaScript(https://github.com/tristen/tablesort)。
  * @version 2018/08/08 ace 新增Leaflet - a JavaScript library for interactive maps(https://leafletjs.com/)。
  * @version 2018/08/08 ace 新增Leaflet.EasyButton(http://cliffcloud.github.io/Leaflet.EasyButton/v1/)。
- * @version 2018/09/01 ace 新增RLifeUtil。
  * @version 2018/09/17 ace 新增Wunderlist。
  * @version 2018/10/16 ace 新增mustache.js。
  * @version 2019/03/18 ace 新增toastr.js。
@@ -71,9 +70,9 @@
  * @version 2025/11/04 ace 新增DataStructure。
  * @version 2025/11/10 ace 新增Math。
  * @version 2025/12/24 ace 新增Misc。
- * @version 2025/12/29 ace 新增CharacterCodeMap。
  * @version 2025/12/29 ace 新增CharacterCode。
  * @version 2025/12/29 ace 新增Word。
+ * @version 2025/12/30 ace 新增Invoice。
  *
  * @author ace
  *
@@ -207,10 +206,7 @@
 
 			// Cross Platform Util
 			"tw.ace33022.util.XLSXUtil": acePath + 'util/XLSXUtil',	/* @version 2017/02/22 新增XLSXUtil.js。 */
-			"tw.ace33022.util.RLifeUtil": acePath + 'util/RLifeUtil',	/* @version 2018/09/01 新增RLifeUtil。 */
-			"tw.ace33022.util.RLife": acePath + 'util/RLife',	/* @version 2023/03/25 ace 新增RLife。 */
 			
-			"tw.ace33022.util.CharacterCodeMap": acePath + 'util/CharacterCodeMap',		/* @version 2025/12/29 ace 新增CharacterCodeMap。 */
 			"tw.ace33022.util.map.CharacterCode": acePath + 'util/map/CharacterCode',	/* @version 2025/12/29 ace 新增CharacterCode。 */
 			"tw.ace33022.util.map.HttpCode": acePath + 'util/map/HttpCode',						/* @version 2025/12/29 ace 新增HttpCode。 */
 			
@@ -218,12 +214,14 @@
 			
 			"tw.ace33022.functions.Datetime": acePath + 'functions/Datetime',
 			"tw.ace33022.functions.Validate": acePath + 'functions/Validate',
-			"tw.ace33022.functions.Word": acePath + 'functions/Word',	/* @version 2025/12/29 ace 新增Word。 */
-			"tw.ace33022.functions.Math": acePath + 'functions/Math',	/* @version 2025/11/10 ace 新增Math。 */
-			"tw.ace33022.functions.Sort": acePath + 'functions/Sort',	/* @version 2023/10/11 ace 新增Sort。 */
-			"tw.ace33022.functions.Stock": acePath + 'functions/Stock',	/* @version 2025/08/19 ace 新增Stock。 */
-			"tw.ace33022.functions.Google": acePath + 'functions/Google',	/* @version 2025/07/17 ace 新增Google。 */
+			"tw.ace33022.functions.Word": acePath + 'functions/Word',				/* @version 2025/12/29 ace 新增Word。 */
+			"tw.ace33022.functions.Math": acePath + 'functions/Math',				/* @version 2025/11/10 ace 新增Math。 */
+			"tw.ace33022.functions.Sort": acePath + 'functions/Sort',				/* @version 2023/10/11 ace 新增Sort。 */
+			"tw.ace33022.functions.Stock": acePath + 'functions/Stock',			/* @version 2025/08/19 ace 新增Stock。 */
+			"tw.ace33022.functions.Google": acePath + 'functions/Google',		/* @version 2025/07/17 ace 新增Google。 */
+			"tw.ace33022.functions.Invoice": acePath + 'functions/Invoice',	/* @version 2025/12/30 ace 新增Invoice。 */
 			// "tw.ace33022.functions.Wunderlist": acePath + 'functions/Wunderlist',	/* @version 2018/09/17 新增Wunderlist。 */
+			"tw.ace33022.functions.RLife": acePath + 'functions/RLife',			/* @version 2023/03/25 ace 新增RLife。 */
 			
 			"tw.ace33022.browser.functions.Misc": acePath + 'browser/functions/Misc',	/* @version 2025/12/24 ace 新增Misc。 */
 			
