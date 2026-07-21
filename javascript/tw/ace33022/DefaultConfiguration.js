@@ -27,12 +27,70 @@
 		"timeFormatString": "HHmmss",
 		"SaveTimeFormatString": "HHmmss",
 		"ShowTimeFormatString": "HH:mm:ss",
+		
+		"stringDateFormat": "yyyyMMdd",
+		"stringTimeFormat": "HHmmss",
+		"stringDateShowFormat": "yyyyMMdd",
+		"stringTimeShowFormat": "HH:mm:ss",
+		"stringDateSaveFormat": "yyyyMMdd",
+		"stringTimeSaveFormat": "HHmmss",
+		
+		"dir_user_space": "W:/UserSpace",
+		"dirUserSpace": "W:/UserSpace",
 		"sexy_novel_directory_name": "SexyNovel",
+		"dirNameSexyNovel": "SexyNovel",
+		
 		"RESTfulRelativePath": "ws/rs/",
-		"requirejsFile": "javascript/requirejs/require.js"
+		"requirejsFile": "javascript/requirejs/require.js",
+		"requirejsConfigFile": "javascript/tw/ace33022/RequireJSConfig.js"
 	};
 	
-	var Database = function() {return null;}
+	/**
+	 *
+	 * @description logger
+	 *
+	 * @version 2019/02/15 ace 初始版本。
+	 *
+	 * @author ace
+	 *
+	 * @see {@link http://logging.apache.org/|Welcome - Apache Logging Services}
+	 * @see {@link http://logging.apache.org/log4j/1.2/|Apache log4j 1.2 -}
+	 * @see {@link http://logging.apache.org/log4j/2.x/|Log4j – Apache Log4j 2 - Apache Log4j 2}
+	 *
+	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html|java.util.logging (Java Platform SE 8 )}
+	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html|Level (Java Platform SE 8 )}
+	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/ConsoleHandler.html|ConsoleHandler (Java Platform SE 8 )}
+	 *
+	 */
+	var logger = function() {
+
+		var out;
+
+		if (typeof console != 'undefined') {
+
+			// nodeJS執行環境
+			out = console.log;
+		}
+		else if (typeof print != 'undefined') {
+
+			// Rhino執行環境
+			out = print;
+		}
+		else {
+
+			// LibreOffice沒有print函數。
+			out = function(value) {};
+		}
+
+		this.trace = function(value) {out(value)};	// (the least serious)
+		this.debug = function(value) {out(value)};
+		this.info = function(value) {out(value)};
+		this.warn = function(value) {out(value)};
+		this.error = function(value) {out(value)};
+		this.fatal = function(value) {out(value)};	// (the most serious)
+
+		return this;
+	}
 	
 	/**
 	 *
@@ -68,133 +126,15 @@
 
 		this.host = (function() {return hostname + ':' + new String(port)})();
 		this.origin = (function() {return protocol + '//' + hostname + ':' + new String(port)})();
-
+		
+		this.toString = function() {return protocol + '//' + hostname + ':' + new String(port)};
+		
 		if (typeof window != 'undefined') result = window.location;
 		
 		return result;
 	}
-
-	/**
-	 *
-	 * @description logger
-	 *
-	 * @version 2019/02/15 ace 初始版本。
-	 *
-	 * @author ace
-	 *
-	 * @see {@link http://logging.apache.org/|Welcome - Apache Logging Services}
-	 * @see {@link http://logging.apache.org/log4j/1.2/|Apache log4j 1.2 -}
-	 * @see {@link http://logging.apache.org/log4j/2.x/|Log4j – Apache Log4j 2 - Apache Log4j 2}
-	 *
-	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/package-summary.html|java.util.logging (Java Platform SE 8 )}
-	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/Level.html|Level (Java Platform SE 8 )}
-	 * @see {@link https://docs.oracle.com/javase/8/docs/api/java/util/logging/ConsoleHandler.html|ConsoleHandler (Java Platform SE 8 )}
-	 *
-	 */
-	var logger = function() {
-
-		var out;
-
-		if (typeof console != 'undefined') {
-
-			// nodeJS執行環境
-			out = console.log;
-		}
-		else if (typeof print != 'undefined') {
-
-			// Rhino執行環境
-			out = print;
-		}
-		else {
-
-			// LibreOffice沒有提供print函數。
-			out = function(value) {};
-		}
-
-		this.trace = function(value) {out(value)};	// (the least serious)
-		this.debug = function(value) {out(value)};
-		this.info = function(value) {out(value)};
-		this.warn = function(value) {out(value)};
-		this.error = function(value) {out(value)};
-		this.fatal = function(value) {out(value)};	// (the most serious)
-
-		return this;
-	}
 	
-	// Namespace
-	if (typeof root.tw == 'undefined') root.tw = {};
-	if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = {};
-	
-  if (typeof root.tw.ace33022.po == 'undefined') root.tw.ace33022.po = {};
-	if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = {};
-  if (typeof root.tw.ace33022.bo == 'undefined') root.tw.ace33022.bo = {};
-	
-	if (typeof root.tw.ace33022.util == 'undefined') root.tw.ace33022.util = {};
-	if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = {};
-	
-	if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = {};
-	if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = {};
-  if (typeof root.tw.ace33022.dao.db.po == 'undefined') root.tw.ace33022.dao.db.po = {};
-	if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = {};
-	if (typeof root.tw.ace33022.dao.db.program == 'undefined') root.tw.ace33022.dao.db.program = {};
-	if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = {};
-	if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = {};
-	if (typeof root.tw.ace33022.dao.ws.program == 'undefined') root.tw.ace33022.dao.ws.program = {};
-	
-	if (typeof root.tw.ace33022.rhino == 'undefined') root.tw.ace33022.rhino = {};
-	if (typeof root.tw.ace33022.rhino.functions == 'undefined') root.tw.ace33022.rhino.functions = {};
-	if (typeof root.tw.ace33022.rhino.google == 'undefined') root.tw.ace33022.rhino.google = {};
-	if (typeof root.tw.ace33022.rhino.google.apps == 'undefined') root.tw.ace33022.rhino.google.apps = {};
-	if (typeof root.tw.ace33022.rhino.google.apps.script == 'undefined') root.tw.ace33022.rhino.google.apps.script = {};
-	
-	if (typeof root.tw.ace33022.google == 'undefined') root.tw.ace33022.google = {};
-	if (typeof root.tw.ace33022.google.apps == 'undefined') root.tw.ace33022.google.apps = {};
-	if (typeof root.tw.ace33022.google.apps.functions == 'undefined') root.tw.ace33022.google.apps.functions = {};
-	
-	if (typeof console != 'undefined') console.log('Execute DefaultConfiguration');
-	
-	result["Database"] = new Database();
-	result["location"] = new LocationInformation();
-	result["logger"] = new logger();
-	
-	result["paths"] = new Object();
-	
-	result["isRhinoPlatform"] = function() {return (typeof Packages != 'undefined') ? true : false;}
-	result["isGoogleAppsScriptPlatform"] = function() {return (typeof ScriptApp != 'undefined') ? true : false;}
-	result["enableJVMExternalCLibrary"] = 1;	// @memo 2024/12/29 ace 控制JVM是否使用載入dll檔案執行功能(如果有對應的dll檔案與函數)。
-	
-	result["AceDir"] = 'tw/ace33022';
-	result["VODir"] = result["AceDir"] + '/vo';
-	result["DAODir"] = result["AceDir"] + '/dao/Rhino';
-	result["BrowserUIDir"] = result["AceDir"] + '/program/browser';
-	
-	result["workDir"] = 'W:';
-	
-	result["JSLibDir"] = 'javascript';
-	// result["JSLibPath"] = jsLibDir + '/';
-	result["JavaScriptLibDir"] = 'javascript';
-	result["dirJavaScriptLib"] = 'javascript';
-	
-	if (result["isRhinoPlatform"]()) {
-
-		// Rhino執行環境
-		
-		if (Packages.java.lang.System.getProperty('WorkDir') != null) result["workDir"] = Packages.java.lang.System.getProperty('WorkDir');
-		
-		// if (Packages.java.lang.System.getProperty('JSLibDir') != null) result["JSLibDir"] = 'javascript';
-		// if (Packages.java.lang.System.getProperty('JavaScriptLibDir') != null) result["JavaScriptLibDir"] = 'javascript';
-		
-		result["dirJavaScriptLib"] = result["workDir"] + '/' + 'javascript';
-		
-		result["JSLibDir"] = result["dirJavaScriptLib"];
-		result["JavaScriptLibDir"] = result["dirJavaScriptLib"];
-		
-		result["loggingPropertiesFile"] = result["dirJavaScriptLib"] + '/tw/ace33022/util/Rhino/logging.properties';
-		result["log4jPropertiesFile"] = result["dirJavaScriptLib"] + '/tw/ace33022/util/Rhino/log4j.properties';
-		
-		result["userSpaceDir"] = result["workDir"] + '/' + 'UserSpace';
-		result["tempDir"] = 'O:/tmp';
-	}
+	if (typeof console != 'undefined') console.log('load DefaultConfiguration');
 	
 	if (!String.prototype.startsWith) {
 	
@@ -414,6 +354,188 @@
 		return format; 
 	}
 	
+	result["isBrowserPlatform"] = function() {return (typeof Window != 'undefined') ? true : false;}
+	result["isRhinoPlatform"] = function() {return (typeof Packages != 'undefined') ? true : false;}
+	result["isGoogleAppsScriptPlatform"] = function() {return (typeof ScriptApp != 'undefined') ? true : false;}
+	result["isNodePlatform"] = function() {return (typeof process != 'undefined') ? true : false;}
+	
+	result["enableJVMExternalCLibrary"] = 1;	// @memo 2024/12/29 ace 控制JVM是否使用載入dll檔案執行功能(如果有對應的dll檔案與函數)。
+	
+	// Namespace
+	if (typeof root.tw == 'undefined') root.tw = {};
+	if (typeof root.tw.ace33022 == 'undefined') root.tw.ace33022 = {};
+	
+  if (typeof root.tw.ace33022.po == 'undefined') root.tw.ace33022.po = {};
+	if (typeof root.tw.ace33022.vo == 'undefined') root.tw.ace33022.vo = {};
+  if (typeof root.tw.ace33022.bo == 'undefined') root.tw.ace33022.bo = {};
+	
+	if (typeof root.tw.ace33022.util == 'undefined') root.tw.ace33022.util = {};
+	if (typeof root.tw.ace33022.functions == 'undefined') root.tw.ace33022.functions = {};
+	
+	if (typeof root.tw.ace33022.dao == 'undefined') root.tw.ace33022.dao = {};
+	if (typeof root.tw.ace33022.dao.db == 'undefined') root.tw.ace33022.dao.db = {};
+  if (typeof root.tw.ace33022.dao.db.po == 'undefined') root.tw.ace33022.dao.db.po = {};
+	if (typeof root.tw.ace33022.dao.db.vo == 'undefined') root.tw.ace33022.dao.db.vo = {};
+	if (typeof root.tw.ace33022.dao.db.program == 'undefined') root.tw.ace33022.dao.db.program = {};
+	if (typeof root.tw.ace33022.dao.ws == 'undefined') root.tw.ace33022.dao.ws = {};
+	if (typeof root.tw.ace33022.dao.ws.vo == 'undefined') root.tw.ace33022.dao.ws.vo = {};
+	if (typeof root.tw.ace33022.dao.ws.program == 'undefined') root.tw.ace33022.dao.ws.program = {};
+	
+	if (typeof root.tw.ace33022.rhino == 'undefined') root.tw.ace33022.rhino = {};
+	if (typeof root.tw.ace33022.rhino.functions == 'undefined') root.tw.ace33022.rhino.functions = {};
+	if (typeof root.tw.ace33022.rhino.functions.cef == 'undefined') root.tw.ace33022.rhino.functions.cef = {};
+	if (typeof root.tw.ace33022.rhino.google == 'undefined') root.tw.ace33022.rhino.google = {};
+	if (typeof root.tw.ace33022.rhino.google.apps == 'undefined') root.tw.ace33022.rhino.google.apps = {};
+	if (typeof root.tw.ace33022.rhino.google.apps.script == 'undefined') root.tw.ace33022.rhino.google.apps.script = {};
+	if (typeof root.tw.ace33022.rhino.google.apps.macro == 'undefined') root.tw.ace33022.rhino.google.apps.macro = {};
+	
+	if (typeof root.tw.ace33022.google == 'undefined') root.tw.ace33022.google = {};
+	if (typeof root.tw.ace33022.google.apps == 'undefined') root.tw.ace33022.google.apps = {};
+	if (typeof root.tw.ace33022.google.apps.functions == 'undefined') root.tw.ace33022.google.apps.functions = {};
+	
+	// result["paths"] = new Object();
+	result["paths"] = {};
+	
+	if (result["logger"] == null) result["logger"] = new logger();
+	// result["Database"] = (function() {return null;})();
+	result["location"] = new LocationInformation();
+	
+	// @memo 2026/03/26 ace 啟動Rhino執行環境的方式可透過命令列與Java函數。特別是從Tomcat進行呼叫，就不會設定dirWork參數。改成由呼叫環境呼叫Configuration.setDirWor()設定工作路徑，後續取得JavaScript等需要的環境。
+	// result["setDirWork"] = function(value) {dirWork = value; return value;}
+	// @memo 2026/04/01 ace 在DefaultConfiguration/Configuration的getDirWork()函數屬於通用模式，將依照不同執行環境取得相應的路徑設定。
+	result["getDirWork"] = function() {
+	
+		var dirWork = '';
+		
+		if (result["isRhinoPlatform"]()) dirWork = root["getDirWork"]();
+		if (result["isBrowserPlatform"]()) dirWork = document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].getAttribute('href');
+
+		return dirWork;
+	}
+	result["getDirJavaScript"] = function() {return result["isRhinoPlatform"]() ? root["getDirJavaScript"]() : result["getDirWork"]() + 'javascript';}
+	result["getDirTool"] = function() {return result["isRhinoPlatform"]() ? root["getDirTool"]() : result["getDirWork"]() + 'tool';}
+	
+	result["JSLibDir"] = 'javascript';
+	result["JavaScriptLibDir"] = 'javascript';
+	result["dirJavaScriptLib"] = 'javascript';
+	result["dirJavaScript"] = 'javascript';
+	
+	if (result["isRhinoPlatform"]()) {
+
+		// Rhino執行環境
+		
+		result["JSLibDir"] = result["dirJavaScriptLib"];
+		result["JavaScriptLibDir"] = result["dirJavaScriptLib"];
+		result["dirJavaScriptLib"] = getDirJavaScript();
+		result["dirJavaScript"] = getDirJavaScript();
+	}
+	else if (result["isBrowserPlatform"]()) {
+	
+		/**
+		 *
+		 * @description loadLink
+		 *
+		 * @version 2024/04/20 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 */
+		result.loadLink = function(sourceFile, rel, type) {
+		
+			var link = document.createElement('link');
+			
+			link.setAttribute('href', sourceFile);
+			link.setAttribute('rel', rel);
+			
+			if (typeof type != 'undefined') link.setAttribute('type', type);
+			
+			document.head.appendChild(link);
+		}
+	
+		/**
+		 *
+		 * @description loadCSS
+		 *
+		 * @param {String} CSS檔案連結。
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link https://stackoverflow.com/questions/10457870/is-there-any-way-to-load-css-and-javascript-from-a-string|html - Is there any way to load css and javascript from a string? - Stack Overflow}
+		 *
+		 */
+		result.loadCSS = function(sourceFile) {result.loadLink(sourceFile, 'stylesheet', 'text/css');}
+		
+		/**
+		 *
+		 * @description loadJS
+		 *
+		 * @version 2019/02/15 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see {@link http://rocksaying.tw/archives/11847511.html|跨網站載入與執行 JavaScript 的方式 - 石頭閒語}
+		 * @see {@link https://hype.codes/how-include-js-file-another-js-file|How to include JS file to another JS file? | Hype.Codes}
+		 * @see {@link https://stackoverflow.com/questions/3248384/document-createelementscript-synchronously|javascript - document.createElement("script") synchronously - Stack Overflow}
+		 *
+		 */
+		result.loadJS = function() {
+			
+			function removeAfterLoaded() {
+			
+				var eleScripts = document.getElementsByTagName('head')[0].getElementsByTagName('script');
+				var index;
+				
+				for (index = 0; index < eleScripts.length ; index++) {
+				
+					// 將此節點自 DOM 中移除。(ps.需等待瀏覽器進行垃圾回收，回收效率並不高。)
+					if (objJS == eleScripts[index]) document.getElementsByTagName('head')[0].removeChild(this); 
+				}
+			};
+			
+			var script = document.createElement('script');
+			var callback;
+			var sourceFile;
+			
+			script.setAttribute('type', 'text/javascript');
+			
+			if (arguments.length == 3) {
+			
+				sourceFile = arguments[1];
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+			
+				script.setAttribute('charset', arguments[0]);
+				// script.setAttribute('src', arguments[1]);
+				
+				callback = arguments[2];
+			}
+			else {
+			
+				sourceFile = arguments[0];
+				
+				if (!sourceFile.endsWith('.js')) sourceFile += '.js';
+				
+				// this.substring(startsPosition, startsPosition + searchString.length) == searchString;
+				
+				// script.setAttribute('src', arguments[0]);
+				
+				callback = arguments[1];
+			}
+			
+			script.setAttribute('src', sourceFile);
+			
+			script.onload = function() {if (typeof callback == 'function') callback();};
+			
+			document.head.appendChild(script);
+		}
+	}
+	
+	result["AceDir"] = 'tw/ace33022';
+	result["VODir"] = result["AceDir"] + '/vo';
+	result["DAODir"] = result["AceDir"] + '/dao/Rhino';
+	result["BrowserUIDir"] = result["AceDir"] + '/program/browser';
+	
 	if (typeof process != 'undefined') {
 
 		// nodeJS執行環境
@@ -431,7 +553,7 @@
 		}
 	}
 	else {
-	
+		
 		root.tw.ace33022.DefaultConfiguration = result;
 	}
 })(this);

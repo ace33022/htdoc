@@ -1,6 +1,6 @@
 /**
  *
- * Lottery649Logs
+ * Lottery649Log
  *
  * @version 2015/11/03 初始版本。
  *
@@ -196,6 +196,6 @@
 		
 		ancestor = root.tw.ace33022.vo.Ancestor;
 		
-		root.tw.ace33022.vo.Lottery649Logs = result;
+		root.tw.ace33022.vo.Lottery649Log = result;
 	}
 })(this);

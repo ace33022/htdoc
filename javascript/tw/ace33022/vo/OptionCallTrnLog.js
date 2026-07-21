@@ -38,11 +38,11 @@
 		// this.prototype = uber;	// 保留原型鍊。
 		this.prototype = this;  	// 由於已複製父類別Ancestor，因此原型類別指向自己。
 	
-		this.setBestAskPrice = function(value) {if (value) bestAskPrice = value; return value;}
-		this.setBestAskQty = function(value) {if (value) bestAskQty = value; return value;}
-		this.setBestBidPrice = function(value) {if (value) bestBidPrice = value; return value;}
-		this.setBestBidQty = function(value) {if (value) bestBidQty = value; return value;}
-		this.setMarginPrice = function(value) {if (value) marginPrice = value; return value;}
+		this.setBestAskPrice = function(value) {if (value) bestAskPrice = parseFloat(value); return value;}
+		this.setBestAskQty = function(value) {if (value) bestAskQty = parseInt(value); return value;}
+		this.setBestBidPrice = function(value) {if (value) bestBidPrice = parseFloat(value); return value;}
+		this.setBestBidQty = function(value) {if (value) bestBidQty = parseInt(value); return value;}
+		this.setMarginPrice = function(value) {if (value) marginPrice = parseFloat(value); return value;}
 
 	  this.getBestAskPrice = function() {return bestAskPrice;}
     this.getBestAskQty = function() {return bestAskQty;}

@@ -2,106 +2,56 @@
  *
  * @description Lottery
  *
- * @version 2024/03/10 ace 初始版本。
+ * @version 2026/05/26 ace 初始版本。
  *
  * @author ace
  *
  */
 (function(root) {
 
-  var LOTTERY539_API = "https://api.taiwanlottery.com/TLCAPIWeB/Lottery/Daily539Result";
-
-  function getLottery539LatestPeriod() {
-    
-    var result = '';
-    
-    var httpResponse;
+	function getLottery539() {
+	
+		console.log('arguments.length: ' + arguments.length);
 		
-		if (typeof Packages != 'undefined') {
+		if (arguments.length != 0) console.log('arguments[0]: ' + arguments[0]);
 		
-			result = Packages.tw.ace33022.functions.Lottery.getLottery539LatestPeriod();
-		}
-		else {
+		// @todo 2026/05/26 ace 是否先抓取Google Apps Script的API回傳資料？
 		
-			httpResponse = UrlFetchApp.fetch(LOTTERY539_API + '?month=' + Utilities.formatDate(new Date(), 'GMT+08:00', 'yyyy-MM'));
+		return (arguments.length == 0) ? Packages.tw.ace33022.functions.Lottery.getLottery539() : Packages.tw.ace33022.functions.Lottery.getLottery539(arguments[0]);
+	}
+
+	function getLottery649() {
+	
+		console.log('arguments.length: ' + arguments.length);
 		
-			if (httpResponse.getResponseCode() == 200) {
-
-				if (JSON.parse(httpResponse.getContentText())["rtCode"] == 0) {
-
-					result = Utilities.formatString('%s', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["period"]);
-				}
-			}
-		}
-
-    return result;
-  }
-
-  function getLatestLottery539() {
-
-    var result = '';
+		if (arguments.length != 0) console.log('arguments[0]: ' + arguments[0]);
 		
-    var httpResponse;
+		// @todo 2026/05/27 ace 是否先抓取Google Apps Script的API回傳資料？
 		
-		if (typeof Packages != 'undefined') {
-		
-			result = Packages.tw.ace33022.functions.Lottery.getLatestLottery539();
-		}
-		else {
-		
-			httpResponse = UrlFetchApp.fetch(LOTTERY539_API + '?month=' + Utilities.formatDate(new Date(), 'GMT+08:00', 'yyyy-MM'));
-		
-			if (httpResponse.getResponseCode() == 200) {
-
-				if (JSON.parse(httpResponse.getContentText())["rtCode"] == 0) {
-
-					if (JSON.parse(httpResponse.getContentText())["content"]["daily539Res"].length != 0) {
-
-						// console.log(JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]);
-						
-						result = {};
-
-						result["period"] = (new String(JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["period"])).valueOf();
-						result["num01"] = Utilities.formatString('%02d', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["drawNumberAppear"][0]);
-						result["num02"] = Utilities.formatString('%02d', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["drawNumberAppear"][1]);
-						result["num03"] = Utilities.formatString('%02d', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["drawNumberAppear"][2]);
-						result["num04"] = Utilities.formatString('%02d', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["drawNumberAppear"][3]);
-						result["num05"] = Utilities.formatString('%02d', JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["drawNumberAppear"][4]);
-						result["prize01"] = JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["d539JackpotAssign"]["winnerCount"];
-						result["prize02"] = JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["d539SecondAssign"]["winnerCount"];
-						result["prize03"] = JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["d539ThirdAssign"]["winnerCount"];
-						result["prize04"] = JSON.parse(httpResponse.getContentText())["content"]["daily539Res"][0]["d539FourthAssign"]["winnerCount"];
-						
-						result = JSON.stringify(result);
-					}
-				}
-			}
-		}
-
-    return result;
-  }
-
-	if (typeof define === 'function') {
+		return (arguments.length == 0) ? Packages.tw.ace33022.functions.Lottery.getLottery649() : Packages.tw.ace33022.functions.Lottery.getLottery649(arguments[0]);
+	}
+	
+	if (typeof define == 'function') {
 	
 		define([], function() { 
 		
 			return {
   
-				getLottery539LatestPeriod: getLottery539LatestPeriod,
-				getLatestLottery539: getLatestLottery539
+				getLottery539: getLottery539,
+				getLottery649: getLottery649
 			}
 		});
 	}
 	else if (typeof exports !== 'undefined') {
 	
-		module.exports = getLottery539LatestPeriod;
-		module.exports = getLatestLottery539;
+		module.exports = getLottery539;
+		module.exports = getLottery649;
 	}
 	else {
 	
-		if (typeof root.tw.ace33022.functions.Lottery == 'undefined') root.tw.ace33022.functions.Lottery = {};
+		if (typeof root.tw.ace33022.rhino.functions.Lottery == 'undefined') root.tw.ace33022.rhino.functions.Lottery = {};
 		
-		root.tw.ace33022.functions.Lottery.getLottery539LatestPeriod = getLottery539LatestPeriod;
-		root.tw.ace33022.functions.Lottery.getLatestLottery539 = getLatestLottery539;
+		root.tw.ace33022.rhino.functions.Lottery.getLottery539 = getLottery539;
+		root.tw.ace33022.rhino.functions.Lottery.getLottery649 = getLottery649;
 	}
 })(this);

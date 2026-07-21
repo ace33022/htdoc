@@ -1,4 +1,3 @@
-/** resets **/
 
 *, *:before, *:after {
 
@@ -7,13 +6,6 @@
 
 :root {
 
-	--gold:     #8C704E;
-	--gray-100: #FAFAFA;
-	--gray-200: #CCCCCC;
-	--gray-600: #555555;
-	--gray-900: #202020;
-	--red-500:  #A52020;
-	
 	--font-xxl:      2rem;
 	--font-xl:     1.5rem;
 	--font-l:     1.25rem;
@@ -23,64 +15,110 @@
 	--font-xs:    0.75rem;
 }
 
-::selection {background: #A4DCEC;}
-::-moz-selection {background: #A4DCEC;}
-::-webkit-selection {background: #A4DCEC;}
+html {
 
-::-webkit-input-placeholder { /* WebKit browsers */
-			
-	color: #CCC;
-	font-style: italic;
+	font-size: 100%; /* 通常等於瀏覽器預設的 16px */
+
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	
+	/* -webkit-text-size-adjust: 100%; */
+	-webkit-text-size-adjust: none;
+	   -moz-text-size-adjust: none;
+	    -ms-text-size-adjust: none;
+	        text-size-adjust: none;
+	
+	text-rendering: optimizeLegibility;
+	
+	/* -webkit-font-smoothing: antialiased; */
+	
+	scroll-behavior: smooth;
+	
+	outline: none;
 }
-			
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-			
-	color: #CCC;
-	font-style: italic;
-}
-			
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-			
-	color: #CCC;
-	font-style: italic;
-}
-			
-:-ms-input-placeholder { /* Internet Explorer 10+ */
-			
-	color: #CCC !important;
-	font-style: italic;  
+
+body {
+
+	/* font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; */
+	/* font-family: cursive, Arial, Helvetica, sans-serif; */
+	
+	font-size: 1rem; /* 套用 html 的基準大小 */
+	
+	line-height: 1.5;
 }
 
 br { 
 
 	display: block; 
+	
 	line-height: 2.2em; 
 } 
 
-article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display: block;}
+strong {
 
-blockquote, q {quotes: none;}
-
-blockquote:before, blockquote:after, q:before, q:after {content: ''; content: none;}
-
-strong {font-weight: bold;} 
-
-ol, ul {list-style: none;}
-
-table {border-collapse: collapse; border-spacing: 0;}
+	font-weight: bold;
+} 
 
 input, textarea { 
 			
-	-webkit-font-smoothing: antialiased;
-	
 	-webkit-text-size-adjust: 100%;
-	-ms-text-size-adjust: 100%;
+	    -ms-text-size-adjust: 100%;
+	        text-size-adjust: 100%;
 	
 	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
-	box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+	        box-sizing: border-box;
+	
+	-webkit-font-smoothing: antialiased;
 	
 	outline: none; 
+}
+
+input[readonly] {
+
+	background-color: #00FFFF;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+
+	0% {-webkit-transform: rotate(0deg);}
+	100% {-webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+
+	0% {transform: rotate(0deg);}
+	100% {transform: rotate(360deg);}
+}
+
+::-webkit-selection {background: #A4DCEC;}
+   ::-moz-selection {background: #A4DCEC;}
+        ::selection {background: #A4DCEC;}
+
+/* WebKit browsers */
+::-webkit-input-placeholder {
+			
+	color: #CCC;
+	
+	font-style: italic;
+}
+
+/* Mozilla Firefox 19+ */
+::-moz-placeholder {
+			
+	color: #CCC;
+	
+	font-style: italic;
+}
+
+/* Internet Explorer 10+ */
+:-ms-input-placeholder {
+			
+	color: #CCC !important;
+	
+	font-style: italic;  
 }
 			
 .text--xxl {

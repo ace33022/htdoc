@@ -3,7 +3,7 @@
  * @description Stock
  *
  * @version 2021/02/02 ace Initialize.
- * @version 2025/08/13 ace add getOptionMargin().
+ * @version 2025/08/13 ace add getOptionMargin.
  *
  * @see <a href="https://www.taifex.com.tw/cht/index">臺灣期貨交易所</a>
  *
@@ -236,7 +236,7 @@
 			}
 			else if (Configuration.isGoogleAppsScriptPlatform()) {
 			
-				// result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getOptionDayTrnLog(trnDate));
+				result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getOptionDayTrnLog(trnDate));
 			}
 		}
 		
@@ -266,7 +266,7 @@
 			}
 			else if (Configuration.isGoogleAppsScriptPlatform()) {
 			
-				// result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getFoundationOptionDayTrnLog(trnDate));
+				result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getFoundationOptionDayTrnLog(trnDate));
 			}
 		}
 		
@@ -296,7 +296,7 @@
 			}
 			else if (Configuration.isGoogleAppsScriptPlatform()) {
 			
-				// result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getOptionLargeStayLog(trnDate));
+				result = JSON.parse(root.tw.ace33022.google.apps.functions.Stock.getOptionLargeStayLog(trnDate));
 			}
 		}
 		
@@ -529,141 +529,163 @@
 	 *                         "TEO": 電指選。
 	 * @comment 2025/08/30 ace 配合計算保證金的需求，傳入的productCode只需要TX/TF/TE代碼。
 	 */
-	function getOptionPromptTrnLog(productCode, conMonth) {
+  function getOptionPromptTrnLog(parameter, callback) {
 	
 		var result = {
 		
-			"code": 1,
-			"message": "initialize state",
-			"data": {
-			
-				"con_month": []
-			}
+			"code": 0,
+			"message": "",
+			"data": {}
 		};
 		
 		var quoteDetail = {};
-		var quoteListOption;
-		
-		var conMonthResult;
 		
 		var sPrice = 0;	// 現貨價格。
 		
-		console.log('arguments.length: ' + arguments.length);
-		
-		if (typeof Configuration != 'undefined') {
-		
-			if (Configuration.isRhinoPlatform()) {
-			
-				if (typeof tw.ace33022.rhino.functions.Stock == 'undefined') load(tw["ace33022"]["Configuration"]["dirJavaScriptLib"] + '/tw/ace33022/rhino/functions/Stock.js');
-				
-				if (arguments.length == 1) {
-				
-					conMonthResult = getConMonth(productCode + 'O');
-					
-					// console.log(conMonthResult);
-					result["code"] = JSON.parse(conMonthResult)["code"];
-					result["message"] = JSON.parse(conMonthResult)["message"];
-					
-					JSON.parse(conMonthResult)["data"].forEach(function(element, index) {
-					
-						if (result["code"] == 0) {
-						
-							result["data"]["con_month"].push(element);
-							result["data"][element] = {};
-							
-							quoteListOption = tw.ace33022.rhino.functions.Stock.getQuoteListOption(productCode + 'O', element);
-							
-							result["code"] = JSON.parse(quoteListOption)["code"];
-							result["message"] = JSON.parse(quoteListOption)["message"];
-							
-							if (result["code"] == 0) result["data"][element] = JSON.parse(quoteListOption)["data"];
-						}
-					});
-				}
-				else if (arguments.length == 2) {
-				
-					result["data"]["con_month"].push(conMonth);
-					result["data"][conMonth] = {};
-				
-					// result = JSON.parse(tw.ace33022.rhino.functions.Stock.getQuoteListOption(productCode, conMonth));
-					// result = JSON.parse(tw.ace33022.rhino.functions.Stock.getQuoteListOption(productCode + 'O', conMonth));
-					// result["data"][conMonth] = JSON.parse(tw.ace33022.rhino.functions.Stock.getQuoteListOption(productCode + 'O', conMonth));
-					
-					quoteListOption = tw.ace33022.rhino.functions.Stock.getQuoteListOption(productCode + 'O', conMonth);
-					result["code"] = JSON.parse(quoteListOption)["code"];
-					result["message"] = JSON.parse(quoteListOption)["message"];
-					
-					if (result["code"] == 0) result["data"][conMonth] = JSON.parse(quoteListOption)["data"];
-				}
-			}
-			else if (Configuration.isGoogleAppsScriptPlatform()) {
+		/*
+		[
+			{"product_code": "TX", "con_month": ["202604", "202605"]},
+			{"product_code": "TE", "con_month": ["202604"]}
+		];
+		*/
 
-				if (arguments.length == 1) {
+		// console.log('arguments.length: ' + arguments.length);
+		console.log('parameter: ' + parameter);
+		
+    try {
+
+      if (Configuration.isRhinoPlatform()) {
+
+				if (typeof tw.ace33022.rhino.functions.Stock == 'undefined') load(tw["ace33022"]["Configuration"]["getDirJavaScript"]() + '/tw/ace33022/rhino/functions/Stock.js');
 				
-					conMonthResult = getConMonth(productCode + 'O');
+        // result = JSON.parse(tw.ace33022.rhino.functions.Stock.getQuoteListOption(parameter));
+				result = tw.ace33022.rhino.functions.Stock.getQuoteListOption(parameter);
+      }
+      else if (Configuration.isGoogleAppsScriptPlatform()) {
+
+        // result = JSON.parse(tw.ace33022.google.apps.functions.Stock.getQuoteListOption(parameter));
+				result = tw.ace33022.google.apps.functions.Stock.getQuoteListOption(parameter);
+      }
+      else if (Configuration.isBrowserPlatform()) {
+			
+				requirejs(["tw.ace33022.functions.Google", "underscore"], function(Google) {
+				
+					/**
+					 *
+					 * API採用GET METHOD方式，因此會採用逐筆取回資料模式。若取回資料過程中有單一個項目錯誤，如何定義？
+					 *
+					 */
+					JSON.parse(parameter).forEach(function(element, index) {
 					
-					// console.log(conMonthResult);
-					result["code"] = JSON.parse(conMonthResult)["code"];
-					result["message"] = JSON.parse(conMonthResult)["message"];
-					
-					JSON.parse(conMonthResult)["data"].forEach(function(element, index) {
-					
+						var queryString;
+						var url;
+						
 						if (result["code"] == 0) {
 						
-							result["data"]["con_month"].push(element);
-							result["data"][element] = {};
+							queryString = 'product_code=' + element["product_code"];
+						
+							if (typeof element["con_month"] != 'undefined') element["con_month"].forEach(function(element, index) {if (element != '') queryString += '&con_month=' + element;});
 							
-							quoteListOption = tw.ace33022.google.apps.functions.Stock.getQuoteListOption(productCode + 'O', element);
+							console.log('queryString: ' + queryString);
 							
-							result["code"] = JSON.parse(quoteListOption)["code"];
-							result["message"] = JSON.parse(quoteListOption)["message"];
+							// console.log(location);
 							
-							if (result["code"] == 0) result["data"][element] = JSON.parse(quoteListOption)["data"];
+							url = Google.getAppsMacroUrl(tw["ace33022"]["Configuration"]["googleAppsMacroId"]["optionPromptTrnLog"]) + '?' + queryString;
+							
+							if ((location.protocol == 'http:') || (location.protocol == 'https:')) {
+							
+								// localhost
+								
+								// http://127.0.0.1:8088/ws/share00001?product_code=TX
+								// if ((location.origin.indexOf('127.0.0.1') != -1) && (location.origin.indexOf('localhost') != -1)) url = 'http://127.0.0.1:8088/ws/rs/SYS09110' + '?' + queryString;
+								if ((location.origin.indexOf('127.0.0.1') != -1) || (location.origin.indexOf('localhost') != -1)) url = 'http://127.0.0.1:8088/ws/share00001' + '?' + queryString;
+							}
+							
+							console.log('url: ' + url);
+							
+							// console.log('typeof jQuery: ' + typeof jQuery);			// function
+							// console.log('typeof fetch: ' + typeof fetch);				// function
+							// console.log('typeof callback: ' + typeof callback);	// function
+							
+							if (typeof fetch != 'undefined') {
+							
+								fetch(url)
+								.then(function(response) {
+								
+									 return response.json();
+								})
+								.then(function(value) {
+								
+									// console.log('value: ' + value);
+								
+									if (typeof callback != 'undefined') callback(value);
+								});
+							}
+							else if (typeof jQuery != 'undefined') {
+							
+								jQuery.getJSON(url, function(data, textStatus, jqXHR) {
+								
+									if (textStatus == 'success') {
+									
+										result["code"] = data["code"];
+										result["data"][element["product_code"]] = data["data"][element["product_code"]];
+									}
+									else {
+									
+										result["code"] = 1;
+										result["message"] = textStatus;
+									}
+									
+									if (typeof callback != 'undefined') callback(result);
+								});
+							}
+							else {
+							
+								result["code"] = 1;
+								result["message"] = 'No method to get data.';
+								
+								if (typeof callback != 'undefined') callback(result);
+							}
 						}
 					});
-				}
-				else if (arguments.length == 2) {
-				
-					result["data"]["con_month"].push(conMonth);
-					result["data"][conMonth] = {};
-				
-					quoteListOption = tw.ace33022.google.apps.functions.Stock.getQuoteListOption(productCode + 'O', conMonth);
-					result["code"] = JSON.parse(quoteListOption)["code"];
-					result["message"] = JSON.parse(quoteListOption)["message"];
-					
-					if (result["code"] == 0) result["data"][conMonth] = JSON.parse(quoteListOption)["data"];
-				}
-			}
-			else {
-			
-				// SYS09110
-			}
-		}
-		
-		if (result["code"] == 0) quoteDetail = JSON.parse(getQuoteDetail(productCode + 'F'));
-		
-		// 計算保證金
-		if (quoteDetail["code"] == 0) {
-		
-			quoteDetail["data"].forEach(function(element, index) {if (element["SymbolID"] == productCode + 'F' + '-S') sPrice = new Number(element["CLastPrice"]);});
-			
-			console.log('sPrice: ' + sPrice);
-			
-			result["data"]["con_month"].forEach(function(conMonth, index) {
-			
-				result["data"][conMonth]["call"].forEach(function(element, index) {
-					
-					element["margin_price"] = getOptionMargin(productCode + 'O', 'CALL', sPrice, new Number(element["strike_price"]), new Number(element["best_bid_price"]));
 				});
-				
-				result["data"][conMonth]["put"].forEach(function(element, index) {
-					
-					element["margin_price"] = getOptionMargin(productCode + 'O', 'PUT', sPrice, new Number(element["strike_price"]), new Number(element["best_bid_price"]));
-				});
-			});
+      }
+      
+      // if (result["code"] == 0) quoteDetail = JSON.parse(getQuoteDetail(productCode + 'F'));
+      
+      // 計算保證金
+      /*
+      if (quoteDetail["code"] == 0) {
+      
+        quoteDetail["data"].forEach(function(element, index) {if (element["SymbolID"] == productCode + 'F' + '-S') sPrice = new Number(element["CLastPrice"]);});
+        
+        console.log('sPrice: ' + sPrice);
+        
+        result["data"]["con_month"].forEach(function(conMonth, index) {
+        
+          result["data"][conMonth]["call"].forEach(function(element, index) {
+            
+            element["margin_price"] = getOptionMargin(productCode + 'O', 'CALL', sPrice, new Number(element["strike_price"]), new Number(element["best_bid_price"]));
+          });
+          
+          result["data"][conMonth]["put"].forEach(function(element, index) {
+            
+            element["margin_price"] = getOptionMargin(productCode + 'O', 'PUT', sPrice, new Number(element["strike_price"]), new Number(element["best_bid_price"]));
+          });
+        });
+      }
+      */
 		}
+		catch (e) {
 		
-		return JSON.stringify(result);
+			result["code"] = 1;
+			result["message"] = e.message;
+		}
+
+    // if ((typeof logger != 'undefined') && (logger != null)) logger.debug(JSON.stringify(result));
+		
+		// return JSON.stringify(result);
+		return result;
 	}
 	
 	/**
@@ -679,6 +701,8 @@
 	 * @version 2025/08/13 ace 初始版本。
 	 *
 	 * @author ace
+	 *
+	 * @todo 2025/02/10 ace 動態取得A/B值。
 	 *
 	 */
 	function getOptionMargin(productCode, optionType, targetPoint, strikePrice, premiumPoint) {
@@ -698,12 +722,12 @@
 		var outPriceValue = 0;	// 價外值。
 		
 		var unitPrice = SETTING_OPTION_PREMIUM[productCode]["UNIT_PRICE"];
-		var aOriginalDeposit = SETTING_OPTION_PREMIUM[productCode]["ORIGINAL_DEPOSIT_A"];
-		var bOriginalDeposit = SETTING_OPTION_PREMIUM[productCode]["ORIGINAL_DEPOSIT_B"];
+		var originalDepositA = SETTING_OPTION_PREMIUM[productCode]["ORIGINAL_DEPOSIT_A"];
+		var originalDepositB = SETTING_OPTION_PREMIUM[productCode]["ORIGINAL_DEPOSIT_B"];
 			
 		console.log('unitPrice: ' + unitPrice);
-		console.log('aOriginalDeposit: ' + aOriginalDeposit);
-		console.log('bOriginalDeposit: ' + bOriginalDeposit);
+		console.log('originalDepositA: ' + originalDepositA);
+		console.log('originalDepositB: ' + originalDepositB);
 		
 		console.log('strikePrice: ' + strikePrice);
 		console.log('premiumPoint: ' + premiumPoint);
@@ -714,13 +738,13 @@
 			
 			if ((strikePrice - targetPoint) >= 500) {
 			
-				aOriginalDeposit *= 1.2;
-				bOriginalDeposit *= 1.2;
+				originalDepositA *= 1.2;
+				originalDepositB *= 1.2;
 			}
 			else if ((strikePrice - targetPoint) >= 1000) {
 			
-				aOriginalDeposit *= 1.5;
-				bOriginalDeposit *= 1.5;
+				originalDepositA *= 1.5;
+				originalDepositB *= 1.5;
 			}
 		}
 		else if (optionType == 'PUT') {
@@ -729,19 +753,19 @@
 			
 			if ((targetPoint - strikePrice) >= 500) {
 			
-				aOriginalDeposit *= 1.2;
-				bOriginalDeposit *= 1.2;
+				originalDepositA *= 1.2;
+				originalDepositB *= 1.2;
 			}
 			else if ((targetPoint - strikePrice) >= 1000) {
 			
-				aOriginalDeposit *= 1.5;
-				bOriginalDeposit *= 1.5;
+				originalDepositA *= 1.5;
+				originalDepositB *= 1.5;
 			}
 		}
 		
 		console.log('outPriceValue: ' + outPriceValue);
 		
-		result = (premiumPoint * unitPrice) + Math.max(aOriginalDeposit - outPriceValue, bOriginalDeposit);
+		result = (premiumPoint * unitPrice) + Math.max(originalDepositA - outPriceValue, originalDepositB);
 		
 		return result;
 	}

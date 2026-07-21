@@ -52,14 +52,14 @@
 		this.setProductCode = function(value) {if (value) productCode = value; return value;}
 		this.setTrnDate = function(value) {if (value) trnDate = value; return value;}
 		this.setConMonth = function(value) {if (value) conMonth = value; return value;}
-		this.setStrikePrice = function(value) {if (value) strikePrice = value; return value;}
-		this.setOpenPrice = function(value) {if (value) openPrice = value; return value;}
-		this.setHighPrice = function(value) {if (value) highPrice = value; return value;}
-		this.setLowPrice = function(value) {if (value) lowPrice = value; return value;}
-		this.setClosePrice = function(value) {if (value) closePrice = value; return value;}
-		this.setLastCalPrice = function(value) {if (value) lastCalPrice = value; return value;}
-		this.setTrnQty = function(value) {if (value) trnQty = value; return value;}
-		this.setStayQty = function(value) {if (value) stayQty = value; return value;}
+		this.setStrikePrice = function(value) {if (value) strikePrice = parseFloat(value); return value;}
+		this.setOpenPrice = function(value) {if (value) openPrice = parseFloat(value); return value;}
+		this.setHighPrice = function(value) {if (value) highPrice = parseFloat(value); return value;}
+		this.setLowPrice = function(value) {if (value) lowPrice = parseFloat(value); return value;}
+		this.setClosePrice = function(value) {if (value) closePrice = parseFloat(value); return value;}
+		this.setLastCalPrice = function(value) {if (value) lastCalPrice = parseFloat(value); return value;}
+		this.setTrnQty = function(value) {if (value) trnQty = parseInt(value); return value;}
+		this.setStayQty = function(value) {if (value) stayQty = parseInt(value); return value;}
   
 		this.getProductCode = function() {return productCode;}
 		this.getTrnDate	= function() {return trnDate;}
@@ -118,23 +118,23 @@
 			result.$schema = '/json-schema/vo/option_call_day_trn_log';
 			result.title = 'option_call_day_trn_log';
 
-      result.properties.product_code = { "description": "商品代碼", "type": "string", "maxLength": 3 };
-      result.properties.trn_date = { "description": "交易日期", "type": "string", "maxLength": 8 };
-      result.properties.con_month = { "description": "契約月份", "type": "string", "maxLength": 8 };
-			result.properties.strike_price = { "description": "履約價", "type": "number" };
-      result.properties.open_price = { "description": "開盤價", "type": "number" };
-			result.properties.high_price = { "description": "最高價", "type": "number" };
-			result.properties.low_price = { "description": "最低價", "type": "number" };
-			result.properties.close_price = { "description": "收盤價", "type": "number" };
-			result.properties.last_cal_price = { "description": "結算價", "type": "number" };
-      result.properties.trn_qty = { "description": "成交量", "type": "number" };
-      result.properties.stay_qty = { "description": "未沖銷契約量", "type": "number" };
+      result.properties.product_code = {"description": "商品代碼", "type": "string", "maxLength": 3};
+      result.properties.trn_date = {"description": "交易日期", "type": "string", "maxLength": 8};
+      result.properties.con_month = {"description": "契約月份", "type": "string", "maxLength": 8};
+			result.properties.strike_price = {"description": "履約價", "type": "number"};
+      result.properties.open_price = {"description": "開盤價", "type": "number"};
+			result.properties.high_price = {"description": "最高價", "type": "number"};
+			result.properties.low_price = {"description": "最低價", "type": "number"};
+			result.properties.close_price = {"description": "收盤價", "type": "number"};
+			result.properties.last_cal_price = {"description": "結算價", "type": "number"};
+      result.properties.trn_qty = {"description": "成交量", "type": "number"};
+      result.properties.stay_qty = {"description": "未沖銷契約量", "type": "number"};
 
       return result;
     }
 	}
 
-	if (typeof define === 'function') {
+	if (typeof define == 'function') {
 	
 		define(["tw.ace33022.vo.Ancestor", "underscore"], function(Ancestor) {
 		
@@ -145,7 +145,7 @@
 			return result;
 		});
 	}
-	else if (typeof exports !== 'undefined') {
+	else if (typeof exports != 'undefined') {
 	
 		RequireJSConfig = require('tw/ace33022/RequireJSConfig.js');
 	

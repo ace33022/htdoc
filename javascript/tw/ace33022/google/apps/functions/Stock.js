@@ -796,6 +796,833 @@
 
 	/**
 	 *
+	 * @description 每日選擇權交易資料
+	 *
+	 * @version 2015/01/22 ace 初始版本。
+	 *
+	 * @author ace
+	 *
+	 */
+	function getOptionDayTrnLog(trnDate) {
+	
+		/**
+		 *
+		 * @description 取得網頁資料
+		 *
+		 * @version 2020/03/17 ace 初始版本。
+		 *
+		 * @author ace
+		 *
+		 * @see <a href="https://openhome.cc/Gossip/Encoding/URLEncoding.html">URL 編碼</a>
+		 *
+		 */
+		function getHTML(trnDate, productCode) {
+		
+			function method01(url, payload) {
+			
+				var result = '';
+			
+        var options = {
+
+          "method": "post",
+          "contentType": "application/x-www-form-urlencoded",
+          "payload": payload
+        };
+
+        // console.log(JSON.stringify(options));
+				
+        var httpResponse = UrlFetchApp.fetch(url, options);
+				
+				if (httpResponse.getResponseCode() == 200) result = httpResponse.getContentText();
+			
+				return result;
+			}
+		
+			// var url = new String('http://www.taifex.com.tw/chinese/3/3_2_2.asp');
+			// var url = new String('http://www.taifex.com.tw/cht/3/optDailyMarketReport');
+			var url = new String('https://www.taifex.com.tw/cht/3/optDailyMarketReport');
+		
+			var year = trnDate.substr(0, 4);
+			var month = trnDate.substr(4, 2);
+			var day = trnDate.substr(6, 2);
+		
+			/**
+			 * 因POST方式中，參數commodity_name內存中文字("臺指選擇權(TXO)")，
+			 * 使用java.net.URLEncoder.encode("臺指選擇權(TXO)")函數之結果:%BB%4F%AB%FC%BF%EF%BE%DC%C5%76%28TXO%29
+			 * 從LiveHTTP headers取得之結果:%BBO%AB%FC%BF%EF%BE%DC%C5v%28TXO%29
+			 * 轉換結果無法一至，且使用UrlEncodeFormEntity類別編碼後，%符號會再轉換成%25，無法轉換成對應之參數資料。
+			 * 故不使用UrlEncodeFormEntity類別作處理，改以Stringentity類別處理參數資料，即可自行指定POST方式所需之參數資料。
+			 **/
+			var postData = 'queryType=2' + '&'
+									 + 'marketCode=0' + '&'
+									 + 'dateaddcnt=' + '&'
+									 + 'commodity_id=' + productCode + '&'
+									 + 'commodity_id2=' + '&'
+									 + 'commodity_idt=' + productCode + '&'
+									 + 'commodity_id2t=' + '&'
+									 + 'commodity_id2t2=' + '&'
+									 + 'MarketCode=0' + '&'
+									 + 'queryDate=' + year + '/' + month + '/' + day;
+			
+			return method01(url, postData);
+		}
+			
+		function addOptionDayTrnLog(arrayOptionCallDayTrnLog, arrayOptionPutDayTrnLog, trnDate, productCode) {
+		
+      var $ = Cheerio.load(getHTML(trnDate, productCode));
+      var trs = $('.table_f').find('tbody').find('tr');
+
+      var index;
+      var vo;
+      var trnType;
+      var temp;
+
+      // console.log(trs.length);
+
+      for (index = 0; index < trs.length; index++) {
+
+        // console.log(trs.eq(index).find('td').eq(0).text().trim().toUpperCase());
+
+        if ((new String(trs.eq(index).find('td').eq(0).text())).trim().toUpperCase() == productCode) {
+
+          trnType = (new String(trs.eq(index).find('td').eq(4).text())).toUpperCase();
+
+					if (trnType == 'CALL') {
+				
+						vo = new tw.ace33022.vo.OptionCallDayTrnLog();
+					}	
+					else if (trnType == 'PUT') {
+				
+						vo = new tw.ace33022.vo.OptionPutDayTrnLog();
+					}	
+
+					vo.setTrnDate(trnDate);
+					vo.setConMonth((new String(trs.eq(index).find('td').eq(1).text())).trim());
+					vo.setProductCode(productCode);
+					vo.setStrikePrice(new String(trs.eq(index).find('td').eq(3).text()));
+
+          temp = (new String(trs.eq(index).find('td').eq(5).text())).trim();
+					if (temp != '-') vo.setOpenPrice(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(6).text())).trim();
+					if (temp != '-') vo.setHighPrice(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(7).text())).trim();
+					if (temp != '-') vo.setLowPrice(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(8).text())).trim();
+					if (temp != '-') vo.setClosePrice(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(9).text())).trim();
+					if (temp != '-') vo.setLastCalPrice(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(14).text())).trim();
+					if (temp != '-') vo.setTrnQty(parseFloat(temp));
+				
+          temp = (new String(trs.eq(index).find('td').eq(15).text())).trim();
+					if (temp != '-') vo.setStayQty(parseFloat(temp));
+
+					if (trnType == 'CALL') {
+				
+						arrayOptionCallDayTrnLog.push(vo.toJSONObject());
+					}	
+					else if (trnType == 'PUT') {
+				
+						arrayOptionPutDayTrnLog.push(vo.toJSONObject());
+					}	
+        }
+      }
+		}
+
+		var result = {
+		
+			"code": 0,
+			"message": "",
+			"data": {
+			
+				"option_call_day_trn_log": [],
+				"option_put_day_trn_log": []
+			}
+		};
+		
+		try {
+		
+			addOptionDayTrnLog(result["data"]["option_call_day_trn_log"], result["data"]["option_put_day_trn_log"], trnDate, 'TXO');	// 臺指選擇權
+			addOptionDayTrnLog(result["data"]["option_call_day_trn_log"], result["data"]["option_put_day_trn_log"], trnDate, 'TEO');	// 電子選擇權
+			addOptionDayTrnLog(result["data"]["option_call_day_trn_log"], result["data"]["option_put_day_trn_log"], trnDate, 'TFO');	// 金融選擇權
+		}
+		catch (e) {
+		
+			result["code"] = 1;
+			result["message"] = e.message;
+		}
+		
+		return JSON.stringify(result);
+	}
+  
+	/**
+	 *
+	 * @description 三大法人每日選擇權交易資料
+	 *
+	 * @version 2012/08/08 ace 初始版本。
+	 * @version 2012/08/08 ace 函數GetOptionDayTrnLogsHtml()更名為GetFoundationOptionDayTrnLogsHtml()。
+	 * @version 2012/08/08 ace 函數DealWithOptionDayTrnLogs()更名為DealWithFoundationOptionDayTrnLogs()。
+	 * @version 2020/03/23 ace 函數DealWithFoundationOptionDayTrnLogs()更名為DealWithFoundationOptionDayTrnLog()。
+	 * @version 2024/05/04 ace 配合版型修改調整取得資料方式。
+	 *
+	 * @author ace
+	 *
+	 */
+	function getFoundationOptionDayTrnLog(trnDate) {
+
+		function getHTML(trnDate) {
+		
+      function method01(url, payload) {
+
+				var result = '';
+			
+        var options = {
+
+          "method": "post",
+          "contentType": "application/x-www-form-urlencoded",
+          "payload": payload
+        };
+
+        // console.log(JSON.stringify(options));
+				
+        var httpResponse = UrlFetchApp.fetch(url, options);
+				
+				if (httpResponse.getResponseCode() == 200) result = httpResponse.getContentText();
+			
+				return result;
+      }
+				
+			// var url = new String('http://www.taifex.com.tw/chinese/3/7_12_5.asp');
+			// var url = new String('http://www.taifex.com.tw/cht/3/callsAndPutsDate');
+			var url = new String('https://www.taifex.com.tw/cht/3/callsAndPutsDate');
+
+			var year = trnDate.substr(0, 4);
+			var month = trnDate.substr(4, 2);
+			var day = trnDate.substr(6, 2);
+			
+			// var params = new String('goday=&syear=' + year + '&smonth=' + month + '&sday=' + day + '&COMMODITY_ID=');
+			// var postData = new String('queryType=1&goDay=&doQuery=1&dateaddcnt=&queryDate=' + year + '/' + month + '/' + day + '&commodityId=');
+      var postData = 'queryType=1&goDay=&doQuery=1&dateaddcnt=&queryDate=' + year + '/' + month + '/' + day + '&commodityId=';
+
+			return method01(url, postData);
+		}
+		
+		function addFoundationOptionDayTrnLog(arrayDealerOptin, arrayInvestOptin, arrayForeignOptin, html, productCode, foundation) {
+		
+      var $ = Cheerio.load(html);
+      var trs = $('table').eq(0).find('tr');
+
+			var tr = new Number(0);
+			var vo;
+
+      // console.log(trs.length);
+
+			if (foundation == 'dealer') {
+			
+				vo = new tw.ace33022.vo.DealerOptionDayTrnLog();
+			
+				if (productCode == 'TXO') tr = 3;       // 臺指選擇權
+				else if (productCode == 'TEO') tr = 9;  // 電子選擇權
+				else if (productCode == 'TFO') tr = 15;	// 金融選擇權
+
+				vo.setTrnDate(trnDate);
+				vo.setProductCode(productCode);
+
+				// CALL
+				vo.setCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));    // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(5).text().trim().replace(/,/g, '')));  // 買方交易金額
+				vo.setCallSellQty(parseFloat(trs.eq(tr).find('td').eq(6).text().trim().replace(/,/g, '')));   // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(7).text().trim().replace(/,/g, ''))); // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));     // 買方未平倉口數
+				vo.setStayCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(11).text().trim().replace(/,/g, '')));   // 買方未平倉金額
+				vo.setStayCallSellQty(parseFloat(trs.eq(tr).find('td').eq(12).text().trim().replace(/,/g, '')));    // 賣方未平倉口數
+				vo.setStayCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(13).text().trim().replace(/,/g, '')));  // 賣方未平倉金額
+
+				tr += 3;
+
+				// PUT
+				vo.setPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(2).text().trim().replace(/,/g, '')));     // 買方交易口數
+				vo.setPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(3).text().trim().replace(/,/g, '')));   // 買方交易金額
+				vo.setPutSellQty(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));    // 賣方交易口數
+				vo.setPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(5).text().trim().replace(/,/g, '')));  // 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(8).text().trim().replace(/,/g, '')));     // 買方未平倉口數
+				vo.setStayPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(9).text().trim().replace(/,/g, '')));   // 買方未平倉金額
+				vo.setStayPutSellQty(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));   // 賣方未平倉口數
+				vo.setStayPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(11).text().trim().replace(/,/g, ''))); // 賣方未平倉金額
+				
+				arrayDealerOptin.push(vo.toJSONObject());
+			}
+			else if (foundation == 'invest') {
+			
+				vo = new tw.ace33022.vo.InvestOptionDayTrnLog();
+			
+				if (productCode == 'TXO') tr = 4;       // 臺指選擇權
+				else if (productCode == 'TEO') tr = 10; // 電子選擇權
+				else if (productCode == 'TFO') tr = 16;	// 金融選擇權
+
+				vo.setTrnDate(trnDate);
+				vo.setProductCode(productCode);
+				
+				// CALL
+				vo.setCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(1).text().trim().replace(/,/g, '')));          // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(2).text().trim().replace(/,/g, '')));        // 買方交易金額
+				vo.setCallSellQty(parseFloat(trs.eq(tr).find('td').eq(3).text().trim().replace(/,/g, '')));         // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));       // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(7).text().trim().replace(/,/g, '')));      // 買方未平倉口數
+				vo.setStayCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(8).text().trim().replace(/,/g, '')));    // 買方未平倉金額
+				vo.setStayCallSellQty(parseFloat(trs.eq(tr).find('td').eq(9).text().trim().replace(/,/g, '')));     // 賣方未平倉口數
+				vo.setStayCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));  // 賣方未平倉金額
+	
+				tr += 3;
+	
+				// PUT
+				vo.setPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(1).text().trim().replace(/,/g, '')));         	// 買方交易口數
+				vo.setPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(2).text().trim().replace(/,/g, '')));       	// 買方交易金額
+				vo.setPutSellQty(parseFloat(trs.eq(tr).find('td').eq(3).text().trim().replace(/,/g, '')));        	// 賣方交易口數
+				vo.setPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));      	// 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(7).text().trim().replace(/,/g, '')));     	// 買方未平倉口數
+				vo.setStayPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(8).text().trim().replace(/,/g, '')));   	// 買方未平倉金額
+				vo.setStayPutSellQty(parseFloat(trs.eq(tr).find('td').eq(9).text().trim().replace(/,/g, '')));   	  // 賣方未平倉口數
+				vo.setStayPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));	  // 賣方未平倉金額
+				
+				arrayInvestOptin.push(vo.toJSONObject());
+			}
+			else if (foundation == 'foreign') {
+			
+				vo = new tw.ace33022.vo.ForeignOptionDayTrnLog();
+				
+				if (productCode == 'TXO') tr = 5;       // 臺指選擇權
+				else if (productCode == 'TEO') tr = 11; // 電子選擇權
+				else if (productCode == 'TFO') tr = 17;	// 金融選擇權
+
+				vo.setTrnDate(trnDate);
+				vo.setProductCode(productCode);
+				
+				// CALL
+				vo.setCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(1).text().trim().replace(/,/g, '')));          // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(2).text().trim().replace(/,/g, '')));        // 買方交易金額
+				vo.setCallSellQty(parseFloat(trs.eq(tr).find('td').eq(3).text().trim().replace(/,/g, '')));         // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));       // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(trs.eq(tr).find('td').eq(7).text().trim().replace(/,/g, '')));      // 買方未平倉口數
+				vo.setStayCallBuyTotal(parseFloat(trs.eq(tr).find('td').eq(8).text().trim().replace(/,/g, '')));    // 買方未平倉金額
+				vo.setStayCallSellQty(parseFloat(trs.eq(tr).find('td').eq(9).text().trim().replace(/,/g, '')));     // 賣方未平倉口數
+				vo.setStayCallSellTotal(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));  // 賣方未平倉金額
+	
+				tr += 3;
+	
+				// PUT
+				vo.setPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(1).text().trim().replace(/,/g, '')));         	// 買方交易口數
+				vo.setPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(2).text().trim().replace(/,/g, '')));       	// 買方交易金額
+				vo.setPutSellQty(parseFloat(trs.eq(tr).find('td').eq(3).text().trim().replace(/,/g, '')));        	// 賣方交易口數
+				vo.setPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(4).text().trim().replace(/,/g, '')));      	// 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(trs.eq(tr).find('td').eq(7).text().trim().replace(/,/g, '')));     	// 買方未平倉口數
+				vo.setStayPutBuyTotal(parseFloat(trs.eq(tr).find('td').eq(8).text().trim().replace(/,/g, '')));   	// 買方未平倉金額
+				vo.setStayPutSellQty(parseFloat(trs.eq(tr).find('td').eq(9).text().trim().replace(/,/g, '')));   	  // 賣方未平倉口數
+				vo.setStayPutSellTotal(parseFloat(trs.eq(tr).find('td').eq(10).text().trim().replace(/,/g, '')));	  // 賣方未平倉金額
+				
+				arrayForeignOptin.push(vo.toJSONObject());
+			}
+			
+			return this;
+		}
+		
+		var result = {
+		
+			"code": 0,
+			"message": "",
+			"data": {
+			
+				"dealer": [],
+				"foreign": [],
+				"invest": []
+			}
+		};
+		
+		try {
+
+			var html = getHTML(trnDate);
+
+      // Logger.log(html);
+
+			// 臺指選擇權, 電子選擇權, 金融選擇權
+			["TXO", "TEO", "TFO"].forEach(function(productCode) {
+			
+        // 自營商、投信、外資
+				["dealer", "invest", "foreign"].forEach(function(foundation) {addFoundationOptionDayTrnLog(result["data"]["dealer"], result["data"]["invest"], result["data"]["foreign"], html, productCode, foundation);});
+			});
+		}
+		catch (e) {
+		
+			result["code"] = 1;
+			result["message"] = e.message;
+		}
+		
+		return JSON.stringify(result);
+	}
+
+	/**
+	 *
+	 * @description 選擇權大額交易人未沖銷部位資料
+	 *
+	 * @version 2012/08/08 ace 初始版本。
+	 *
+	 * @author ace
+	 *
+	 */
+	function getOptionLargeStayLog(trnDate) {
+
+		function getHTML(trnDate, productCode) {
+		
+			function method01(url, payload) {
+			
+				var result = '';
+			
+        var options = {
+
+          "method": "post",
+          "contentType": "application/x-www-form-urlencoded",
+          "payload": payload
+        };
+
+        // console.log(JSON.stringify(options));
+				
+        var httpResponse = UrlFetchApp.fetch(url, options);
+				
+				if (httpResponse.getResponseCode() == 200) result = httpResponse.getContentText();
+			
+				return result;
+			}
+			
+			// var url = new String('http://www.taifex.com.tw/chinese/3/7_9.asp');
+			// var url = new String('http://www.taifex.com.tw/cht/3/largeTraderOptQry');
+			var url = new String('https://www.taifex.com.tw/cht/3/largeTraderOptQry');
+		
+			var year = new String(parseInt(trnDate.substr(0, 4), 10));
+			var month = new String(parseInt(trnDate.substr(4, 2), 10));
+			var day = new String(parseInt(trnDate.substr(6, 2), 10));
+		
+			/**
+			 * 因POST方式中，參數commodity_name內存中文字("臺指選擇權(TXO)")，
+			 * 使用java.net.URLEncoder.encode("臺指選擇權(TXO)")函數之結果:%BB%4F%AB%FC%BF%EF%BE%DC%C5%76%28TXO%29
+			 * 從LiveHTTP headers取得之結果:%BBO%AB%FC%BF%EF%BE%DC%C5v%28TXO%29
+			 * 轉換結果無法一至，且使用UrlEncodeFormEntity類別編碼後，%符號會再轉換成%25，無法轉換成對應之參數資料。
+			 * 故不使用UrlEncodeFormEntity類別作處理，改以Stringentity類別處理參數資料，即可自行指定POST方式所需之參數資料。
+			**/
+			var postData = 'datecount=' + '&'
+									 + 'contractId2=' + '&'
+									 + 'contractId=' + productCode + '&'
+									 + 'queryDate=' + year + '/' + month + '/' + day;
+		
+		
+			return method01(url, postData);
+		}
+		
+		function addOptionLargeStayLog(arrayOptionCallLargeStayLog, arrayOptionPutLargeStayLog, html, trnDate, productCode, trnType) {
+		
+			// 選擇權大額交易人未沖銷部位資料
+
+      var $ = Cheerio.load(getHTML(trnDate, productCode));
+      var trs = $('.table_f').eq(0).find('tr');
+			var tds;
+		
+			var index = new Number(0);
+			var temp;
+			
+			var vo;
+
+      // console.log(trs.length);
+
+			if (trs.length != 0) {
+			
+				if (trnType == 'CALL') {
+				
+					vo = new tw.ace33022.vo.OptionCallLargeStayLog();
+			
+					if (productCode == 'TXO') {
+				
+						index = 4;
+					}
+					else {
+				
+						index = 3;
+					}
+				}  
+				else if (trnType == 'PUT') {
+				
+					vo = new tw.ace33022.vo.OptionPutLargeStayLog();
+			
+					if (productCode == 'TXO') {
+				
+						index = 7;
+					}
+					else {
+				
+						index = 5;
+					}
+				}
+
+        tds = trs.eq(index).find('td');
+
+        vo.setTrnDate(trnDate);
+
+        temp = '';  // 契約月份
+				if (productCode == 'TXO') {
+			
+					temp = tds.eq(0).text().trim();
+				}
+				else {
+			
+					temp = tds.eq(1).text().trim();
+				}
+
+				// vo.setConMonth(temp.replace(new RegExp(' ', 'gm'), ''));
+        vo.setConMonth(temp.replace(new RegExp(' ', 'gm'), '').replace(/\t/g, '').replace(/\n/g, ''));
+			
+				vo.setProductCode(productCode);
+			
+				if (productCode == 'TXO') {
+
+          // temp = tds.eq(1).text().substring(0, tds.eq(1).text().indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(/,/g, '').trim();
+          temp = tds.eq(1).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreFiveBuy(parseFloat(temp));
+			
+          temp = tds.eq(1).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreFiveJurBuy(parseFloat(temp));
+
+          temp = tds.eq(3).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreTenBuy(parseFloat(temp));
+			
+          temp = tds.eq(3).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreTenJurBuy(parseFloat(temp));
+
+          temp = tds.eq(5).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreFiveSell(parseFloat(temp));
+			
+          temp = tds.eq(5).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreFiveJurSell(parseFloat(temp));
+
+          temp = tds.eq(7).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreTenSell(parseFloat(temp));
+			
+          temp = tds.eq(7).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreTenJurSell(parseFloat(temp));
+
+          temp = tds.eq(9).text().replace(new RegExp(',', 'gm'), '');
+          vo.setStayQty(parseFloat(temp));
+				}
+				else {
+			
+          temp = tds.eq(2).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreFiveBuy(parseFloat(temp));
+
+          temp = tds.eq(2).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreFiveJurBuy(parseFloat(temp));
+
+          temp = tds.eq(4).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreTenBuy(parseFloat(temp));
+
+          temp = tds.eq(4).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreTenJurBuy(parseFloat(temp));
+
+          temp = tds.eq(6).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreFiveSell(parseFloat(temp));
+
+          temp = tds.eq(6).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreFiveJurSell(parseFloat(temp));
+
+          temp = tds.eq(8).text();
+          temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+          vo.setPreTenSell(parseFloat(temp));
+
+          temp = tds.eq(8).text();
+          temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+          vo.setPreTenJurSell(parseFloat(temp));
+
+					temp = tds.eq(10).text().replace(new RegExp(',', 'gm'), '');
+					vo.setStayQty(parseFloat(temp));
+				}
+				
+				if (trnType == 'CALL') {
+				
+					arrayOptionCallLargeStayLog.push(vo.toJSONObject());
+				}
+				else if (trnType == 'PUT') {
+				
+					arrayOptionPutLargeStayLog.push(vo.toJSONObject());
+				}
+			}
+		}
+
+		function addOptionLargeStayAllLog(arrayOptionCallLargeStayLog, arrayOptionPutLargeStayLog, html, trnDate, productCode, trnType) {
+
+			// 選擇權大額交易人未沖銷部位資料(全部月份)
+
+      var $ = Cheerio.load(getHTML(trnDate, productCode));
+      var trs = $('.table_f').eq(0).find('tr');
+			var tds;
+
+			var vo;
+			
+			var index = new Number(0);
+			var temp;
+		
+			if (trs.length != 0) {
+			
+				if (trnType == 'CALL') {
+			
+					vo = new tw.ace33022.vo.OptionCallLargeStayAllLog();
+					
+					if (productCode == 'TXO') {
+				
+						index = 5;
+					}
+					else {
+				
+						index = 4;
+					}
+				}  
+				else if (trnType == 'PUT') {
+			
+					vo = new tw.ace33022.vo.OptionPutLargeStayAllLog();
+					
+					if (productCode == 'TXO') {
+				
+						index = 8;
+					}
+					else {
+				
+						index = 6;
+					}
+				}  
+			
+        tds = trs.eq(index).find('td');
+
+				vo.setTrnDate(trnDate);
+				vo.setProductCode(productCode);
+			
+        temp = tds.eq(1).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreFiveBuy(parseFloat(temp));
+
+        temp = tds.eq(1).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreFiveJurBuy(parseFloat(temp));
+
+        temp = tds.eq(3).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreTenBuy(parseFloat(temp));
+
+        temp = tds.eq(3).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreTenJurBuy(parseFloat(temp));
+
+        temp = tds.eq(5).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreFiveSell(parseFloat(temp));
+
+        temp = tds.eq(5).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreFiveJurSell(parseFloat(temp));
+
+        temp = tds.eq(7).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreTenSell(parseFloat(temp));
+
+        temp = tds.eq(7).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreTenJurSell(parseFloat(temp));
+
+				temp = new String(tds.eq(9).text().replace(new RegExp(',', 'gm'), ''));
+				vo.setStayQty(parseFloat(temp));
+
+				if (trnType == 'CALL') {
+		
+					arrayOptionCallLargeStayLog.push(vo.toJSONObject());
+				}  
+				else if (trnType == 'PUT') {
+			
+					arrayOptionPutLargeStayLog.push(vo.toJSONObject());
+				}  
+			}
+		}
+
+		function addWeekendOptionLargeStayLog(arrayOptionCallLargeStayLog, arrayOptionPutLargeStayLog, html, trnDate, productCode, trnType) {
+		
+			// 選擇權大額交易人周選擇權未沖銷部位資料
+
+      var $ = Cheerio.load(getHTML(trnDate, productCode));
+      var trs = $('.table_f').eq(0).find('tr');
+			var tds;
+		
+			var index = 0;
+			var temp;
+			
+			var vo;
+
+      // console.log(trs.length);
+
+			if (trs.length != 0) {
+			
+				if (trnType == 'CALL') {
+				
+					vo = new tw.ace33022.vo.OptionCallLargeStayLog();
+
+          index = 3;
+				}  
+				else if (trnType == 'PUT') {
+				
+					vo = new tw.ace33022.vo.OptionPutLargeStayLog();
+
+          index = 6;
+				}
+
+        tds = trs.eq(index).find('td');
+
+        vo.setTrnDate(trnDate);
+        vo.setConMonth('WEEKEND');
+				vo.setProductCode(productCode);
+
+        temp = tds.eq(2).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreFiveBuy(parseFloat(temp));
+    
+        temp = tds.eq(2).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreFiveJurBuy(parseFloat(temp));
+
+        temp = tds.eq(4).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreTenBuy(parseFloat(temp));
+    
+        temp = tds.eq(4).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreTenJurBuy(parseFloat(temp));
+
+        temp = tds.eq(6).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreFiveSell(parseFloat(temp));
+    
+        temp = tds.eq(6).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreFiveJurSell(parseFloat(temp));
+
+        temp = tds.eq(8).text();
+        temp = temp.substring(0, temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').trim();
+
+        vo.setPreTenSell(parseFloat(temp));
+    
+        temp = tds.eq(8).text();
+        temp = temp.substring(temp.indexOf('(')).replace(/\t/g, '').replace(/\n/g, '').replace(new RegExp(',', 'gm'), '').replaceAll('(', '').replaceAll(')', '').trim();
+
+        vo.setPreTenJurSell(parseFloat(temp));
+
+        temp = tds.eq(10).text().replace(new RegExp(',', 'gm'), '');
+        vo.setStayQty(parseFloat(temp));
+
+				if (trnType == 'CALL') {
+				
+					arrayOptionCallLargeStayLog.push(vo.toJSONObject());
+				}
+				else if (trnType == 'PUT') {
+				
+					arrayOptionPutLargeStayLog.push(vo.toJSONObject());
+				}
+			}
+		}
+
+		var result = {
+		
+			"code": 0,
+			"message": "",
+			"data": {
+			
+				"option_call_large_stay_log": [],
+				"option_put_large_stay_log": [],
+				"option_call_large_stay_all_log": [],
+				"option_put_large_stay_all_log": []
+			}
+		};
+		
+		try {
+
+			// 臺指選擇權、電子選擇權、金融選擇權
+			["TXO", "TEO", "TFO"].forEach(function(productCode) {
+			
+				var html = getHTML(trnDate, productCode);
+				
+				["CALL", "PUT"].forEach(function(trnType) {
+				
+					addOptionLargeStayLog(result["data"]["option_call_large_stay_log"], result["data"]["option_put_large_stay_log"], html, trnDate, productCode, trnType);
+					addOptionLargeStayAllLog(result["data"]["option_call_large_stay_all_log"], result["data"]["option_put_large_stay_all_log"], html, trnDate, productCode, trnType);
+
+          // 台指選擇權獨立提供周選擇權。
+          if (productCode == 'TXO') {
+
+					  addWeekendOptionLargeStayLog(result["data"]["option_call_large_stay_log"], result["data"]["option_put_large_stay_log"], html, trnDate, productCode, trnType);
+          }
+				});
+			});
+		}
+		catch (e) {
+		
+			result["code"] = 1;
+			result["message"] = e.message;
+		}
+		
+		return JSON.stringify(result);
+	}
+
+	/**
+	 *
 	 * @description getMarketType
 	 *
 	 * @return String String。
@@ -1055,7 +1882,7 @@
 	 *                         "TFO": 金指選。
 	 *                         "TEO": 電指選。
 	 */
-	function getQuoteListOption(productCode, conMonth) {
+  function getQuoteListOption(parameter) {
 	
 		function getData01(productCode, conMonth, marketType) {
 		
@@ -1095,65 +1922,84 @@
 		
 			"code": 0,
 			"message": "",
-			"data": {
-			
-				"call": [],
-				"put": []
-			}
+			"data": {}
 		};
-		
-		var arrayQuoteList = new Array();
 		
     try {
 
-      arrayQuoteList = JSON.parse(getData01(productCode, conMonth, getMarketType()))["RtData"]["QuoteList"];
+			/*
+			[
+				{"product_code": "TX", "con_month": ["202604", "202605"]},
+				{"product_code": "TE", "con_month": ["202604"]}
+			];
+			*/
 
-      arrayQuoteList.forEach(function(element, index) {
+      JSON.parse(parameter).forEach(function(element, index) {
 
-				if (element["CP"] == 'C') {
-				
-					vo = new tw.ace33022.vo.OptionCallTrnLog();
-					
-					vo.setProductCode(productCode);
-					vo.setConMonth(conMonth);
-					vo.setTrnDate(element["CDate"]);
-					vo.setStrikePrice(element["StrikePrice"]);
-					vo.setOpenPrice(element["COpenPrice"]);
-					vo.setHighPrice(element["CHighPrice"]);
-					vo.setLowPrice(element["CLowPrice"]);
-					vo.setClosePrice(element["CLastPrice"]);
-					vo.setLastCalPrice(element["CLastPrice"]);
-					vo.setTrnQty(element["CTotalVolume"]);
-					vo.setStayQty(element["OpenInterest"]);
-					vo.setBestAskPrice(element["CBestAskPrice"]);
-					vo.setBestAskQty(element["CBestAskSize"]);
-					vo.setBestBidPrice(element["CBestBidPrice"]);
-					vo.setBestBidQty(element["CBestBidSize"]);
-					
-					result["data"]["call"].push(vo.toJSONObject());
-				}
-				else if (element["CP"] == 'P') {
-				
-					vo = new tw.ace33022.vo.OptionPutTrnLog();
-					
-					vo.setProductCode(productCode);
-					vo.setConMonth(conMonth);
-					vo.setTrnDate(element["CDate"]);
-					vo.setStrikePrice(element["StrikePrice"]);
-					vo.setOpenPrice(element["COpenPrice"]);
-					vo.setHighPrice(element["CHighPrice"]);
-					vo.setLowPrice(element["CLowPrice"]);
-					vo.setClosePrice(element["CLastPrice"]);
-					vo.setLastCalPrice(element["CLastPrice"]);
-					vo.setTrnQty(element["CTotalVolume"]);
-					vo.setStayQty(element["OpenInterest"]);
-					vo.setBestAskPrice(element["CBestAskPrice"]);
-					vo.setBestAskQty(element["CBestAskSize"]);
-					vo.setBestBidPrice(element["CBestBidPrice"]);
-					vo.setBestBidQty(element["CBestBidSize"]);
-					
-					result["data"]["put"].push(vo.toJSONObject());
-				}
+        var productCode = element["product_code"];
+
+        if (typeof result["data"][productCode] == 'undefined') result["data"][productCode] = {"con_month": []};
+
+        element["con_month"].forEach(function(element, index) {
+
+          var conMonth = element;
+
+          // Logger.log(productCode);
+          // Logger.log(conMonth);
+
+          result["data"][productCode]["con_month"].push(conMonth);
+          result["data"][productCode][conMonth] = {"call": [], "put": []};
+
+          JSON.parse(getData01(productCode + 'O', conMonth, getMarketType()))["RtData"]["QuoteList"].forEach(function(element, index) {
+
+            var vo;
+
+            if (element["CP"] == 'C') {
+            
+              vo = new tw.ace33022.vo.OptionCallTrnLog();
+              
+              vo.setProductCode(productCode);
+              vo.setConMonth(conMonth);
+              vo.setTrnDate(element["CDate"]);
+              vo.setStrikePrice(element["StrikePrice"]);
+              vo.setOpenPrice(element["COpenPrice"]);
+              vo.setHighPrice(element["CHighPrice"]);
+              vo.setLowPrice(element["CLowPrice"]);
+              vo.setClosePrice(element["CLastPrice"]);
+              vo.setLastCalPrice(element["CLastPrice"]);
+              vo.setTrnQty(element["CTotalVolume"]);
+              vo.setStayQty(element["OpenInterest"]);
+              vo.setBestAskPrice(element["CBestAskPrice"]);
+              vo.setBestAskQty(element["CBestAskSize"]);
+              vo.setBestBidPrice(element["CBestBidPrice"]);
+              vo.setBestBidQty(element["CBestBidSize"]);
+              
+              result["data"][productCode][conMonth]["call"].push(vo.toJSONObject());
+            }
+            else if (element["CP"] == 'P') {
+            
+              vo = new tw.ace33022.vo.OptionPutTrnLog();
+              
+              vo.setProductCode(productCode);
+              vo.setConMonth(conMonth);
+              vo.setTrnDate(element["CDate"]);
+              vo.setStrikePrice(element["StrikePrice"]);
+              vo.setOpenPrice(element["COpenPrice"]);
+              vo.setHighPrice(element["CHighPrice"]);
+              vo.setLowPrice(element["CLowPrice"]);
+              vo.setClosePrice(element["CLastPrice"]);
+              vo.setLastCalPrice(element["CLastPrice"]);
+              vo.setTrnQty(element["CTotalVolume"]);
+              vo.setStayQty(element["OpenInterest"]);
+              vo.setBestAskPrice(element["CBestAskPrice"]);
+              vo.setBestAskQty(element["CBestAskSize"]);
+              vo.setBestBidPrice(element["CBestBidPrice"]);
+              vo.setBestBidQty(element["CBestBidSize"]);
+              
+              result["data"][productCode][conMonth]["put"].push(vo.toJSONObject());
+            }
+          });
+        });
       });
 		}
 		catch (e) {
@@ -1179,6 +2025,9 @@
         getFutureDayTrnLog: getFutureDayTrnLog,
         getFoundationFutureDayTrnLog: getFoundationFutureDayTrnLog,
         getFutureLargeStayLog: getFutureLargeStayLog,
+        getOptionDayTrnLog: getOptionDayTrnLog,
+        getFoundationOptionDayTrnLog: getFoundationOptionDayTrnLog,
+        getOptionLargeStayLog: getOptionLargeStayLog,
         getConMonth: getConMonth,
         getQuoteDetail: getQuoteDetail,
         getQuoteListOption: getQuoteListOption
@@ -1193,6 +2042,9 @@
     module.exports = getFutureDayTrnLog;
     module.exports = getFoundationFutureDayTrnLog;
     module.exports = getFutureLargeStayLog;
+    module.exports = getOptionDayTrnLog;
+    module.exports = getFoundationOptionDayTrnLog;
+    module.exports = getOptionLargeStayLog;
     module.exports = getConMonth;
     module.exports = getQuoteDetail;
     module.exports = getQuoteListOption;
@@ -1207,6 +2059,9 @@
     root.tw.ace33022.google.apps.functions.Stock.getFutureDayTrnLog = getFutureDayTrnLog;
     root.tw.ace33022.google.apps.functions.Stock.getFoundationFutureDayTrnLog = getFoundationFutureDayTrnLog;
     root.tw.ace33022.google.apps.functions.Stock.getFutureLargeStayLog = getFutureLargeStayLog;
+    root.tw.ace33022.google.apps.functions.Stock.getOptionDayTrnLog = getOptionDayTrnLog;
+    root.tw.ace33022.google.apps.functions.Stock.getFoundationOptionDayTrnLog = getFoundationOptionDayTrnLog;
+    root.tw.ace33022.google.apps.functions.Stock.getOptionLargeStayLog = getOptionLargeStayLog;
     root.tw.ace33022.google.apps.functions.Stock.getConMonth = getConMonth;
     root.tw.ace33022.google.apps.functions.Stock.getQuoteDetail = getQuoteDetail;
     root.tw.ace33022.google.apps.functions.Stock.getQuoteListOption = getQuoteListOption;

@@ -1,6 +1,7 @@
-program/
-javascript\tw\_FOSSIL_
-javascript\tw\tw.fossil
+program
+javascript/tw/_FOSSIL_
+javascript/tw/tw.fossil
+javascript/tw/ace33022/functions/av
 javascript/backbone/
 javascript/Blob.js/
 javascript/bootstrap/bootbox-4.4.0/
@@ -47,4 +48,4 @@ javascript/vue-2.3.3/
 javascript/wordcloud2.js-1.0.5/
 javascript/x-editable/
 javascript/qrious-4.0.2/
-stylesheet/Font-Awesome/
+stylesheet/Font-Awesome

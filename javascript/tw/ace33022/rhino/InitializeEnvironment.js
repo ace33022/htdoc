@@ -13,6 +13,8 @@
  * @version 2015/02/25 ace 全域變數JSLibDir改以Configuration.JSLibDir取代。
  * @version 2015/11/13 ace 載入RequireJS時，新增定義requirejs函數。
  * @version 2015/11/21 ace 替換Configuration的logger物件。
+ * @version 2026/04/21 ace 新增dirJavaScript區域變數紀錄獨立的JavaScript目錄，當JavaScript目錄不在WorkDir目錄下，可以設定對應的獨立目錄。
+ * @version 2026/04/23 ace 新增setDirTool函數自行設定Tool目錄，若Tool程式不是位在dirWork路徑下，可彈性設定實際的Tool目錄。
  *
  * @author ace
  *
@@ -50,39 +52,75 @@
  *
  */
 
-// 設定console輸出資料為BIG5編碼格式。
-// Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'BIG5'));
-// Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'BIG5'));
-
-// 設定console輸出資料為UTF8編碼格式。
-Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'UTF8'));
-Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'UTF8'));
-
 (function(root) {
 	
-	// @version 2015/11/21 替換Configuration的logger物件。
-	var loggerName = 'org.mozilla.javascript.tools.shell.Main';
-
-	if (typeof Configuration["loggerName"] != 'undefined') loggerName = Configuration["loggerName"];
-
-  // @todo 2023/09/13 ace 在Tomcat環境下如何搭配使用ServletContext?
-	root.logger = Packages.tw.ace33022.functions.Misc.getLog(loggerName);
+	// var dirWork = function() {return Packages.java.lang.System.getenv('dirWork') != null ? Packages.java.lang.System.getenv('dirWork') : 'W:'}();
+	var dirWork = function() {return Packages.java.lang.System.getProperty('dirWork') != null ? Packages.java.lang.System.getProperty('dirWork') : 'W:'}();
+	var dirJavaScript = '';
+	var dirTool = '';
 	
-	// @version 2013/03/04 新增alert函數對應print函數。
+	var propertiesLog4J = new Packages.java.util.Properties();
+	
+	// @version 2015/11/21 替換Configuration的logger物件。
+	// var loggerName = 'org.mozilla.javascript.tools.shell.Main';
+	
+	// if (typeof Configuration["loggerName"] != 'undefined') loggerName = Configuration["loggerName"];
+	
+	// 設定console輸出資料為BIG5編碼格式。
+	// Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'BIG5'));
+	// Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'BIG5'));
+
+	// 設定console輸出資料為UTF8編碼格式。
+	Packages.java.lang.System.setOut(new Packages.java.io.PrintStream(Packages.java.lang.System.out, true, 'UTF8'));
+	Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.lang.System.err, true, 'UTF8'));
+	
+	// @memo 2026/03/31 ace 從Java(JVM)呼叫啟動時，基本環境並沒有print。
 	if (typeof root.print == 'undefined') root.print = function(msg) {Packages.java.lang.System.out.println(msg);}
 	
 	// if (typeof root.alert == 'undefined') root.alert = function(msg) { Packages.javax.swing.JOptionPane.showMessageDialog(null, msg); }
 	if (typeof root.alert == 'undefined') root.alert = root.print;
 	
-	if (typeof root["window"] == 'undefined') {
-
-		root["window"] = {};
-		
-		if (typeof root["window"]["document"] == 'undefined') root["document"] = {};
-		
-		if (typeof root["window"]["console"] == 'undefined') root["window"]["console"] = {};
-		if (typeof root["window"]["console"]["log"] == 'undefined') root["window"]["console"]["log"] = print;
-	}
+	// @memo 2026/03/31 ace 從Java(JVM)呼叫啟動時，基本環境並沒有load函數。
+	if (typeof load == 'undefined') load = function(file) {Packages.tw.ace33022.functions.Rhino.load(context, scope, new Packages.java.io.File(file));}
+			
+	if (typeof print != 'undefined') print('java.lang.System.getProperty(\'dirWork\'): ' + Packages.java.lang.System.getProperty('dirWork'));
+	
+	if (dirWork == '') throw new Exception('Variable dirWork is empty.');
+	
+	// Packages.tw.ace33022.ReThink.initializeLog4J();
+	Packages.tw.ace33022.ReThink.initializeEnvironment();
+	
+	// @memo 2026/03/30 ace 在Tomcat環境下，應該要取得ServletContext.getResource("/")的目錄，建立各自對應的執行環境？
+	// @memo 2026/04/22 ace 新增setDirWork函數自行設定工作目錄，對於類似Tomcat環境，用來指定對應的工作路徑。
+	root["setDirWork"] = function(value) {dirWork = value; return dirWork;}
+	root["getDirWork"] = function() {return dirWork;}
+	
+	// @memo 2026/04/22 ace 新增setDirJavaScript函數自行設定JavaScript目錄，若JavaScript程式不是位在dirWork路徑下，可彈性設定實際的JavaScript目錄。
+	// root["getDirJavaScript"] = function() {return root["getDirWork"]() + '/javascript';};
+	root["setDirJavaScript"] = function(value) {dirJavaScript = value; return dirJavaScript;}
+	root["getDirJavaScript"] = function() {return dirJavaScript != '' ? dirJavaScript : root["getDirWork"]() + '/javascript';};
+	
+	// @memo 2026/04/23 ace 新增setDirTool函數自行設定Tool目錄，若Tool程式不是位在dirWork路徑下，可彈性設定實際的Tool目錄。
+	root["setDirTool"] = function(value) {dirTool = value; return dirTool;}
+	root["getDirTool"] = function() {return dirTool != '' ? dirTool : root["getDirWork"]() + '/tool';};
+	
+	// @todo 2026/04/01 ace 路徑UserSpace應該讀取設定檔的設定資料？
+	root["getDirUserSpace"] = function() {return getDirWork() + '/' + 'UserSpace';}
+	
+	// @todo 2026/04/01 ace 路徑temp應該讀取設定檔的設定資料？
+	root["getDirTemp"] = function() {return 'O:/tmp';}
+	
+	root["getLog"] = function(loggerName) {return Packages.tw.ace33022.functions.Log.getLog(loggerName);}
+	
+  // @todo 2023/09/13 ace 在Tomcat環境下如何搭配使用ServletContext?
+	root["logger"] = (function() {return root["getLog"]('org.mozilla.javascript.tools.shell.Main');})();
+	
+	if (typeof root["window"] == 'undefined') root["window"] = {};
+	
+	if (typeof root["window"]["document"] == 'undefined') root["document"] = {};
+	
+	if (typeof root["window"]["console"] == 'undefined') root["window"]["console"] = {};
+	if (typeof root["window"]["console"]["log"] == 'undefined') root["window"]["console"]["log"] = print;
 	
 	if (typeof root["console"] == 'undefined') root["console"] = root["window"]["console"];
 	
@@ -91,60 +129,41 @@ Packages.java.lang.System.setErr(new Packages.java.io.PrintStream(Packages.java.
 		root["Logger"] = {};
 		root["Logger"]["log"] = function(value) {root.console.log(value);}	// 對應Google Apps Script語法。
 	}
+	
+	// load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["js-logger"] + '.js');
+	
+	// importClass(Packages.javax.swing.JOptionPane); JOptionPane.showMessageDialog(null, 'Start Load');
+	
+	if (typeof module == 'undefined') {
+
+		// CommonJS功能改由Rhino-Require處理。
+		// module = {};
+		// module.exports = {};
+	}
+
+	// json2.js中使用alert函數進行警告提示，在沒有定義alert的狀況下載入會造成例外狀況發生。
+	// load(Configuration["dirJavaScript"] + '/tw/ace33022/json2.js');
+
+	// load(Configuration["dirJavaScript"] + '/tw/ace33022/RequireJSConfig.js');
+	
+	// @version 2013/10/14 新增載入require.js(https://github.com/micmath/Rhino-Require)。
+	// @version 2013/11/24 取消載入require.js(https://github.com/micmath/Rhino-Require)，與require.js(http://requirejs.org/)衝突。
+	// @version 2013/11/24 是否使用require功能應該由各別程式自行指定。
+	// load(root["getDirJavaScript"]() + 'tw/ace33022/rhino/require.js');
+
+	if (typeof define == 'function') {
+
+		// @version 2015/11/13 載入RequireJS時，新增定義requirejs函數。
+		// requirejs = require;
+			
+		// requirejs.config(tw.ace33022.RequireJSConfig);
+	}	
+	else if (typeof exports != 'undefined') {
+
+		// 沒有載入RequireJS時則載入Rhino-Require(會有node_modules目錄讀取問題)？
+		// load(root["getDirJavaScript"]() + '/tw/ace33022/rhino/require.js');	
+	}
 })(this);
-
-// @memo 2024/09/05 ace 由各別程式顯示系統狀態，初始化過程執行這個動作會有重複執行的困擾。
-// Packages.tw.ace33022.util.Misc.checkEnvironmentSetting(logger);
-// Packages.tw.ace33022.functions.Misc.checkEnvironmentSetting();
-
-if (typeof module == 'undefined') {
-
-	// CommonJS功能改由Rhino-Require處理。
-	// module = {};
-	// module.exports = {};
-}
-
-// @version 2013/10/14 新增載入require.js(https://github.com/micmath/Rhino-Require)。
-// @version 2013/11/24 取消載入require.js(https://github.com/micmath/Rhino-Require)，與require.js(http://requirejs.org/)衝突。
-// require = load;
-// load('L:/js/tw/ace33022/Rhino/require.js');
-// requirejs = require;
-
-// json2.js中使用alert函數進行警告提示，在沒有定義alert的狀況下載入會造成例外狀況發生。
-// @version 2015/02/25 全域變數JSLibDir改以Configuration.JSLibDir取代。
-// load(Configuration["JSLibDir"] + '/tw/ace33022/json2.js');
-// load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/json2.js');
-load(Configuration["dirJavaScriptLib"] + '/tw/ace33022/json2.js');
-	
-// load(Configuration["JSLibDir"] + '/tw/ace33022/RequireJSConfig.js');
-// load(Configuration["JavaScriptLibDir"] + '/tw/ace33022/RequireJSConfig.js');
-load(Configuration["dirJavaScriptLib"] + '/tw/ace33022/RequireJSConfig.js');
-
-// @memo 2025/08/07 ace rhitno的早期版本還沒有提供endsWith()函數。
-// if (!tw.ace33022.RequireJSConfig.baseUrl.endsWith('/')) tw.ace33022.RequireJSConfig.baseUrl += '/';
-if (tw.ace33022.RequireJSConfig.baseUrl.substring(tw.ace33022.RequireJSConfig.baseUrl.length - 1) != '/') tw.ace33022.RequireJSConfig.baseUrl += '/';
-
-// importClass(Packages.javax.swing.JOptionPane); JOptionPane.showMessageDialog(null, 'Start Load');
-// Libre Office的Rhino版本進行load的順序有問題？改成各別檔案依需求增加判斷再載入。
-// for (var key in RequireJSConfig.paths) load(RequireJSConfig.baseUrl + RequireJSConfig.paths[key] + '.js');
-	
-// 是否使用require功能應該由各別程式自行指定。
-// load(JSLibDir + 'tw/ace33022/Rhino/require.js');
-
-if (typeof define == 'function') {
-
-	// @version 2015/11/13 載入RequireJS時，新增定義requirejs函數。
-	requirejs = require;
-		
-	requirejs.config(tw.ace33022.util.RequireJSConfig);
-}	
-else if (typeof exports != 'undefined') {
-
-	// 沒有載入RequireJS時則載入Rhino-Require(會有node_modules目錄讀取問題)？
-	// load(Configuration.JSLibDir + '/tw/ace33022/util/Rhino/require.js');	
-}
-
-// load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["js-logger"] + '.js');
 
 /*
 Logger.useDefaults({

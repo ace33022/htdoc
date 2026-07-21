@@ -30,10 +30,9 @@
 
 	// if (typeof tw.ace33022.functions.Datetime == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.functions.Datetime"] + '.js');
 	
-	// var cURLPath = 'T:/package/net/curl/bin/curl.exe';
-	// var cURLPath = tw.ace33022.DefaultConfiguration.getCURLExeFile();
-	// var cURLFile = tw["ace33022"]["Configuration"]["workDir"] + '/tool/package/net/curl/bin/curl.exe';
-	var cURLExeFile = tw["ace33022"]["Configuration"]["workDir"] + '/tool/package/net/curl/bin/curl.exe';
+	var cURLExeFile = tw.ace33022.Configuration.getDirWork() + '/tool/package/net/curl/bin/curl.exe';
+	// var exeFileCURL = tw.ace33022.Configuration.getDirWork() + '/tool/package/net/curl/bin/curl.exe';
+	var exeFileCURL = tw.ace33022.Configuration.getDirTool() + '/package/net/curl/bin/curl.exe';
 	
 	/**
 	 *
@@ -689,7 +688,6 @@
 		
 		return JSON.stringify(result);
 	}
-	
 	
 	/**
 	 *
@@ -1364,6 +1362,17 @@
 				return result;
 			}
 			
+			/**
+			 *
+			 * @description 模擬Google Apps Script UrlFetchApp元件取得網頁資料。
+			 *
+			 * @version 2025/01/16 ace 初始版本。
+			 *
+			 * @see <a href="https://developers.google.com/apps-script/reference/url-fetch">URL Fetch Service  |  Apps Script  |  Google for Developers</a>
+			 *
+			 * @author ace
+			 *
+			 */
 			function method03(url, payload) {
 			
 				if (typeof tw.ace33022.rhino.google.apps.script.UrlFetchApp == 'undefined') load(Packages.java.lang.System.getProperty('WorkDir') + '/javascript/tw/ace33022/rhino/google/apps/script/UrlFetchApp.js');
@@ -1644,44 +1653,26 @@
 				vo.setProductCode(productCode);
 				
 				// CALL
-				// vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(0).text()).replace(/,/g, '')));        // 多方交易口數
-				// vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));      // 多方交易金額
-				// vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       // 空方交易口數
-				// vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));     // 空方交易金額
-				// vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(6).text()).replace(/,/g, '')));    // 多方交易口數
-				// vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));  // 多方交易金額
-				// vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   // 空方交易口數
-				// vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));	// 空方交易金額
-	
-				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));         // 多方交易口數
-				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(5).text()).replace(/,/g, '')));       // 多方交易金額
-				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(6).text()).replace(/,/g, '')));        // 空方交易口數
-				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));      // 空方交易金額
-				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));    // 多方交易口數
-				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(11).text()).replace(/,/g, '')));  // 多方交易金額
-				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(12).text()).replace(/,/g, '')));   // 空方交易口數
-				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(13).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));         // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(5).text()).replace(/,/g, '')));       // 買方交易金額
+				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(6).text()).replace(/,/g, '')));        // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));      // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));    // 買方交易口數
+				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(11).text()).replace(/,/g, '')));  // 買方交易金額
+				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(12).text()).replace(/,/g, '')));   // 賣方交易口數
+				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(13).text()).replace(/,/g, '')));	// 賣方交易金額
 				
 				tr += 3;
 	
 				// PUT
-				// vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(0).text()).replace(/,/g, '')));         	// 多方交易口數
-				// vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));       	// 多方交易金額
-				// vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));        	// 空方交易口數
-				// vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));      	// 空方交易金額
-				// vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(6).text()).replace(/,/g, '')));     	// 多方交易口數
-				// vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));   	// 多方交易金額
-				// vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   	// 空方交易口數
-				// vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));	// 空方交易金額
-				
-				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));         	// 多方交易口數
-				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));       	// 多方交易金額
-				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));        	// 空方交易口數
-				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(5).text()).replace(/,/g, '')));      	// 空方交易金額
-				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));     	// 多方交易口數
-				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 多方交易金額
-				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));   	// 空方交易口數
-				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(11).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));         	// 買方交易口數
+				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));       	// 買方交易金額
+				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));        	// 賣方交易口數
+				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(5).text()).replace(/,/g, '')));      	// 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));     	// 買方交易口數
+				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 買方交易金額
+				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));   	// 賣方交易口數
+				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(11).text()).replace(/,/g, '')));	// 賣方交易金額
 				
 				arrayDealerOptin.push(vo.toJSONObject());
 			}
@@ -1697,26 +1688,26 @@
 				vo.setProductCode(productCode);
 				
 				// CALL
-				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         // 多方交易口數
-				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       // 多方交易金額
-				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        // 空方交易口數
-				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      // 空方交易金額
-				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     // 多方交易口數
-				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   // 多方交易金額
-				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));    // 空方交易口數
-				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       // 買方交易金額
+				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     // 買方交易口數
+				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   // 買方交易金額
+				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));    // 賣方交易口數
+				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 賣方交易金額
 	
 				tr += 3;
 	
 				// PUT
-				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         	// 多方交易口數
-				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       	// 多方交易金額
-				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        	// 空方交易口數
-				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      	// 空方交易金額
-				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     	// 多方交易口數
-				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   	// 多方交易金額
-				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 空方交易口數
-				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         	// 買方交易口數
+				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       	// 買方交易金額
+				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        	// 賣方交易口數
+				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      	// 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     	// 買方交易口數
+				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   	// 買方交易金額
+				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 賣方交易口數
+				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 賣方交易金額
 				
 				arrayInvestOptin.push(vo.toJSONObject());
 			}
@@ -1732,26 +1723,26 @@
 				vo.setProductCode(productCode);
 				
 				// CALL
-				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         // 多方交易口數
-				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       // 多方交易金額
-				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        // 空方交易口數
-				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      // 空方交易金額
-				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     // 多方交易口數
-				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   // 多方交易金額
-				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));    // 空方交易口數
-				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         // 買方交易口數
+				vo.setCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       // 買方交易金額
+				vo.setCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        // 賣方交易口數
+				vo.setCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      // 賣方交易金額
+				vo.setStayCallBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     // 買方交易口數
+				vo.setStayCallBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   // 買方交易金額
+				vo.setStayCallSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));    // 賣方交易口數
+				vo.setStayCallSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 賣方交易金額
 	
 				tr += 3;
 	
 				// PUT
-				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         	// 多方交易口數
-				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       	// 多方交易金額
-				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        	// 空方交易口數
-				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      	// 空方交易金額
-				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     	// 多方交易口數
-				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   	// 多方交易金額
-				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 空方交易口數
-				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 空方交易金額
+				vo.setPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(1).text()).replace(/,/g, '')));         	// 買方交易口數
+				vo.setPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(2).text()).replace(/,/g, '')));       	// 買方交易金額
+				vo.setPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(3).text()).replace(/,/g, '')));        	// 賣方交易口數
+				vo.setPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(4).text()).replace(/,/g, '')));      	// 賣方交易金額
+				vo.setStayPutBuyQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(7).text()).replace(/,/g, '')));     	// 買方交易口數
+				vo.setStayPutBuyTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(8).text()).replace(/,/g, '')));   	// 買方交易金額
+				vo.setStayPutSellQty(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(9).text()).replace(/,/g, '')));   	// 賣方交易口數
+				vo.setStayPutSellTotal(parseFloat(new String(trs.get(tr).getElementsByTag('td').get(10).text()).replace(/,/g, '')));	// 賣方交易金額
 				
 				arrayForeignOptin.push(vo.toJSONObject());
 			}
@@ -1773,14 +1764,14 @@
 		
 		try {
 
-			if (typeof tw.ace33022.vo.ForeignOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.ForeignOptionDayTrnLog"] + '.js');
-			if (typeof tw.ace33022.vo.DealerOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.DealerOptionDayTrnLog"] + '.js');
-			if (typeof tw.ace33022.vo.InvestOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.InvestOptionDayTrnLog"] + '.js');
-				
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.ForeignOptionDayTrnLog'] + '.js');
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.DealerOptionDayTrnLog'] + '.js');
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.InvestOptionDayTrnLog'] + '.js');
 
+			if (typeof tw.ace33022.vo.ForeignOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.ForeignOptionDayTrnLog"] + '.js');
+			if (typeof tw.ace33022.vo.DealerOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.DealerOptionDayTrnLog"] + '.js');
+			if (typeof tw.ace33022.vo.InvestOptionDayTrnLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.InvestOptionDayTrnLog"] + '.js');
+				
 			// var arrForeignOption = new Array();
 			// var arrDealerOption  = new Array();
 			// var arrInvestOption  = new Array();
@@ -1792,6 +1783,7 @@
 			// 臺指選擇權, 電子選擇權, 金融選擇權
 			["TXO", "TEO", "TFO"].forEach(function(productCode) {
 			
+				// 自營商、投信、外資
 				["dealer", "invest", "foreign"].forEach(function(foundation) {addFoundationOptionDayTrnLog(result["data"]["dealer"], result["data"]["invest"], result["data"]["foreign"], html, productCode, foundation);});
 			});
 			
@@ -2260,15 +2252,19 @@
 		
 		try {
 
-			if (typeof tw.ace33022.vo.OptionCallLargeStayLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayLog"] + '.js');
-			if (typeof tw.ace33022.vo.OptionPutLargeStayLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionPutLargeStayLog"] + '.js');
-			if (typeof tw.ace33022.vo.OptionCallLargeStayAllLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
-			if (typeof tw.ace33022.vo.OptionPutLargeStayAllLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionPutLargeStayAllLog"] + '.js');
-				
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.OptionCallLargeStayLog'] + '.js');
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.OptionCallLargeStayAllLog'] + '.js');
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.OptionPutLargeStayLog'] + '.js');
 			// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths['tw.ace33022.dao.db.vo.OptionPutLargeStayAllLog'] + '.js');
+			
+			if (typeof tw.ace33022.vo.OptionCallLargeStayLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayLog"] + '.js');
+			if (typeof tw.ace33022.vo.OptionPutLargeStayLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionPutLargeStayLog"] + '.js');
+			if (typeof tw.ace33022.vo.OptionCallLargeStayAllLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionCallLargeStayAllLog"] + '.js');
+			if (typeof tw.ace33022.vo.OptionPutLargeStayAllLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionPutLargeStayAllLog"] + '.js');
+			
+			if (typeof tw.ace33022.rhino.google.apps.macro.StockDailyTransactionLog == 'undefined') load(tw.ace33022.RequireJSConfig.baseUrl + 'tw/ace33022/rhino/google/apps/macro/StockDailyTransactionLog.js');
+			
+			result = JSON.parse(tw.ace33022.rhino.google.apps.macro.StockDailyTransactionLog.getOptionLargeStayLog(trnDate));
 			
 			// var dao;
 			
@@ -2277,12 +2273,11 @@
 			// var arrOptionPut  = new Array();
 			// var arrOptionPutAll  = new Array();
 			
-			var html;
-			
 			// 臺指選擇權、電子選擇權、金融選擇權
+			/*
 			["TXO", "TEO", "TFO"].forEach(function(productCode) {
 			
-				html = getHTML(trnDate, productCode);
+				var html = getHTML(trnDate, productCode);
 				
 				["CALL", "PUT"].forEach(function(trnType) {
 				
@@ -2290,6 +2285,7 @@
 					addOptionLargeStayAllLog(result["data"]["option_call_large_stay_all_log"], result["data"]["option_put_large_stay_all_log"], html, trnDate, productCode, trnType);
 				});
 			});
+			*/
 			
 			// dao = new tw.ace33022.dao.db.vo.OptionCallLargeStayLog(conn);
 			// dao.doDelete(trnDate, 'TXO');
@@ -2448,7 +2444,7 @@
 				
 				// process = Packages.java.lang.Runtime.getRuntime().exec(Configuration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '--data-binary' + ' ' + '"@K:/JavaScript/Rhino/EXA92100/doc/mis.taifex.com.tw/getCmdyMonthDDLItemByKindPostData.json"');
 				// process = Packages.java.lang.Runtime.getRuntime().exec(Configuration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
-				process = Packages.java.lang.Runtime.getRuntime().exec(cURLExeFile + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
+				process = Packages.java.lang.Runtime.getRuntime().exec(exeFileCURL + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getCmdyMonthDDLItemByKind"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
 				
 				inputBufferedReader = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
 				while ((temp = inputBufferedReader.readLine()) != null) result += temp;
@@ -2602,10 +2598,13 @@
 	 * @comment 2022/08/10 ace "TXO": 台指選。
 	 *                         "TFO": 金指選。
 	 *                         "TEO": 電指選。
+	 * @comment 2026/04/07 ace 改成先呼叫Google Apps Script的API處理，若是呼叫失敗才自行處理。
+	 *
 	 */
-	function getQuoteListOption(productCode, conMonth) {
+	// function getQuoteListOption(productCode, conMonth) {
+	function getQuoteListOption(parameter) {
 	
-		function getMethod01(productCode, conMonth, marketType) {
+		function getData01(productCode, conMonth, marketType) {
 		
 			var result = '';
 			
@@ -2624,7 +2623,7 @@
 									+ ' \\"SortColumn\\": \\"\\", '
 									+ ' \\"SymbolType\\": \\"O\\" }';
 			// var process = Packages.java.lang.Runtime.getRuntime().exec(tw.ace33022.DefaultConfiguration.getCURLExeFile() + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
-			var process = Packages.java.lang.Runtime.getRuntime().exec(cURLExeFile + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
+			var process = Packages.java.lang.Runtime.getRuntime().exec(exeFileCURL + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
 			
 			if (logger != null) logger.debug(payload);
 			
@@ -2641,81 +2640,239 @@
 			return result;
 		}
 		
-		// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionCallTrnLog"] + '.js');
-		// load(tw.ace33022.RequireJSConfig.baseUrl + tw.ace33022.RequireJSConfig.paths["tw.ace33022.vo.OptionPutTrnLog"] + '.js');
-		if (typeof tw.ace33022.vo.OptionCallTrnLog == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.vo.OptionCallTrnLog"] + '.js');
-		if (typeof tw.ace33022.vo.OptionPutTrnLog == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.vo.OptionPutTrnLog"] + '.js');
+		function getData02(productCode, conMonth, marketType) {
+		
+			var result = '';
+			
+			var message = '';
+
+			// var inputBufferedReader, errorBufferedReaded;
+			var bufferedReaderSTDOUT, bufferedReaderSTDERR;
+			var temp;
+			
+			var payload = '{\\"AscDesc\\": \\"A\\", '
+								  + ' \\"CID\\": \\"' + productCode + '\\", '
+									+ ' \\"ExpireMonth\\": \\"' + conMonth + '\\", '
+									+ ' \\"KindID\\": \\"1\\", '	
+									+ ' \\"MarketType\\": \\"' + marketType + '\\", '	// '0'：一般交易時段行情；'1'；盤後交易時段行情。
+									+ ' \\"PageNo\\": \\"\\", '
+									// + ' \\"RowSize\\": \\"全部\\", '	// 中文字傳輸問題？！
+									+ ' \\"SortColumn\\": \\"\\", '
+									+ ' \\"SymbolType\\": \\"O\\" }';
+			var process = Packages.java.lang.Runtime.getRuntime().exec(exeFileCURL + ' ' + '-k -X POST' + ' ' + '"https://mis.taifex.com.tw/futures/api/getQuoteListOption"' + ' ' + '-H "Content-Type: application/json;charset=UTF-8" -H "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"' + ' ' + '-d' + ' ' + '"' + payload + '"');
+			
+			if (logger != null) logger.debug(payload);
+			
+			bufferedReaderSTDOUT = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
+			while ((temp = bufferedReaderSTDOUT.readLine()) != null) result += temp;
+			
+			bufferedReaderSTDERR = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getErrorStream()));
+			while ((temp = bufferedReaderSTDERR.readLine()) != null) message += temp;
+			
+			if (process.waitFor() !== 0) throw new Error(message);
+			
+			// if (logger != null) logger.debug(result);
+			
+			return result;
+		}
+		
+		function getFromGoogleAppsScript(parameter) {
+		
+			if (typeof tw.ace33022.functions.Google == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.functions.Google"] + '.js');
+		
+			var result = {
+				
+				"code": 0,
+				"message": "",
+				"data": {}
+			};
+		
+			try {
+			
+				JSON.parse(parameter).forEach(function(element, index) {
+				
+					var message = '';
+
+					var bufferedReaderSTDOUT, bufferedReaderSTDERR;
+					var temp;
+					var response = '';
+
+					var process;
+					
+					var queryString = '';
+					var arrayConMonth = element["con_month"];
+				
+					if (typeof element["product_code"] != 'undefined') {
+					
+						queryString += 'product_code=' + element["product_code"];
+						
+						if (typeof element["con_month"] == 'undefined') arrayConMonth = [];
+						
+						// if (arrayConMonth.length == 0) arrayConMonth = JSON.parse(getConMonth(element["product_code"] + 'O'))["data"];
+						
+						if (arrayConMonth.length != 0) {
+						
+							queryString += '&';
+							
+							arrayConMonth.forEach(function(element, index) {queryString += '&con_month=' + element;});
+						}
+					}
+					
+					if (logger != null) logger.debug(tw.ace33022.functions.Google.getAppsMacroUrl(tw["ace33022"]["Configuration"]["googleAppsMacroId"]["optionPromptTrnLog"]) + '?' + queryString);
+					
+					process = Packages.java.lang.Runtime.getRuntime().exec(exeFileCURL + ' ' + '-k -L' + ' ' + '"' + tw.ace33022.functions.Google.getAppsMacroUrl(tw["ace33022"]["Configuration"]["googleAppsMacroId"]["optionPromptTrnLog"]) + '?' + queryString + '"');
+					
+					bufferedReaderSTDOUT = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getInputStream()));
+					while ((temp = bufferedReaderSTDOUT.readLine()) != null) response += temp;
+					
+					bufferedReaderSTDERR = new Packages.java.io.BufferedReader(new Packages.java.io.InputStreamReader(process.getErrorStream()));
+					while ((temp = bufferedReaderSTDERR.readLine()) != null) message += temp;
+					
+					if (process.waitFor() != 0) throw new Error(message);
+					
+					// if (logger != null) logger.debug('response: ' + response);
+					
+					response = JSON.parse(response);
+					
+					// @memo 2026/05/03 ace 
+					if (response["code"] == 0) result["data"][element["product_code"]] = response["data"][element["product_code"]];
+				});
+			}
+			catch (e) {
+			
+				result["code"] = 1;
+				result["message"] = e.message;
+			}
+			
+			// return JSON.stringify(result);
+			return result;
+		}
+		
+		function getFromSelf(parameter) {
+		
+			if (typeof tw.ace33022.vo.OptionCallTrnLog == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.vo.OptionCallTrnLog"] + '.js');
+			if (typeof tw.ace33022.vo.OptionPutTrnLog == 'undefined') load(tw["ace33022"]["RequireJSConfig"]["baseUrl"] + tw["ace33022"]["RequireJSConfig"]["paths"]["tw.ace33022.vo.OptionPutTrnLog"] + '.js');
+			
+			var result = {
+			
+				"code": 0,
+				"message": "",
+				"data": {}
+			};
+			
+			try {
+			
+				JSON.parse(parameter).forEach(function(element, index) {
+				
+					var productCode = element["product_code"];
+					var arrayConMonth = element["con_month"];
+				
+					if (typeof result["data"][productCode] == 'undefined') result["data"][productCode] = {"con_month": []};
+					
+					if (typeof element["con_month"] == 'undefined') arrayConMonth = [];
+					
+					if (arrayConMonth.length == 0) arrayConMonth = JSON.parse(getConMonth(element["product_code"] + 'O'))["data"];
+					
+					arrayConMonth.forEach(function(element, index) {
+					
+						var conMonth = element;
+					
+						if ((typeof logger != 'undefined') && (logger != null)) logger.debug(conMonth);
+						
+						result["data"][productCode]["con_month"].push(conMonth);
+						result["data"][productCode][conMonth] = {"call": [], "put": []};
+						
+						JSON.parse(getData02(productCode + 'O', conMonth, getMarketType()))["RtData"]["QuoteList"].forEach(function(element, index) {
+						
+							var vo;
+						
+							if (element["CP"] == 'C') {
+							
+								vo = new tw.ace33022.vo.OptionCallTrnLog();
+								
+								vo.setProductCode(productCode);
+								vo.setConMonth(conMonth);
+								vo.setTrnDate(element["CDate"]);
+								vo.setStrikePrice(element["StrikePrice"]);
+								vo.setOpenPrice(element["COpenPrice"]);
+								vo.setHighPrice(element["CHighPrice"]);
+								vo.setLowPrice(element["CLowPrice"]);
+								vo.setClosePrice(element["CLastPrice"]);
+								vo.setLastCalPrice(element["CLastPrice"]);
+								vo.setTrnQty(element["CTotalVolume"]);
+								vo.setStayQty(element["OpenInterest"]);
+								vo.setBestAskPrice(element["CBestAskPrice"]);
+								vo.setBestAskQty(element["CBestAskSize"]);
+								vo.setBestBidPrice(element["CBestBidPrice"]);
+								vo.setBestBidQty(element["CBestBidSize"]);
+								
+								result["data"][productCode][conMonth]["call"].push(vo.toJSONObject());
+							}
+							else if (element["CP"] == 'P') {
+							
+								vo = new tw.ace33022.vo.OptionPutTrnLog();
+								
+								vo.setProductCode(productCode);
+								vo.setConMonth(conMonth);
+								vo.setTrnDate(element["CDate"]);
+								vo.setStrikePrice(element["StrikePrice"]);
+								vo.setOpenPrice(element["COpenPrice"]);
+								vo.setHighPrice(element["CHighPrice"]);
+								vo.setLowPrice(element["CLowPrice"]);
+								vo.setClosePrice(element["CLastPrice"]);
+								vo.setLastCalPrice(element["CLastPrice"]);
+								vo.setTrnQty(element["CTotalVolume"]);
+								vo.setStayQty(element["OpenInterest"]);
+								vo.setBestAskPrice(element["CBestAskPrice"]);
+								vo.setBestAskQty(element["CBestAskSize"]);
+								vo.setBestBidPrice(element["CBestBidPrice"]);
+								vo.setBestBidQty(element["CBestBidSize"]);
+								
+								result["data"][productCode][conMonth]["put"].push(vo.toJSONObject());
+							}
+						});
+					});
+				});
+			}
+			catch (e) {
+			
+				result["code"] = 1;
+				result["message"] = e.message;
+			}
+			
+			return result;
+		}
 		
 		var result = {
-		
+			
 			"code": 0,
 			"message": "",
-			"data": {
-			
-				"call": [],
-				"put": []
-			}
+			"data": {}
 		};
 		
-		try {
+		/*
+		[
+			{"product_code": "TX", "con_month": ["202604", "202605"]},
+			{"product_code": "TE", "con_month": ["202604"]},
+			{"product_code": "TF"},
+		];
+		*/
+			
+		if ((typeof logger != 'undefined') && (logger != null)) logger.debug('parameter: ' + parameter);
 		
-			var arrayQuoteList = JSON.parse(getMethod01(productCode, conMonth, getMarketType()))["RtData"]["QuoteList"];
-			
-			arrayQuoteList.forEach(function(element, index) {
-			
-				if (element["CP"] == 'C') {
-				
-					vo = new tw.ace33022.vo.OptionCallTrnLog();
-					
-					vo.setProductCode(productCode);
-					vo.setConMonth(conMonth);
-					vo.setTrnDate(element["CDate"]);
-					vo.setStrikePrice(element["StrikePrice"]);
-					vo.setOpenPrice(element["COpenPrice"]);
-					vo.setHighPrice(element["CHighPrice"]);
-					vo.setLowPrice(element["CLowPrice"]);
-					vo.setClosePrice(element["CLastPrice"]);
-					vo.setLastCalPrice(element["CLastPrice"]);
-					vo.setTrnQty(element["CTotalVolume"]);
-					vo.setStayQty(element["OpenInterest"]);
-					vo.setBestAskPrice(element["CBestAskPrice"]);
-					vo.setBestAskQty(element["CBestAskSize"]);
-					vo.setBestBidPrice(element["CBestBidPrice"]);
-					vo.setBestBidQty(element["CBestBidSize"]);
-					
-					result["data"]["call"].push(vo.toJSONObject());
-				}
-				else if (element["CP"] == 'P') {
-				
-					vo = new tw.ace33022.vo.OptionPutTrnLog();
-					
-					vo.setProductCode(productCode);
-					vo.setConMonth(conMonth);
-					vo.setTrnDate(element["CDate"]);
-					vo.setStrikePrice(element["StrikePrice"]);
-					vo.setOpenPrice(element["COpenPrice"]);
-					vo.setHighPrice(element["CHighPrice"]);
-					vo.setLowPrice(element["CLowPrice"]);
-					vo.setClosePrice(element["CLastPrice"]);
-					vo.setLastCalPrice(element["CLastPrice"]);
-					vo.setTrnQty(element["CTotalVolume"]);
-					vo.setStayQty(element["OpenInterest"]);
-					vo.setBestAskPrice(element["CBestAskPrice"]);
-					vo.setBestAskQty(element["CBestAskSize"]);
-					vo.setBestBidPrice(element["CBestBidPrice"]);
-					vo.setBestBidQty(element["CBestBidSize"]);
-					
-					result["data"]["put"].push(vo.toJSONObject());
-				}
-			});
-		}
-		catch (e) {
+		// if ((typeof logger != 'undefined') && (logger != null)) logger.debug('before getFromGoogleAppsScript(parameter)');
 		
-			result["code"] = 1;
-			result["message"] = e.message;
-			
-			// throw new Error(error.message);
-		}
+		result = getFromGoogleAppsScript(parameter);
+		
+		// if ((typeof logger != 'undefined') && (logger != null)) logger.debug('after getFromGoogleAppsScript(parameter)');
+		
+		// if ((typeof logger != 'undefined') && (logger != null)) logger.debug('after getFromGoogleAppsScript(parameter): ' + result);
+		
+		// @memo 2026/05/01 ace 因回傳資料多，此處的JSON.parse()轉換過程花費相當多時間。
+		// if (JSON.parse(result)["code"] != 0) result = getFromSelf(parameter);
+		if (result["code"] != 0) result = getFromSelf(parameter);
+		
+		// if ((typeof logger != 'undefined') && (logger != null)) logger.debug('after getFromSelf(parameter)');
 		
 		return JSON.stringify(result);
 	}

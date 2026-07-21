@@ -1,6 +1,6 @@
 /**
  *
- * @description TestComponent01
+ * @description TestComponent001
  *
  * @version 2025/12/23 ace 初始版本。
  *
@@ -31,7 +31,7 @@
  * @see {@link https://fontawesome.com/|Font Awesome}
  *
  */
-class TestComponent01 extends HTMLElement {
+class TestComponent001 extends HTMLElement {
 
 	constructor() {
 	
@@ -39,10 +39,19 @@ class TestComponent01 extends HTMLElement {
 		
 		let template = document.createElement('template');
 		
+		console.log('constructor()');
+		
 		template.innerHTML = `
 		
 			<style>
 			
+				span {
+			
+					font-size: 24px;
+					
+					color: red;
+				}
+				
 				div {
 			
 					font-size: 24px;
@@ -51,9 +60,8 @@ class TestComponent01 extends HTMLElement {
 				}
 			</style>
 			
-			<div>
-				<span>使用template</span>
-			</div>
+			<span>使用template</span>
+			<!-- <div>使用template</div> -->
 		`;
 		
 		// let shadow = this.attachShadow({mode: 'open'});
@@ -61,6 +69,11 @@ class TestComponent01 extends HTMLElement {
 		
 		this.attachShadow({mode: 'open'}).appendChild(template.content.cloneNode(true));
 	}
+	
+	connectedCallback() {
+	
+		console.log('connectedCallback()');
+	}
 }
 
-customElements.define('test-component-01', TestComponent01);
+customElements.define('test-component-001', TestComponent001);

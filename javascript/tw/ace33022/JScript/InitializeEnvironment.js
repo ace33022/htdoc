@@ -12,10 +12,13 @@
 
 (function(root) {
 	
-	this.EXIT_SUCCESS = 0;
-	this.EXIT_FAILURE = 1;
+	root.EXIT_SUCCESS = 0;
+	root.EXIT_FAILURE = 1;
 	
-	if (typeof this.console == 'undefined') this.console = {};
+	if (typeof root.console == 'undefined') root.console = {};
 	
-	this.console.log = function(message) {WScript.Stdout.WriteLine(message);}
+	if (typeof root.WScript != 'undefined') {
+	
+		root.console.log = function(message) {WScript.Stdout.WriteLine(message);}
+	}
 })(this);

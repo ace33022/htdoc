@@ -73,6 +73,7 @@
  * @version 2025/12/29 ace 新增CharacterCode。
  * @version 2025/12/29 ace 新增Word。
  * @version 2025/12/30 ace 新增Invoice。
+ * @version 2026/06/24 ace 新增Log。
  *
  * @author ace
  *
@@ -169,7 +170,7 @@
 	}
 
 	if (typeof Configuration == 'undefined') throw new Error('Configuration is undefined!');
-
+	
 	acePath = Configuration["AceDir"] + '/';
 	voPath = Configuration["VODir"] + '/';
 	// daoPath = Configuration["DAODir"] + '/';
@@ -188,7 +189,8 @@
 		// baseUrl: Configuration.JSLibDir + '/',
 		// "baseUrl": Configuration["JSLibDir"],
 		// "baseUrl": Configuration["JavaScriptLibDir"],
-		"baseUrl": Configuration["dirJavaScriptLib"] + '/',
+		// "baseUrl": Configuration["dirJavaScriptLib"] + '/',
+		"baseUrl": Configuration["getDirJavaScript"]() + '/',
 
     "paths": {
 
@@ -223,10 +225,18 @@
 			// "tw.ace33022.functions.Wunderlist": acePath + 'functions/Wunderlist',	/* @version 2018/09/17 新增Wunderlist。 */
 			"tw.ace33022.functions.RLife": acePath + 'functions/RLife',			/* @version 2023/03/25 ace 新增RLife。 */
 			
+			"tw.ace33022.browser.functions.Log": acePath + 'browser/functions/Log',	/* @version 2026/06/24 ace 新增Log。 */
 			"tw.ace33022.browser.functions.Misc": acePath + 'browser/functions/Misc',	/* @version 2025/12/24 ace 新增Misc。 */
 			
 			// UI
-			"tw.ace33022.browser.component.test-component-01": acePath + 'browser/ui/component/test-component-01',	/* @version 2025/12/24 ace 新增Misc。 */
+			"tw.ace33022.browser.component.block-bottom-000": acePath + 'browser/ui/component/block-bottom-000',
+			"tw.ace33022.browser.component.test-component-001": acePath + 'browser/ui/component/test-component-001',
+			"tw.ace33022.browser.component.test-component-002": acePath + 'browser/ui/component/test-component-002',
+			"tw.ace33022.browser.component.test-component-003": acePath + 'browser/ui/component/test-component-003',
+			"tw.ace33022.browser.component.test-component-004": acePath + 'browser/ui/component/test-component-004',
+			"tw.ace33022.browser.component.modal-message-002": acePath + 'browser/ui/component/modal-message-002',
+			"tw.ace33022.browser.component.modal-message-003": acePath + 'browser/ui/component/modal-message-003',
+			"tw.ace33022.browser.component.list-product-000": acePath + 'browser/ui/component/list-product-000',
 			
 			"tw.ace33022.rhino.functions.Stock": acePath + 'rhino/functions/Stock',	/* @version 2025/08/19 ace 新增Stock。 */
 			
