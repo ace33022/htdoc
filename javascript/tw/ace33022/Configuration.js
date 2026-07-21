@@ -280,7 +280,7 @@
 		
 			// All resources finished loading!
 			
-			var fileNwInjectEnd;
+			var fileNwInjectEnd = 'nw_inject_end.js';
 			
 			console.log('window load triggered.');
 			
@@ -311,16 +311,7 @@
 				// else if ((result.location.protocol == 'chrome-extension:') || (result.location.protocol == 'file:')) {
 				else {
 				
-					if (typeof nw != 'undefined') {
-					
-						// result["requirejsFile"] = document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].getAttribute('href') + 'javascript/requirejs/require.js';
-						
-						// console.log('result["requirejsFile"]: ' + result["requirejsFile"]);
-						
-						// NW.js由inject_js_end屬性載入執行。
-						// result.loadJS('javascript/tw/ace33022/RequireJSConfig.js');
-					}
-					else if (typeof nw == 'undefined') {
+					if (typeof nw == 'undefined') {
 					
 						fileNwInjectEnd = location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'nw_inject_end.js';
 						
@@ -329,6 +320,15 @@
 						// result.loadJS(result["getDirJavaScript"]() + '/tw/ace33022/RequireJSConfig.js', function() {result.loadJS(fileNwInjectEnd);});
 						// result.loadJS('javascript/tw/ace33022/RequireJSConfig.js', function() {result.loadJS(fileNwInjectEnd);});
 						result.loadJS(fileNwInjectEnd);
+					}
+					else {
+					
+						// result["requirejsFile"] = document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].getAttribute('href') + 'javascript/requirejs/require.js';
+						
+						// console.log('result["requirejsFile"]: ' + result["requirejsFile"]);
+						
+						// NW.js由inject_js_end屬性載入執行。
+						// result.loadJS('javascript/tw/ace33022/RequireJSConfig.js');
 					}
 				}
 			}
@@ -362,6 +362,14 @@
 			
 			console.log('base.href: ' + document.getElementsByTagName('head')[0].getElementsByTagName('base')[0].getAttribute('href'));
 			
+			console.log('location.toString(): ' + result.location.toString());
+			console.log('location.protocol: ' + result.location.protocol);
+			console.log('location.origin: ' + result.location.origin);
+			console.log('location.port: ' + result.location.port);
+			console.log('location.hostname: ' + result.location.hostname);
+			console.log('location.pathname: ' + result.location.pathname);
+			console.log('location.search: ' + result.location.search);
+				
 			// worker執行環境中並沒有window物件可以操作。
 			// if (typeof WorkerGlobalScope == 'undefined') {}
 				
@@ -395,7 +403,7 @@
 				if ((result.location.origin.indexOf('127.0.0.1') == -1) && (result.location.origin.indexOf('localhost') == -1)) {
 				
 					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-					result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
+					// result.loadCSS('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.4/toastr.min.css');
 					
 					if (result["UIStyle"] == 'bootstrap') {
 					
@@ -425,38 +433,11 @@
 			
 				// nwJS的location.protocol也是定義成chrome-extension:。
 				
-				console.log('location.toString(): ' + result.location.toString());
-				console.log('location.protocol: ' + result.location.protocol);
-				console.log('location.origin: ' + result.location.origin);
-				console.log('location.port: ' + result.location.port);
-				console.log('location.hostname: ' + result.location.hostname);
-				console.log('location.pathname: ' + result.location.pathname);
-				console.log('location.search: ' + result.location.search);
-				
 				// console.log('index.css: ' + location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'index.css');
 				
 				if (location.protocol == 'file:') {
 				
 					cssFile = location.pathname.substring(1, location.pathname.lastIndexOf('/') + 1) + 'index.css';
-				}
-				else if ((location.protocol == 'http:') || (location.protocol == 'https:')) {
-				
-					try {
-					
-						cssFile = location.toString() + 'index.css';
-						
-						console.log('index.css path: ' + cssFile);
-						
-						// @2025/01/02 cody location並非String物件，使用上必須先轉換物件後才可以執行endsWith函數，否則會造成location.endsWith is not a function的錯誤狀況。
-						// console.log(location.endsWith('/'));
-						if (!location.toString().endsWith('/')) cssFile = location.toString() + '/' + 'index.css';
-						
-						console.log('index.css path: ' + cssFile);
-					}
-					catch (e) {
-						
-						console.error(e.message);
-					}
 				}
 				else if (location.protocol == 'chrome-extension:') {
 				
