@@ -293,14 +293,13 @@
 			if (result.loadNWInjectEnd().toUpperCase() == 'Y') {
 			
 				if ((result.location.protocol == 'http:') || (result.location.protocol == 'https:')) {
-				
+
 					// location.pathname: /program/sex00010
-					if (location.pathname.startsWith('/program')) {
+					// location.toString(): https://ace33022.github.io/big5code/
+					// location.toString(): http://127.0.0.1:8088/program/sexy00001
+					fileNwInjectEnd = location.toString() + 'nw_inject_end.js';
 					
-						fileNwInjectEnd = location.toString() + 'nw_inject_end.js';
-						
-						if (!location.toString().endsWith('/')) fileNwInjectEnd = location.toString() + '/' + 'nw_inject_end.js';
-					}
+					if (!location.toString().endsWith('/')) fileNwInjectEnd = location.toString() + '/' + 'nw_inject_end.js';
 					
 					console.log('fileNwInjectEnd: ' + fileNwInjectEnd);
 					
